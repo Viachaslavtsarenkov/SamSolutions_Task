@@ -9,6 +9,10 @@
     <maven.compiler.target>11</maven.compiler.target>
     <spring.version>5.1.5.RELEASE</spring.version>
     <hibernate.version>5.4.1.Final</hibernate.version>
+    <jstl.version>1.2</jstl.version>
+    <jsp.version>2.3.1</jsp.version>
+    <servlet.version>3.1.0</servlet.version>
+    <springframeword.data.version>2.1.5.RELEASE</springframeword.data.version>
   </properties>
   <dependencies>
     <dependency>
@@ -29,7 +33,7 @@
     <dependency>
       <groupId>org.springframework.data</groupId>
       <artifactId>spring-data-jpa</artifactId>
-      <version>2.1.5.RELEASE</version>
+      <version>${springframeword.data.version}</version>
     </dependency>
     <dependency>
       <groupId>org.hibernate</groupId>
@@ -39,19 +43,19 @@
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
-      <version>3.1.0</version>
+      <version>${servlet.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>javax.servlet.jsp</groupId>
       <artifactId>javax.servlet.jsp-api</artifactId>
-      <version>2.3.1</version>
+      <version>${jsp.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>jstl</groupId>
       <artifactId>jstl</artifactId>
-      <version>1.2</version>
+      <version>${jstl.version}</version>
     </dependency>
   </dependencies>
   <packaging>pom</packaging>
