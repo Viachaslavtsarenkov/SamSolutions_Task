@@ -11,7 +11,7 @@
   <artifactId>common</artifactId>
   <version>1</version>
   <name>common</name>
-  <url>http://maven.apache.org</url>
+  <packaging>jar</packaging>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>

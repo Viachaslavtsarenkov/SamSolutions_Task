@@ -11,7 +11,7 @@
   <artifactId>payment</artifactId>
   <version>1.0-SNAPSHOT</version>
   <name>payment</name>
-  <url>http://maven.apache.org</url>
+  <packaging>jar</packaging>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
