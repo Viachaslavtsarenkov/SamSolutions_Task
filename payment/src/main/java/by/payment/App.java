@@ -1,4 +1,4 @@
-package by.tsarenkov;
+package by.payment;
 
 /**
  * Hello world!

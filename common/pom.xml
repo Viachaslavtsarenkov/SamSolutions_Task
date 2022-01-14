@@ -7,11 +7,12 @@
     <artifactId>SamSolutions_Task</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
-  <groupId>by.tsarenkov</groupId>
+  <groupId>by.common</groupId>
   <artifactId>common</artifactId>
   <version>1</version>
   <name>common</name>
   <packaging>jar</packaging>
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -24,5 +25,22 @@
           <artifactId>spring-web</artifactId>
           <version>5.3.14</version>
       </dependency>
+    <dependency>
+      <groupId>by.service</groupId>
+      <artifactId>service</artifactId>
+      <version>1</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet.jsp</groupId>
+      <artifactId>javax.servlet.jsp-api</artifactId>
+      <version>${jsp.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
   </dependencies>
 </project>
