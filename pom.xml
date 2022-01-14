@@ -22,5 +22,7 @@
     <module>db</module>
     <module>web-ui</module>
     <module>payment</module>
+    <module>service</module>
+    <module>controller</module>
   </modules>
 </project>
