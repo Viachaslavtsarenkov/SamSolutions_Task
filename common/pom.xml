@@ -11,6 +11,11 @@
   <artifactId>common</artifactId>
   <version>1</version>
   <name>common</name>
+  <properties>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+    <spring.version>5.3.14</spring.version>
+  </properties>
   <packaging>jar</packaging>
 
   <dependencies>
@@ -20,11 +25,6 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
-      <dependency>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-web</artifactId>
-          <version>5.3.14</version>
-      </dependency>
     <dependency>
       <groupId>by.service</groupId>
       <artifactId>service</artifactId>
@@ -38,9 +38,18 @@
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
-      <artifactId>spring-webmvc</artifactId>
+      <artifactId>spring-orm</artifactId>
       <version>${spring.version}</version>
     </dependency>
-
+    <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-jpa</artifactId>
+      <version>2.1.5.RELEASE</version>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core</artifactId>
+      <version>${hibernate.version}</version>
+    </dependency>
   </dependencies>
 </project>

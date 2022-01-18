@@ -12,9 +12,15 @@
     <jstl.version>1.2</jstl.version>
     <jsp.version>2.3.1</jsp.version>
     <servlet.version>3.1.0</servlet.version>
+    <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
     <springframeword.data.version>2.1.5.RELEASE</springframeword.data.version>
   </properties>
   <dependencies>
+    <dependency>
+      <groupId>org.thymeleaf</groupId>
+      <artifactId>thymeleaf-spring5</artifactId>
+      <version>${thymeleaf.version}</version>
+    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-orm</artifactId>
@@ -47,12 +53,6 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>javax.servlet.jsp</groupId>
-      <artifactId>javax.servlet.jsp-api</artifactId>
-      <version>${jsp.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>jstl</groupId>
       <artifactId>jstl</artifactId>
       <version>${jstl.version}</version>
@@ -62,8 +62,9 @@
   <modules>
     <module>common</module>
     <module>db</module>
-    <module>web-ui</module>
     <module>payment</module>
     <module>service</module>
+    <module>web-ui</module>
   </modules>
+
 </project>

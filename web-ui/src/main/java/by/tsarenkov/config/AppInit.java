@@ -1,28 +1,20 @@
-package by.common.config;
+package by.tsarenkov.config;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class AppInit extends AbstractAnnotationConfigDispatcherServletInitializer {
-
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class<?>[]{
-                WebConfig.class
-        };
+        return null;
     }
 
-    // Тут добавляем конфигурацию, в которой инициализируем ViewResolver
     @Override
     protected Class<?>[] getServletConfigClasses() {
-
-        return new Class<?>[]{
-                WebConfig.class
-        };
+        return new Class[]{SpringConfig.class};
     }
 
     @Override
     protected String[] getServletMappings() {
         return new String[]{"/"};
     }
-
 }
