@@ -1,4 +1,6 @@
 package by.tsarenkov.service.impl;
 
-public class CartServiceImpl {
+import by.tsarenkov.service.CartService;
+
+public class CartServiceImpl implements CartService {
 }

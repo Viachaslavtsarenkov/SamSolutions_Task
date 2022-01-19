@@ -1,4 +1,6 @@
 package by.tsarenkov.service.impl;
 
-public class UserServiceImpl {
+import by.tsarenkov.service.UserService;
+
+public class UserServiceImpl implements UserService {
 }
