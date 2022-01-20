@@ -12,6 +12,7 @@
     <jstl.version>1.2</jstl.version>
     <jsp.version>2.3.1</jsp.version>
     <servlet.version>3.1.0</servlet.version>
+    <postgreslq.version>9.3-1104-jdbc41</postgreslq.version>
     <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
     <springframeword.data.version>2.1.5.RELEASE</springframeword.data.version>
   </properties>
@@ -57,6 +58,17 @@
       <artifactId>jstl</artifactId>
       <version>${jstl.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>${postgreslq.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>RELEASE</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
   <packaging>pom</packaging>
   <modules>
@@ -66,5 +78,4 @@
     <module>service</module>
     <module>web-ui</module>
   </modules>
-
 </project>

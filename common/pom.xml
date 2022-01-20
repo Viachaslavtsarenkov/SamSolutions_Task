@@ -26,30 +26,9 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>by.service</groupId>
+      <groupId>by.tsarenkov</groupId>
       <artifactId>service</artifactId>
       <version>1</version>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet.jsp</groupId>
-      <artifactId>javax.servlet.jsp-api</artifactId>
-      <version>${jsp.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-orm</artifactId>
-      <version>${spring.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.data</groupId>
-      <artifactId>spring-data-jpa</artifactId>
-      <version>2.1.5.RELEASE</version>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-core</artifactId>
-      <version>${hibernate.version}</version>
     </dependency>
   </dependencies>
 </project>
