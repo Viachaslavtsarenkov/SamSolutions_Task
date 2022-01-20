@@ -1,0 +1,32 @@
+package by.tsarenkov.common.model.enumeration;
+
+public enum Genre {
+    ART,
+    AUTOBIOGRAPHY,
+    BIOGRAPHY,
+    BUSINESS,
+    COOKBOOK,
+    DICTIONARY,
+    ENCYCLOPEDIA,
+    GUIDE,
+    HEALTH,
+    HISTORY,
+    PHILOSOPHY,
+    SCIENCE,
+    MATH,
+    RELIGION,
+    ADVENTURE,
+    KINDS,
+    CLASSIC,
+    COMIC_BOOK,
+    DRAMA,
+    FAIRYTALE,
+    FANTASY,
+    HORROR,
+    MYSTERY,
+    POETRY,
+    ROMANCE,
+    SATIRE,
+    THRILLER,
+    WESTERN
+}
