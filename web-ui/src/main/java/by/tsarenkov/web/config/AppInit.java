@@ -1,4 +1,4 @@
-package by.tsarenkov.config;
+package by.tsarenkov.web.config;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
