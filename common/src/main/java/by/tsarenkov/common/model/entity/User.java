@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -34,16 +34,16 @@ public class User implements Serializable {
     private String address;
     @Column(name = "password")
     private char[] password;
-    @OneToOne
-    @JoinColumn(name = "id_user")
+    @OneToOne(optional = false, mappedBy = "user")
     private Cart cart;
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "books_cart",
             joinColumns = @JoinColumn(name = "id_book"),
-            inverseJoinColumns = @JoinColumn(name = "id_book")
+            inverseJoinColumns = @JoinColumn(name = "id_cart")
     )
     private Collection<Book> books;
     @ManyToOne
+    @JoinColumn(name = "id_role")
     private UserRole role;
     @OneToMany
     private Collection<Payment> payments;

@@ -31,7 +31,7 @@ public class Payment {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "payment_books",
             joinColumns = @JoinColumn(name = "id_payment"),
-            inverseJoinColumns = @JoinColumn(name = "id_payment")
+            inverseJoinColumns = @JoinColumn(name = "id_book")
     )
     private Collection<Book> books;
 }

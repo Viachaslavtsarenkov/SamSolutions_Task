@@ -34,25 +34,32 @@ public class Book implements Serializable {
     @ManyToMany
     @JoinTable(name = "author_book",
             joinColumns = @JoinColumn(name = "id_author"),
-            inverseJoinColumns = @JoinColumn(name = "id_author")
+            inverseJoinColumns = @JoinColumn(name = "id_book")
     )
     private Collection<Author> authors;
+
     @ManyToMany
-    @JoinTable(name = "books_cart",
+    @JoinTable(name = "book_genre",
             joinColumns = @JoinColumn(name = "id_book"),
-            inverseJoinColumns = @JoinColumn(name = "id_book")
+            inverseJoinColumns = @JoinColumn(name = "id_genre")
     )
     private Collection<BookGenre> genre;
     @ManyToMany
+    @JoinTable(name = "books_cart",
+            joinColumns = @JoinColumn(name = "id_book"),
+            inverseJoinColumns = @JoinColumn(name = "id_cart")
+    )
+    private Collection<BookGenre> cart;
+    @ManyToMany
     @JoinTable(name = "sale_books",
             joinColumns = @JoinColumn(name = "id_book"),
-            inverseJoinColumns = @JoinColumn(name = "id_book")
+            inverseJoinColumns = @JoinColumn(name = "id_sale")
     )
     private Collection<Sale> sales;
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "payment_books",
             joinColumns = @JoinColumn(name = "id_book"),
-            inverseJoinColumns = @JoinColumn(name = "id_book")
+            inverseJoinColumns = @JoinColumn(name = "id_payment")
     )
     private Collection<Payment> payments;
 }
