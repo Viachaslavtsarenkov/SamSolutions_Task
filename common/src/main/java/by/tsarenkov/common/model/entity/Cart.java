@@ -17,15 +17,15 @@ import java.util.Collection;
 public class Cart {
     @Id
     @Column(name = "id_cart")
-    private long idCard;
-    @Column(name = "id_user")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long idCard;
     @OneToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_user")
     private User user;
     @ManyToMany
     @JoinTable(name = "books_cart",
             joinColumns = @JoinColumn(name = "id_cart"),
-            inverseJoinColumns = @JoinColumn(name = "id_cart")
+            inverseJoinColumns = @JoinColumn(name = "id_book")
     )
     private Collection<Book> books;
 }

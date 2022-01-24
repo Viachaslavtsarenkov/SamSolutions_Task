@@ -18,8 +18,8 @@ import java.util.Collection;
 public class Author  implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id_author")
-    private long id;
+    @Column(name = "id_author", unique = true)
+    private Long id;
     @Column(name = "name")
     private String name;
     @Column(name = "surname")
@@ -31,7 +31,7 @@ public class Author  implements Serializable {
     @ManyToMany
     @JoinTable(name = "author_book",
             joinColumns = @JoinColumn(name = "id_author"),
-            inverseJoinColumns = @JoinColumn(name = "id_author")
+            inverseJoinColumns = @JoinColumn(name = "id_book")
     )
     private Collection<Book> books;
 }

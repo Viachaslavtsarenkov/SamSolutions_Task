@@ -18,10 +18,11 @@ import java.util.Collection;
 @EqualsAndHashCode
 public class UserRole {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id_role")
     private int id;
     @Column(name = "role")
     private Role role;
-    @OneToMany
+    @OneToMany(mappedBy = "role", fetch = FetchType.EAGER)
     private Collection<User> user;
 }

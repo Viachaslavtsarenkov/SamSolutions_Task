@@ -17,6 +17,7 @@ import java.util.Collection;
 @EqualsAndHashCode
 public class BookGenre {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id_genre")
     private int id;
     @Column(name = "genre")
@@ -24,7 +25,7 @@ public class BookGenre {
     @ManyToMany
     @JoinTable(name = "book_genre",
             joinColumns = @JoinColumn(name = "id_genre"),
-            inverseJoinColumns = @JoinColumn(name = "id_genre")
+            inverseJoinColumns = @JoinColumn(name = "id_book")
     )
     private Collection<Book> books;
 }

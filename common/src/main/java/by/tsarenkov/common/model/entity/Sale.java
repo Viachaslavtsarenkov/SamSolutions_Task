@@ -15,8 +15,9 @@ import java.util.Collection;
 @Setter
 public class Sale {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id_sale")
-    private long idSale;
+    private Long idSale;
     @Column(name = "start_date")
     private Calendar startDate;
     @Column(name = "end_date")
@@ -28,7 +29,7 @@ public class Sale {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "sale_books",
             joinColumns = @JoinColumn(name = "id_sale"),
-            inverseJoinColumns = @JoinColumn(name = "id_sale")
+            inverseJoinColumns = @JoinColumn(name = "id_book")
     )
     private Collection<Book> books;
 }
