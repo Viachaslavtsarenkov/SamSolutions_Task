@@ -14,7 +14,6 @@
   <properties>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
-    <spring.version>5.3.14</spring.version>
   </properties>
   <packaging>jar</packaging>
   <dependencies>
