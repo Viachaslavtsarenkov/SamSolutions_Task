@@ -7,11 +7,6 @@
     <artifactId>SamSolutions_Task</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
-  <properties>
-    <hibernate.version>5.4.1.Final</hibernate.version>
-    <servlet.version>3.1.0</servlet.version>
-    <springframeword.data.version>2.1.5.RELEASE</springframeword.data.version>
-  </properties>
   <artifactId>db</artifactId>
   <version>1.0-SNAPSHOT</version>
   <name>db</name>

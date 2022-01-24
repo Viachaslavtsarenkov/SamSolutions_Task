@@ -6,7 +6,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -15,8 +14,8 @@ import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 @Configuration
-@ComponentScan("by.tsarenkov")
 @EnableWebMvc
+@ComponentScan({"by.tsarenkov"})
 public class SpringConfig implements WebMvcConfigurer {
 
     private final ApplicationContext applicationContext;
@@ -25,13 +24,12 @@ public class SpringConfig implements WebMvcConfigurer {
     public SpringConfig(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
         System.out.println(this.applicationContext.getBean("authorServiceImpl"));
-       // System.out.println(this.applicationContext.getBean("authorRepository"));
+        // System.out.println(this.applicationContext.getBean("authorRepository"));
     }
 
     @Bean
     public SpringResourceTemplateResolver templateResolver() {
-        SpringResourceTemplateResolver templateResolver =
-                new SpringResourceTemplateResolver();
+        SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
         templateResolver.setApplicationContext(applicationContext);
         templateResolver.setPrefix("/WEB-INF/views/");
         templateResolver.setSuffix(".html");
@@ -54,7 +52,6 @@ public class SpringConfig implements WebMvcConfigurer {
         resolver.setCharacterEncoding("UTF-8");
         registry.viewResolver(resolver);
     }
-
 
 
 }
