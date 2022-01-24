@@ -17,7 +17,7 @@ public class Sale {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id_sale")
-    private long idSale;
+    private Long idSale;
     @Column(name = "start_date")
     private Calendar startDate;
     @Column(name = "end_date")

@@ -22,7 +22,7 @@ public class Book implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id_book")
-    private long id;
+    private Long id;
     @Column(name = "name")
     private String name;
     @Column(name = "description")

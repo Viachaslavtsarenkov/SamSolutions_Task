@@ -19,7 +19,7 @@ public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id_payment")
-    private long idPayment;
+    private Long idPayment;
     @Column(name = "amount")
     private long amount;
     @Column(name = "count")
