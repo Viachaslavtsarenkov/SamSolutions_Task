@@ -11,13 +11,11 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 public class AuthorController {
 
-    @Autowired
-    private AuthorService service;
 
     @RequestMapping("/store/authors")
     public ModelAndView getAuthors() {
         System.out.println("asdasddaasdfsdfsdfssdfsdasd");
-        service.saveAuthor(Author.builder().name("geirby").build());
+        //service.saveAuthor(Author.builder().name("geirby").build());
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("index");
         return modelAndView;

@@ -17,7 +17,7 @@ import java.util.Collection;
 @EqualsAndHashCode
 public class Author  implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id_author", unique = true)
     private Long id;
     @Column(name = "name")

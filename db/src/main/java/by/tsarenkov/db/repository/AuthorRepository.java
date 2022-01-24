@@ -1,4 +1,4 @@
-package by.tsarenkov.db;
+package by.tsarenkov.db.repository;
 
 import by.tsarenkov.common.model.entity.Author;
 import org.springframework.data.repository.CrudRepository;
