@@ -7,31 +7,43 @@ import by.tsarenkov.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class AuthorServiceImpl implements AuthorService {
 
+    private AuthorRepository authorRepository;
     @Autowired
-    AuthorRepository authorRepository;
-
-    @Override
-    public void saveAuthor(Author author) {
-        System.out.println("from service");
-        System.out.println(authorRepository.save(author));
+    public void setAuthorRepository(AuthorRepository authorRepository) {
+        this.authorRepository = authorRepository;
     }
 
     @Override
-    public void deleteAuthor(Author author) {
-       // repository.delete(author);
+    public void saveAuthor(Author author) {
+        authorRepository.save(author);
+    }
+
+    @Override
+    public void deleteAuthor(Long id) {
+        authorRepository.deleteById(id);
     }
 
     @Override
     public void updateAuthor(Author author) {
-      //  repository.saveAndFlush(author);
+        authorRepository.save(author);
     }
 
     @Override
-    public Author getAuthor(long id) {
-      //  return repository.getOne(id);
+    public Author getAuthor(Long id) {
+      //return  authorRepository.findById(id);
         return null;
+    }
+
+    @Override
+    public List<Author> getAllAuthors() {
+        List<Author> authors = new ArrayList<>();
+        authorRepository.findAll().forEach(authors::add);
+        return authors;
     }
 }
