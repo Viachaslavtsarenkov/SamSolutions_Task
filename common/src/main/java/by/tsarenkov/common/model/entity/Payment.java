@@ -28,7 +28,7 @@ public class Payment {
     private Calendar calendar;
     @ManyToOne
     private User user;
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "payment_books",
             joinColumns = @JoinColumn(name = "id_payment"),
             inverseJoinColumns = @JoinColumn(name = "id_book")

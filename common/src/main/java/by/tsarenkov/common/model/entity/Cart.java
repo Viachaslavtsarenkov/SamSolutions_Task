@@ -19,7 +19,7 @@ public class Cart {
     @Column(name = "id_cart")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idCard;
-    @OneToOne(optional = false, cascade = CascadeType.ALL)
+    @OneToOne(optional = false)
     @JoinColumn(name = "id_user")
     private User user;
     @ManyToMany

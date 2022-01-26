@@ -26,7 +26,7 @@ public class Sale {
     private String name;
     @Column(name = "discount_factor")
     private double discountFactor;
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "sale_books",
             joinColumns = @JoinColumn(name = "id_sale"),
             inverseJoinColumns = @JoinColumn(name = "id_book")

@@ -36,7 +36,7 @@ public class User implements Serializable {
     private char[] password;
     @OneToOne(optional = false, mappedBy = "user")
     private Cart cart;
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "books_cart",
             joinColumns = @JoinColumn(name = "id_book"),
             inverseJoinColumns = @JoinColumn(name = "id_cart")
