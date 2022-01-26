@@ -23,8 +23,8 @@ public class SpringConfig implements WebMvcConfigurer {
     @Autowired
     public SpringConfig(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
-        System.out.println(this.applicationContext.getBean("authorServiceImpl"));
-        // System.out.println(this.applicationContext.getBean("authorRepository"));
+         //System.out.println(this.applicationContext.getBean("authorServiceImpl"));
+         //System.out.println(this.applicationContext.getBean("authorRepository"));
     }
 
     @Bean

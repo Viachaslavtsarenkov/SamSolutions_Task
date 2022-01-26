@@ -27,10 +27,10 @@ public class JpaConfig {
 
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setUsername("sa");
-        dataSource.setPassword("");
-        dataSource.setUrl("jdbc:h2:file:~/data/book_store");
-        dataSource.setDriverClassName("org.h2.Driver");
+        dataSource.setUsername("user");
+        dataSource.setPassword("1234");
+        dataSource.setUrl("jdbc:postgresql://localhost:5432/book_store");
+        dataSource.setDriverClassName("org.postgresql.Driver");
 
         return dataSource;
     }
@@ -38,10 +38,10 @@ public class JpaConfig {
 
     private Properties jpaProperties() {
         Properties extraProperties = new Properties();
-        extraProperties.put("javax.persistence.jdbc.url", "jdbc:h2:file:~/data/book_store");
+        extraProperties.put("javax.persistence.jdbc.url", "jdbc:postgresql://localhost:5432/book_store");
         extraProperties.put("hibernate.format_sql", "true");
         extraProperties.put("hibernate.show_sql", "true");
-        extraProperties.put("hibernate.hbm2ddl.auto", "create");
+        extraProperties.put("hibernate.hbm2ddl.auto", "update");
         return extraProperties;
     }
 

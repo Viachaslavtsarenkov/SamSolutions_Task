@@ -8,7 +8,7 @@
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/book_store" />
       <property name="javax.persistence.jdbc.user" value="user" />
       <property name="javax.persistence.jdbc.password" value="1234" />
-      <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
+      <property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />
       <property name="hibernate.show_sql" value="true" />
       <property name="hibernate.format_sql" value="true" />
     </properties>
