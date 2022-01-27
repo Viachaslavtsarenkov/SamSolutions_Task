@@ -1,5 +1,6 @@
 package by.tsarenkov.common.model.entity;
 
+import by.tsarenkov.common.model.enumeration.UserStatus;
 import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -30,6 +31,7 @@ public class User implements Serializable {
     private String email;
     @Column(name = "phone_number")
     private String phoneNumber;
+    //todo chagne address
     @Column(name = "address")
     private String address;
     @Column(name = "password")
@@ -47,4 +49,6 @@ public class User implements Serializable {
     private UserRole role;
     @OneToMany
     private Collection<Payment> payments;
+    @Column(name = "status")
+    private UserStatus status;
 }
