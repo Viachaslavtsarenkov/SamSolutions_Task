@@ -22,7 +22,6 @@ public class WelcomeController {
 
     @RequestMapping(value={"/"})
     public ModelAndView index () {
-
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("index");
         return modelAndView;
