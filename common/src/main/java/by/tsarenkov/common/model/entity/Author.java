@@ -28,7 +28,7 @@ public class Author  implements Serializable {
     private String patronymic;
     @Column(name = "calendar")
     private Calendar dateOfBirth;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "author_book",
             joinColumns = @JoinColumn(name = "id_author"),
             inverseJoinColumns = @JoinColumn(name = "id_book")

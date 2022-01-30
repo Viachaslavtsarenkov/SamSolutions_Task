@@ -15,7 +15,7 @@ class AuthorsList extends React.Component {
     }
 
     loadAuthors() {
-        axios.get('/authors').then(
+        axios.get('/authors/').then(
             (response) => {
                 this.setState({
                     authors: response.data

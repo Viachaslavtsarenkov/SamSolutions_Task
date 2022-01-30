@@ -8,7 +8,7 @@ import SignUP from "./component/auth/SignUp";
 
 ReactDOM.render(
   <React.StrictMode>
-      <SignUP />
+      <SignUP/>
   </React.StrictMode>,
   document.getElementById('root')
 );

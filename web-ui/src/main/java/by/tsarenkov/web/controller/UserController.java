@@ -1,6 +1,5 @@
 package by.tsarenkov.web.controller;
 
-import by.tsarenkov.common.model.UserDto;
 import by.tsarenkov.common.model.entity.User;
 import by.tsarenkov.service.UserService;
 import by.tsarenkov.service.exception.MailAlreadyInUse;

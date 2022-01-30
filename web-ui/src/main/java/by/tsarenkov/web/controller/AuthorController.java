@@ -21,8 +21,10 @@ public class AuthorController {
     }
 
     @GetMapping("/")
-    public void getAuthors() {
+    public List<Author> getAuthors() {
         List<Author> authorList = service.getAllAuthors();
+        System.out.println(authorList);
+        return authorList;
     }
 
     @GetMapping("/{id}")
