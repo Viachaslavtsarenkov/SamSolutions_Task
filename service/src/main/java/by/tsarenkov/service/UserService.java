@@ -2,12 +2,11 @@ package by.tsarenkov.service;
 
 import by.tsarenkov.common.model.entity.User;
 import by.tsarenkov.common.model.enumeration.UserStatus;
-import by.tsarenkov.service.exception.MailAlreadyInUse;
 
 import java.util.List;
 
 public interface UserService {
-   User registerUser(User user) throws MailAlreadyInUse;
+   User registerUser(User user);
    boolean checkUserByEmail(String email);
    void deleteUser(Long id);
    void updateUser(User user);

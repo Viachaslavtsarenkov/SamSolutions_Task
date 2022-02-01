@@ -2,12 +2,15 @@ package by.tsarenkov.web.controller;
 
 import by.tsarenkov.common.model.entity.User;
 import by.tsarenkov.service.UserService;
-import by.tsarenkov.service.exception.MailAlreadyInUse;
 import by.tsarenkov.service.impl.UserServiceImpl;
+import by.tsarenkov.service.validator.UserServiceValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
@@ -16,12 +19,17 @@ import java.util.List;
 public class UserController {
 
     private UserService userService;
+    private Validator userValidator;
+
+    @Autowired
+    public void setUserValidator(UserServiceValidator userValidator) {
+        this.userValidator = userValidator;
+    }
 
     @Autowired
     public void setUserService(UserServiceImpl userService) {
         this.userService = userService;
     }
-
 
     @GetMapping("/{id}")
     public void getUserById(@PathVariable Long id) {
@@ -35,13 +43,10 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> createUser(@RequestBody User user) {
-        try {
-            userService.registerUser(user);
-        } catch (MailAlreadyInUse e) {
-            //todo
-        }
-        //todo change return value
+    public ResponseEntity<?> createUser(@RequestBody User user, BindingResult bindingResult) {
+        userValidator.validate(user, bindingResult);
+        System.out.println(bindingResult);
+        //userService.registerUser(user);
         return ResponseEntity.ok(user);
 
     }

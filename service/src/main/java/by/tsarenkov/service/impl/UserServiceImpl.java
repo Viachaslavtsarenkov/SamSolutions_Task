@@ -6,8 +6,9 @@ import by.tsarenkov.common.model.enumeration.Role;
 import by.tsarenkov.common.model.enumeration.UserStatus;
 import by.tsarenkov.db.repository.UserRepository;
 import by.tsarenkov.service.UserService;
-import by.tsarenkov.service.exception.MailAlreadyInUse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,23 +17,30 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     public void setUser(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @PreAuthorize("hasRole('GUEST')")
     @Override
-    public User registerUser(User user) throws MailAlreadyInUse {
-        //todo validation
-        // todo SECURITY
-        if (checkUserByEmail(user.getEmail())) {
-            throw new MailAlreadyInUse();
-        } else {
-            user.setStatus(UserStatus.NO_ACTIVATED);
-            user.setRole(UserRole.builder()
-                    .role(Role.CUSTOMER).build());
-        }
+    public User registerUser(User user) {
+        user.setStatus(UserStatus.NO_ACTIVATED);
+        user.setPassword(passwordEncoder.encode(new String(user.getPassword())).toCharArray());
+        user.setRole(UserRole.builder()
+                .role(Role.CUSTOMER).build());
         return userRepository.save(user);
     }
 
