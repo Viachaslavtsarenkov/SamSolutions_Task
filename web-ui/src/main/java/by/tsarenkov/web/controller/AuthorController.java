@@ -20,16 +20,16 @@ public class AuthorController {
         this.service = service;
     }
 
-    @GetMapping("/")
+    @GetMapping()
     public List<Author> getAuthors() {
         List<Author> authorList = service.getAllAuthors();
-        System.out.println(authorList);
         return authorList;
     }
 
     @GetMapping("/{id}")
-    public void getOne(@PathVariable Long id) {
+    public Author getOne(@PathVariable Long id) {
         Author author = service.getAuthor(id);
+        return author;
     }
 
     @DeleteMapping("/{id}")
@@ -39,6 +39,7 @@ public class AuthorController {
 
     @PostMapping()
     public void createAuthor(@RequestBody Author author) {
+        //todo
         service.saveAuthor(author);
     }
 
