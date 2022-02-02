@@ -4,6 +4,7 @@ import by.tsarenkov.common.model.entity.Author;
 import by.tsarenkov.service.AuthorService;
 import by.tsarenkov.service.impl.AuthorServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
