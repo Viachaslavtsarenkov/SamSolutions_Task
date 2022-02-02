@@ -36,7 +36,7 @@ public class User implements Serializable {
     private String address;
     @Column(name = "password")
     private char[] password;
-    @OneToOne(optional = false, mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Cart cart;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "books_cart",
@@ -44,7 +44,7 @@ public class User implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "id_cart")
     )
     private Collection<Book> books;
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "id_role")
     private UserRole role;
     @OneToMany

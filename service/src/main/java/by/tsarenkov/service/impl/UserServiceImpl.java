@@ -1,5 +1,6 @@
 package by.tsarenkov.service.impl;
 
+import by.tsarenkov.common.model.entity.Cart;
 import by.tsarenkov.common.model.entity.User;
 import by.tsarenkov.common.model.entity.UserRole;
 import by.tsarenkov.common.model.enumeration.Role;
@@ -34,7 +35,6 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
-    @PreAuthorize("hasRole('GUEST')")
     @Override
     public User registerUser(User user) {
         user.setStatus(UserStatus.NO_ACTIVATED);
