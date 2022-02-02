@@ -3,8 +3,8 @@ import axios from "axios";
 import '../../styles/auth/login.sass'
 import '../../styles/common/common.sass'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Form, Button } from 'react-bootstrap';
-import NavBar from '../commom/NavBar';
+import { Form, Button, Navbar, Nav } from 'react-bootstrap';
+import { Redirect } from 'react-router-dom';
 
 class SignUP extends React.Component {
 
@@ -17,12 +17,15 @@ class SignUP extends React.Component {
         password: ''
         };
 
+
     constructor(props) {
         super(props);
         this.state = {
             user : this.userInfo,
             isEqual: true,
-            repeatedPassword: ''
+            repeatedPassword: '',
+            errors : {password: ''},
+            redirect: null,
         }
         this.handleChange = this.handleChange.bind(this);
         this.registerUser = this.registerUser.bind(this);
@@ -46,7 +49,6 @@ class SignUP extends React.Component {
         if(name === "password" || name === "repeatedPassword") {
             this.checkEqualPassword();
         }
-        console.log(this.state.isEqual)
         this.setState({user});
     }
 
@@ -57,19 +59,20 @@ class SignUP extends React.Component {
     registerUser(event) {
         event.preventDefault();
         const {user} = this.state;
-        console.log(user)
-        axios.post("/users", this.state.user).then((response) => {
-
+        axios.post("/signIn", this.state.user).then((response) => {
+            this.setState({ redirect: '/login' });
         }).catch((error) => {
-            console.log(error)
+            this.setState({error : error.response.data})
         })
     }
 
     render() {
+        if (this.state.redirect) {
+            return <Redirect to={this.state.redirect} />;
+        }
         const {user} = this.state;
         return (
             <div className={"wrapper"}>
-                <NavBar/>
                 <Form onSubmit={this.registerUser} className={"login_form"}>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label>Фамилия</Form.Label>
@@ -77,20 +80,23 @@ class SignUP extends React.Component {
                             required
                             onChange={this.handleChange}
                             type="text"
-                            name="name"
+                            name="surname"
+                            value={this.state.user.surname}
                             placeholder="Введите имя" />
                         <Form.Label>Имя</Form.Label>
                         <Form.Control
                             required
                             onChange={this.handleChange}
                             type="text"
-                            name="surname"
+                            value={this.state.user.name}
+                            name="name"
                             placeholder="Введите фамилию" />
                         <Form.Label>Отчество</Form.Label>
                         <Form.Control
                             required
                             onChange={this.handleChange}
                             type="text"
+                            value={this.state.user.patronymic}
                             name="patronymic"
                             placeholder="Введите отчество" />
                         <Form.Label>Номер телефона</Form.Label>
@@ -99,6 +105,7 @@ class SignUP extends React.Component {
                             onChange={this.handleChange}
                             type="text"
                             name="phoneNumber"
+                            value={this.state.user.phoneNumber}
                             placeholder="Введите номер телефона" />
                         <Form.Label>Email</Form.Label>
                         <Form.Control
@@ -106,6 +113,7 @@ class SignUP extends React.Component {
                             onChange={this.handleChange}
                             ype="email"
                             name="email"
+                            value={this.state.user.email}
                             placeholder="Введите email" />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -115,6 +123,7 @@ class SignUP extends React.Component {
                             onChange={this.handleChange}
                             type="password"
                             name="password"
+                            value={this.state.user.password}
                             placeholder="Введите пароль" />
                         <Form.Label>Подтвержение пароля</Form.Label>
                         <Form.Control

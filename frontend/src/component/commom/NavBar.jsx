@@ -26,7 +26,11 @@ class NavBar extends React.Component {
                                 navbarScroll
                             >
                                 <Nav.Link href="/main">Главная страницы</Nav.Link>
-                                <Nav.Link href="/main">Каталог книг</Nav.Link>
+                                <Nav.Link href="/signUp">Каталог книг</Nav.Link>
+                                <NavDropdown title="Авторы" id="navbarScrollingDropdown">
+                                    <NavDropdown.Item href="/authorNew">Добавить</NavDropdown.Item>
+                                    <NavDropdown.Item href="/authors">Все</NavDropdown.Item>
+                                </NavDropdown>
                                 <NavDropdown title="Жанры" id="navbarScrollingDropdown">
                                     <NavDropdown.Item href="#action3">Драма</NavDropdown.Item>
                                     <NavDropdown.Item href="#action4">Фэнтези</NavDropdown.Item>
@@ -54,8 +58,6 @@ class NavBar extends React.Component {
                         </Navbar.Collapse>
                     </Container>
                 </Navbar>
-
-
             </div>
 
         );
