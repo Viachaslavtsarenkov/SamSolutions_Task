@@ -19,7 +19,7 @@ public class Cart {
     @Column(name = "id_cart")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idCard;
-    @OneToOne(optional = false)
+    @OneToOne
     @JoinColumn(name = "id_user")
     private User user;
     @ManyToMany

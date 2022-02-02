@@ -1,0 +1,13 @@
+{
+  "name": "SamSolutions_Task",
+  "version": "1.0.0",
+  "dependencies": {
+    "react-bootstrap": "^2.1.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "axios": "^0.25.0",
+    "react": "^17.0.2",
+    "react-router-dom": "^6.2.1"
+  }
+}
