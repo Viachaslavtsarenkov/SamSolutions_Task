@@ -4,7 +4,9 @@ import by.tsarenkov.common.model.enumeration.UserStatus;
 import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -35,20 +37,22 @@ public class User implements Serializable {
     @Column(name = "address")
     private String address;
     @Column(name = "password")
-    private char[] password;
+    private String password;
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Cart cart;
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "books_cart",
             joinColumns = @JoinColumn(name = "id_book"),
             inverseJoinColumns = @JoinColumn(name = "id_cart")
     )
-    private Collection<Book> books;
-    @ManyToOne(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "id_role")
+    private List<Book> books = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_role", nullable = false)
     private UserRole role;
     @OneToMany
-    private Collection<Payment> payments;
+    private List<Payment> payments = new ArrayList<>();
     @Column(name = "status")
     private UserStatus status;
+    @Column(name = "code")
+    private String code;
 }

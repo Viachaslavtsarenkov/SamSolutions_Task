@@ -3,8 +3,10 @@ package by.tsarenkov.common.model.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name ="sale")
@@ -31,5 +33,5 @@ public class Sale {
             joinColumns = @JoinColumn(name = "id_sale"),
             inverseJoinColumns = @JoinColumn(name = "id_book")
     )
-    private Collection<Book> books;
+    private List<Book> books = new ArrayList<>();
 }

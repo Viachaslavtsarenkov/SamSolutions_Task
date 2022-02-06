@@ -3,7 +3,9 @@ package by.tsarenkov.common.model.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "cart")
@@ -27,5 +29,5 @@ public class Cart {
             joinColumns = @JoinColumn(name = "id_cart"),
             inverseJoinColumns = @JoinColumn(name = "id_book")
     )
-    private Collection<Book> books;
+    private List<Book> books = new ArrayList<>();
 }
