@@ -1,9 +1,12 @@
 package by.tsarenkov.web.security.controller;
 
 import by.tsarenkov.common.model.UserDetailsImpl;
+import by.tsarenkov.common.model.dto.ActivationDto;
 import by.tsarenkov.common.model.dto.LogInDto;
-import by.tsarenkov.common.model.entity.User;
+import by.tsarenkov.common.model.dto.SignUpDto;
 import by.tsarenkov.service.UserService;
+import by.tsarenkov.service.exception.ActivationAccountException;
+import by.tsarenkov.service.exception.EmailAlreadyTakenException;
 import by.tsarenkov.service.validator.UserDataValidator;
 import by.tsarenkov.web.controller.response.MessageResponse;
 import by.tsarenkov.web.controller.response.UserAuthenticationResponse;
@@ -17,6 +20,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -36,7 +41,7 @@ import java.util.stream.Collectors;
 public class AuthorizationController {
 
     private static final String POST_LOGIN_MAPPING = "/login";
-    private static final String POST_SIGN_IN_MAPPING = "/signIn";
+    private static final String POST_SIGN_IN_MAPPING = "/signUp";
     private static final String EMAIL_CLAIM = "email";
     private static final String ROLE_CLAIM = "role";
     private static final String NAME_CLAIM = "name";
@@ -51,35 +56,37 @@ public class AuthorizationController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @PostMapping(POST_SIGN_IN_MAPPING)
-    public ResponseEntity<?> registerUser(@RequestBody User user, BindingResult result) {
+    @PostMapping(value = POST_SIGN_IN_MAPPING, consumes = {"application/json"})
+    public ResponseEntity<?> registerUser(@RequestBody SignUpDto userDto, BindingResult result) {
         Map<String, String> errors = new HashMap<>();
-        userValidator.validate(user, result);
+        userValidator.validate(userDto, result);
+
         if(result.hasErrors()) {
             for(FieldError error : result.getFieldErrors()) {
                 errors.put(error.getField(), error.getCode());
+
             }
             return ResponseEntity.badRequest().body(errors);
         }
-        //todo check email
+        try {
+            userService.registerUser(userDto);
+        } catch (EmailAlreadyTakenException e) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Email already taken"));
+        }
 
-        System.out.println(userService.registerUser(user));
         return ResponseEntity.ok(new MessageResponse("Registration is done"));
     }
 
     @PostMapping(POST_LOGIN_MAPPING)
     public ResponseEntity<?> authenticate(@RequestBody LogInDto userDto) {
         Authentication authentication;
-        System.out.println(userDto.getLogin() + userDto.getPassword());
         try {
             authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(userDto.getLogin(),
                            userDto.getPassword()));
-        } catch (AuthenticationException e) {
-            return ResponseEntity.badRequest().body(new MessageResponse("error"));
+            } catch (AuthenticationException e) {
+            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
         }
-
-        System.out.println("before ______________________________________________________");
         UserDetailsImpl authenticatedUser = (UserDetailsImpl) authentication.getPrincipal();
         String accessToken = JWT.create()
                 .withSubject(authenticatedUser.getEmail())
@@ -92,7 +99,13 @@ public class AuthorizationController {
                         .map(SimpleGrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .withClaim(NAME_CLAIM, authenticatedUser.getUsername())
                 .sign(Algorithm.HMAC256(SECRET_KEY));
-        System.out.println("______________________________________________________");
         return ResponseEntity.ok(new UserAuthenticationResponse(accessToken));
+    }
+
+    @PostMapping("/activation")
+    public ResponseEntity<?> activateAccount(@RequestBody ActivationDto activationDto)
+            throws ActivationAccountException {
+        userService.activateAccount(activationDto);
+        return ResponseEntity.ok(new MessageResponse("The account is activated"));
     }
 }
