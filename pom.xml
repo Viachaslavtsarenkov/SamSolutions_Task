@@ -5,7 +5,6 @@
     <groupId>by.tsarenkov</groupId>
     <artifactId>SamSolutions_Task</artifactId>
     <version>1.0-SNAPSHOT</version>
-
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
@@ -20,7 +19,11 @@
         <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
         <springframeword.data.version>2.6.1</springframeword.data.version>
         <spring-security.version>5.6.1</spring-security.version>
-        <jackson.version>2.6.3</jackson.version>
+        <jackson.version>2.13.1</jackson.version>
+        <jwt.version>3.18.3</jwt.version>
+        <mail.version>1.4.7</mail.version>
+        <lombok.version>1.18.22</lombok.version>
+        <spring.auth.version>2.3.4.RELEASE</spring.auth.version>
     </properties>
 
     <dependencies>
@@ -73,8 +76,13 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>RELEASE</version>
-            <scope>compile</scope>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
@@ -94,17 +102,22 @@
         <dependency>
             <groupId>org.springframework.security.oauth</groupId>
             <artifactId>spring-security-oauth2</artifactId>
-            <version>2.3.4.RELEASE</version>
+            <version>${spring.auth.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.13.1</version>
+            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
-            <version>3.18.3</version>
+            <version>${jwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>${mail.version}</version>
         </dependency>
     </dependencies>
     <packaging>pom</packaging>
@@ -113,6 +126,6 @@
         <module>db</module>
         <module>payment</module>
         <module>service</module>
-        <module>web-ui</module>
+        <module>controller</module>
     </modules>
 </project>
