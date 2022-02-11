@@ -22,14 +22,12 @@ public class Author  implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id_author", unique = true)
     private Long id;
-    @Column(name = "name")
-    private String name;
-    @Column(name = "surname")
-    private String surname;
-    @Column(name = "patronymic")
-    private String patronymic;
-    @Column(name = "calendar")
-    private Calendar dateOfBirth;
+    @Column(name = "pseudonym")
+    private String pseudonym;
+    @Column(name = "description")
+    private String description;
+    @Column(name="image_name")
+    private String imageName;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "author_book",
             joinColumns = @JoinColumn(name = "id_author"),
