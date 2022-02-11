@@ -10,7 +10,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
-@PropertySource("classpath:mail.properties")
+@PropertySource(value = "classpath:mail.properties", encoding = "UTF-8")
 public class MailServiceImpl implements MailService {
 
     @Autowired
@@ -25,8 +25,8 @@ public class MailServiceImpl implements MailService {
     public void sendActivationMail(String email, String code) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
-        message.setSubject(String.format(activationMessage, email, code));
-        message.setText(code);
+        message.setSubject("Activation");
+        message.setText(String.format(activationMessage, email, code));
         mailSender.send(message);
     }
 
