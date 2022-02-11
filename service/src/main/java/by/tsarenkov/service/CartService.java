@@ -7,7 +7,6 @@ import java.util.List;
 
 public interface CartService {
     void saveBookToCart(Long bookId, Long userId);
-    void deleteBookFromCart(Long boodId, Long userId);
+    void deleteBookFromCart(Long bookId, Long userId);
     Cart getCart(Long idUser);
-    List<Author> getAllAuthors();
 }

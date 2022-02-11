@@ -25,9 +25,4 @@ public class CartServiceImpl implements CartService {
     public Cart getCart(Long idUser) {
         return null;
     }
-
-    @Override
-    public List<Author> getAllAuthors() {
-        return null;
-    }
 }
