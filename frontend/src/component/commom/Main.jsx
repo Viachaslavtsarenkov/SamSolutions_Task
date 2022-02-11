@@ -5,8 +5,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 class Main extends React.Component {
     render () {
         return (
-            <div className={"wrapper"}>
-            </div>
+            <main>
+                <div className={"wrapper"}>
+                </div>
+            </main>
+
         )
     }
 }

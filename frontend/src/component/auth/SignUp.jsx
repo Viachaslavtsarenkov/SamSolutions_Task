@@ -3,8 +3,9 @@ import axios from "axios";
 import '../../styles/auth/login.sass'
 import '../../styles/common/common.sass'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Form, Button, Navbar, Nav } from 'react-bootstrap';
+import {Form, Button} from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
+import AuthorizationService from "../../service/AuthorizationService";
 
 class SignUP extends React.Component {
 
@@ -14,8 +15,9 @@ class SignUP extends React.Component {
         patronymic : '',
         email: '',
         phoneNumber: '',
-        password: ''
-        };
+        password: '',
+        matchingPassword: ''
+    };
 
 
     constructor(props) {
@@ -23,8 +25,7 @@ class SignUP extends React.Component {
         this.state = {
             user : this.userInfo,
             isEqual: true,
-            repeatedPassword: '',
-            errors : {password: ''},
+            errors : {},
             redirect: null,
         }
         this.handleChange = this.handleChange.bind(this);
@@ -40,33 +41,30 @@ class SignUP extends React.Component {
         const name = target.name;
         let user = {...this.state.user};
         user[name] = value;
-        if (name === "repeatedPassword") {
-            this.setState({repeatedPassword: value}, () => {
-                this.checkEqualPassword();
-            })
-            this.checkEqualPassword();
-        }
-        if(name === "password" || name === "repeatedPassword") {
-            this.checkEqualPassword();
-        }
         this.setState({user});
     }
 
-    checkEqualPassword() {
-        this.setState( {isEqual : this.state.user.password === this.state.repeatedPassword});
-    }
 
     registerUser(event) {
         event.preventDefault();
         const {user} = this.state;
-        axios.post("/signIn", this.state.user).then((response) => {
+        axios.post("/signUp", this.state.user).then((response) => {
             this.setState({ redirect: '/login' });
         }).catch((error) => {
-            this.setState({error : error.response.data})
+            this.setState({errors : error.response.data})
+            console.log(this.state.error)
+            this.checkValidityMessage();
         })
     }
 
+    checkValidityMessage() {
+        console.log(this.state.errors)
+    }
+
     render() {
+        if(AuthorizationService.getCurrentUser() === null) {
+            return <Redirect to={"/"}/>
+        }
         if (this.state.redirect) {
             return <Redirect to={this.state.redirect} />;
         }
@@ -83,6 +81,9 @@ class SignUP extends React.Component {
                             name="surname"
                             value={this.state.user.surname}
                             placeholder="Введите имя" />
+                        <div className={"error_validation"}>
+                            {this.state.errors['surname']}
+                        </div>
                         <Form.Label>Имя</Form.Label>
                         <Form.Control
                             required
@@ -91,9 +92,11 @@ class SignUP extends React.Component {
                             value={this.state.user.name}
                             name="name"
                             placeholder="Введите фамилию" />
+                        <div className={"error_validation"}>
+                            {this.state.errors['name']}
+                        </div>
                         <Form.Label>Отчество</Form.Label>
                         <Form.Control
-                            required
                             onChange={this.handleChange}
                             type="text"
                             value={this.state.user.patronymic}
@@ -115,6 +118,9 @@ class SignUP extends React.Component {
                             name="email"
                             value={this.state.user.email}
                             placeholder="Введите email" />
+                        <div className={"error_validation"}>
+                            {this.state.errors['email']}
+                        </div>
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicPassword">
                         <Form.Label>Пароль</Form.Label>
@@ -130,11 +136,13 @@ class SignUP extends React.Component {
                             required
                             onChange={this.handleChange}
                             type="password"
-                            name="repeatedPassword"
+                            name="matchingPassword"
                             placeholder="Введите повторно пароль" />
                         <Form.Text className="text-muted">
-                            {this.state.isEqual ? '' : 'Пароли должны совпадать'}
                         </Form.Text>
+                        <div className={"error_validation"}>
+                            {this.state.errors["password"]}
+                        </div>
                     </Form.Group>
                     <Button variant="primary" type="Зарегистрироваться">
                         Регистрация
