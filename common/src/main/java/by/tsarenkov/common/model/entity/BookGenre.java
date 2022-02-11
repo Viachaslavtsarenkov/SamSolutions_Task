@@ -4,7 +4,9 @@ import by.tsarenkov.common.model.enumeration.Genre;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "genre")
@@ -27,5 +29,5 @@ public class BookGenre {
             joinColumns = @JoinColumn(name = "id_genre"),
             inverseJoinColumns = @JoinColumn(name = "id_book")
     )
-    private Collection<Book> books;
+    private List<Book> books = new ArrayList<>();
 }
