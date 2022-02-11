@@ -1,11 +1,7 @@
 package by.tsarenkov.common.model;
 
-import by.tsarenkov.common.model.entity.UserRole;
 import by.tsarenkov.common.model.enumeration.UserStatus;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
+import lombok.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -13,26 +9,26 @@ import java.util.Collection;
 import java.util.Set;
 
 
-@AllArgsConstructor
+@ToString
 @Getter
+@Setter
+@AllArgsConstructor
 public class UserDetailsImpl implements UserDetails {
 
-    private String name;
-    private String surname;
-    private String patronymic;
     private String email;
-    private char[] password;
+    private String password;
     private Set<SimpleGrantedAuthority> authorities;
     private UserStatus status;
 
+
     @Override
     public Collection<? extends SimpleGrantedAuthority> getAuthorities() {
-        return null;
+        return authorities;
     }
 
     @Override
     public String getPassword() {
-        return String.format("%s %s %s", name, surname, patronymic);
+        return password;
     }
 
     @Override

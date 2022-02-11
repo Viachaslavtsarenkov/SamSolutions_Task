@@ -1,5 +1,6 @@
 package by.tsarenkov.common.model.entity;
 
+import by.tsarenkov.common.model.enumeration.Role;
 import by.tsarenkov.common.model.enumeration.UserStatus;
 import lombok.*;
 import javax.persistence.*;
@@ -46,9 +47,8 @@ public class User implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "id_cart")
     )
     private List<Book> books = new ArrayList<>();
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_role", nullable = false)
-    private UserRole role;
+    @Enumerated(EnumType.ORDINAL)
+    private Role role;
     @OneToMany
     private List<Payment> payments = new ArrayList<>();
     @Column(name = "status")
