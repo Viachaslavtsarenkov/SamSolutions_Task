@@ -46,11 +46,9 @@ public class AuthorServiceImpl implements AuthorService {
             if(image.getSize() == 0L) {
                 author.setImageName(DEFAULT_FILE_PATH);
             } else {
-                if(author.getImageName().equals(DEFAULT_FILE_PATH)) {
-                    String fileName = CodeGenerator.generateCode();
-                    author.setImageName(fileName);
-                }
-                dest = new File(String.format(author.getImageName()));
+                String fileName = CodeGenerator.generateCode();
+                author.setImageName(String.format(FILE_PATH, fileName));
+                dest = new File(author.getImageName());
                 image.transferTo(dest);
             }
         } catch (IllegalStateException e) {
@@ -103,5 +101,10 @@ public class AuthorServiceImpl implements AuthorService {
         List<Author> authors = new ArrayList<>();
         authorRepository.findAll().forEach(authors::add);
         return authors;
+    }
+
+    @Override
+    public List<Author> findAuthor(String pseudonym) {
+        return  authorRepository.findAuthorByPseudonymContaining(pseudonym);
     }
 }

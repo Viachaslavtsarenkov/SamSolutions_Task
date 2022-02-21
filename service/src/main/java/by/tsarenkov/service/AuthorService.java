@@ -15,4 +15,5 @@ public interface AuthorService {
     void updateAuthor(Author author, MultipartFile image);
     Author getAuthor(Long id) throws NoSuchAuthorException;
     List<Author> getAllAuthors();
+    List<Author> findAuthor(String name);
 }

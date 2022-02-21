@@ -10,6 +10,7 @@ import by.tsarenkov.service.security.SecurityContextService;
 import by.tsarenkov.web.controller.response.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,9 +33,8 @@ public class AuthorController {
 
     @GetMapping()
     public List<Author> getAuthors() {
-        //System.out.println(((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getEmail());
-        List<Author> authorList = service.getAllAuthors();
-        return authorList;
+       List<Author> authorList = service.getAllAuthors();
+       return authorList;
     }
 
     @GetMapping("/{id}")
@@ -45,12 +45,14 @@ public class AuthorController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteAuthor(@PathVariable Long id) {
         service.deleteAuthor(id);
         return ResponseEntity.ok("Author was deleted");
     }
 
     @PostMapping(consumes = {"multipart/form-data"})
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createAuthor(@RequestPart("image") MultipartFile image,
                              @RequestPart("author") AuthorDto authorDto) {
         service.saveAuthor(authorDto, image);
@@ -58,10 +60,16 @@ public class AuthorController {
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateAuthor(@RequestPart("image") MultipartFile image,
                              @RequestPart("author")@RequestBody Author author) {
         service.updateAuthor(author, image);
         return ResponseEntity.ok(new MessageResponse("Author is updated"));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchAuthor(@RequestParam("searchString") String searchString) {
+        return ResponseEntity.ok().body(service.findAuthor(searchString));
     }
 
 }
