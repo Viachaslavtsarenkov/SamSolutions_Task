@@ -30,8 +30,18 @@ public class Book implements Serializable {
     private String description;
     @Column(name = "price")
     private double price;
+    @Column(name="weight")
+    private double weight;
+    @Column(name="published_year")
+    private int publishedYear;
     @Column(name = "in_stock")
     private boolean inStock;
+    @Column(name = "material_cover")
+    private String materialCover;
+    @Column(name = "amount_pages")
+    private int amountPages;
+    @Column(name="image")
+    private String imageName;
     @ManyToMany
     @JoinTable(name = "author_book",
             joinColumns = @JoinColumn(name = "id_author"),

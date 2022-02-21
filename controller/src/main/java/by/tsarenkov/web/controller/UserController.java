@@ -4,6 +4,7 @@ import by.tsarenkov.common.model.entity.User;
 import by.tsarenkov.service.UserService;
 import by.tsarenkov.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -26,6 +27,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('CUSTOMER')")
     public void updateUser(@PathVariable Long id, @RequestBody User user) {
         userService.updateUser(user);
     }
@@ -36,6 +38,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('CUSTOMER')")
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
     }

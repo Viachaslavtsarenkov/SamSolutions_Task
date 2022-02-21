@@ -4,12 +4,15 @@ import by.tsarenkov.common.model.entity.Book;
 import by.tsarenkov.common.model.entity.Cart;
 import by.tsarenkov.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/cart")
 public class CartController {
+
 
     @Autowired
     private CartService cartService;
@@ -27,7 +30,15 @@ public class CartController {
     }
 
     @DeleteMapping()
+    @PreAuthorize("hasRole('CUSTOMER')")
     public Cart removeBookFromCart(@RequestBody Book book) {
+        //todo
+        return null;
+    }
+
+    @GetMapping()
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<?> checkBookIntoCart(@Param(value = "book_id") Long id) {
         return null;
     }
 

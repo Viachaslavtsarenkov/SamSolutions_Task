@@ -1,10 +1,13 @@
 package by.tsarenkov.web.controller;
 
+import by.tsarenkov.common.model.dto.AuthorDto;
 import by.tsarenkov.common.model.entity.Book;
 import by.tsarenkov.service.BookService;
 import by.tsarenkov.service.impl.BookServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -31,17 +34,21 @@ public class BookController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteAuthor(@PathVariable Long id) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deleteBook(@PathVariable Long id) {
         service.deleteBook(id);
     }
 
     @PostMapping()
-    public void createBook(@RequestBody Book book) {
-        service.saveBook(book);
+    @PreAuthorize("hasRole('ADMIN')")
+    public void createBook(@RequestPart("image") MultipartFile image,
+                           @RequestPart("author") Book book) {
+        service.saveBook(book, image);
     }
 
     @PatchMapping("/{id}")
-    public void updateAuthor(@RequestBody Book book, @PathVariable Long id) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public void updateBook(@RequestBody Book book, @PathVariable Long id) {
         service.updateBook(book);
     }
 }
