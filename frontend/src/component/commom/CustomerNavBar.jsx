@@ -29,15 +29,6 @@ function CustomerNavBar() {
                         <Link to="/main">Главная страницы</Link>
                         <Link to="/signUp">Каталог книг</Link>
                     </Nav>
-                    <Form className="d-flex">
-                        <FormControl
-                            type="search"
-                            placeholder="Введите что-нибудь"
-                            className="me-2"
-                            aria-label="Search"
-                        />
-                        <Button variant="outline-success">Поиск</Button>
-                    </Form>
                     <Nav>
                         <Link to="/cart">
                             <img src={cart} width={"30px"} height={"30px"} alt={"cart"}/>

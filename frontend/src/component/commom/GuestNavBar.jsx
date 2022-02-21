@@ -12,14 +12,16 @@ function GuestNavBar() {
             <header className={"header"}>
                 <div className={"wrapper"}>
                     <nav className={"header_menu"}>
+                        <Link to="/" className={"nav_link"}>
+                            <img  src={logo} width={"55px"} height={"55px"} alt={"book store"}/>
+                        </Link>
                         <Link to="/main" className={"nav_link"}>Каталог книг</Link>
                         <Link to="/signUp" className={"nav_link"}>Скидки</Link>
-                        <Link to="/" className={"nav_link"}>
-                            <img  src={logo} width={"80px"} height={"60px"} alt={"book store"}/>
-                        </Link>
                         <Link to="/signUp" className={"nav_link"}>О магазине</Link>
                         <Link to="/signUp" className={"nav_link"}>Доставка</Link>
+                        <Link to="/signUp" className={"nav_link"}>Контакты</Link>
                         <div className={"user_panel"}>
+                            <input className={"search_input"}/> <input type={"button"} className={"search_button"} value={"Поиск"}/>
                             <Link to="/cart">
                                 <img src={cart} width={"30px"} height={"30px"} alt={"cart"}/>
                             </Link>

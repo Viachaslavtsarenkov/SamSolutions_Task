@@ -6,6 +6,7 @@ import NavBar from'./component/commom/NavBar'
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import Activation from "./component/auth/Activation";
 import Author from "./component/authors/Author"
+import Book from "./component/books/Book"
 
 function App()  {
 
@@ -18,7 +19,7 @@ function App()  {
     <div className="App">
         <Router>
             <Switch>
-                <div className="container">
+                <div>
                     <NavBar/>
                     <Route exact path={'/'} component={Main}>
                     </Route>
@@ -30,6 +31,7 @@ function App()  {
                     </Route>
                     <Route exact path={"/activation"} component={Activation}>
                     </Route>
+                    <Route path={"/books"} component={Book}></Route>
                 </div>
             </Switch>
         </Router>

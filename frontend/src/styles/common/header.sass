@@ -1,28 +1,41 @@
+$header-font-family: 'Roboto'
+$header-font-size: 18px
+$header-font-color: #000000
+
 .header
+  box-shadow: 0px 0px 5px 0px black
 
 .nav_link
-  color: #000000
+  color: $header-font-color
   text-decoration: none
-  font-size: 18px
-  z-index: 5
+  font-size: $header-font-size
 
 
 
 .header_menu
   display: flex
   flex-direction: row
-  justify-content: space-evenly
+  justify-content: space-between
   align-items: center
   padding: 10px
+  font-family: $header-font-family
+
+.search_button
+  width: 80px
+  height: 30px
+  color: white
+  font-size: 16px
+  border-radius: 5px
+  border: none
+  background-color: #393F72
+
+.search_input
+  outline: none
+  width: 300px
 
 .user_panel
-  background: white
-  width: 1440px
-  margin: 0 auto
-  position: fixed
   display: flex
-  flex-direction: row
-  justify-content: right
+  align-items: center
+  gap: 10px
 
 .user_panel img
-  margin-right: 10px

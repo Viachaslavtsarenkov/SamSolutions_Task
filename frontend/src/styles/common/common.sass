@@ -1,3 +1,12 @@
+$btn-color: #FFFFFF
+$btn-dark-text-color: 000000
+$btn-light-text-color: #FFFFFF
+$btn-light-background-color: #F5F5F5
+$btn-dark-background-color: #808000
+$btn-text-size: 20px
+$font-family-content: 'Roboto'
+
+
 body
   background-color: white
 
@@ -7,3 +16,25 @@ body
 
 .error_validation
   color: red
+
+a
+  color: black
+  font-family: $font-family-content
+
+a.btn_light
+  text-decoration: none
+  padding: 10px 30px
+  text-align: center
+  color: $btn-dark-text-color
+  background: $btn-light-background-color
+  border-radius: 10px
+  display: inline-block
+  margin-top: 300px
+  margin-bottom: 300px
+  transition-duration: 0.2s
+  font-size: $btn-text-size
+
+a.btn_light:hover
+  color: $btn-light-text-color
+  background: $btn-dark-background-color
+

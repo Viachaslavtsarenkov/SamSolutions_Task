@@ -19,7 +19,6 @@ function AuthorView() {
         const url = "/authors/"
         console.log(id)
         axios.get(url + id).then((response)=>{
-            console.log(response.data)
             setAuthor(response.data)
         }).catch((error) => {
 
@@ -27,8 +26,18 @@ function AuthorView() {
     }, []);
 
     function getAuthor(id) {
-        const url = "/authors/"
+        const url = "/authors/";
         axios.get((url, id) =>{
+        }).then((response)=>{
+            setAuthor(response.data)
+        }).catch((error) => {
+
+        })
+    }
+
+    function deleteAuthor(id) {
+        const url = "/authors/";
+        axios.delete((url, id) =>{
         }).then((response)=>{
             setAuthor(response.data)
         }).catch((error) => {
@@ -38,15 +47,33 @@ function AuthorView() {
 
     return (
         <div className={"wrapper"} >
-            <Link to={{
-                pathname : "/authors/" + author.id + "/edit"
-            }}>
-                Редактировать
-            </Link>
-            {author.id}
-            {author.description}
-            {author.pseudonym}
-            <img src={author.imageName}/>
+            <div className={"author_view_container"}>
+                <img src={author.imageName} className={"author_picture"}/>
+
+                <div className={"author_description"}>
+                    <h2>{author.pseudonym}</h2>
+                    Об авторе<br></br>
+                    {author.description}
+                    <div className={"action_btn_container"}>
+                        <Link className={"action_link"}
+                              to={{
+                                  pathname : "/authors/" + author.id + "/edit"
+                              }}
+                        >
+                            Редактировать
+                        </Link>
+                        <Link className={"action_link delete_btn"}
+                              to={{
+                                  pathname : "/authors/" + author.id + "/edit"
+                              }}
+                        >
+                            Удалить
+                        </Link>
+                    </div>
+
+                </div>
+            </div>
+
         </div>
     );
 }

@@ -1,8 +1,6 @@
 import React from "react";
 import axios from "axios";
 import '../../styles/auth/login.sass'
-import '../../styles/common/common.sass'
-import 'bootstrap/dist/css/bootstrap.min.css';
 import {Form, Button} from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 import AuthorizationService from "../../service/AuthorizationService";
@@ -71,11 +69,11 @@ class SignUP extends React.Component {
         const {user} = this.state;
         return (
             <div className={"wrapper"}>
-                <Form onSubmit={this.registerUser} className={"login_form"}>
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label>Фамилия</Form.Label>
-                        <Form.Control
+                <form onSubmit={this.registerUser} className={"sign_up_form"}>
+                        <label>Фамилия</label>
+                        <input
                             required
+                            className={"text_field"}
                             onChange={this.handleChange}
                             type="text"
                             name="surname"
@@ -84,9 +82,10 @@ class SignUP extends React.Component {
                         <div className={"error_validation"}>
                             {this.state.errors['surname']}
                         </div>
-                        <Form.Label>Имя</Form.Label>
-                        <Form.Control
+                        <label>Имя</label>
+                        <input
                             required
+                            className={"text_field"}
                             onChange={this.handleChange}
                             type="text"
                             value={this.state.user.name}
@@ -95,47 +94,51 @@ class SignUP extends React.Component {
                         <div className={"error_validation"}>
                             {this.state.errors['name']}
                         </div>
-                        <Form.Label>Отчество</Form.Label>
-                        <Form.Control
+                        <label>Отчество</label>
+                        <input
                             onChange={this.handleChange}
                             type="text"
+                            className={"text_field"}
                             value={this.state.user.patronymic}
                             name="patronymic"
                             placeholder="Введите отчество" />
-                        <Form.Label>Номер телефона</Form.Label>
-                        <Form.Control
+                        <label>Номер телефона</label>
+                        <input
                             required
                             onChange={this.handleChange}
                             type="text"
+                            className={"text_field"}
                             name="phoneNumber"
                             value={this.state.user.phoneNumber}
                             placeholder="Введите номер телефона" />
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control
+                        <label>Email</label>
+                        <input
                             required
                             onChange={this.handleChange}
-                            ype="email"
+                            type="email"
                             name="email"
+                            className={"text_field"}
                             value={this.state.user.email}
                             placeholder="Введите email" />
                         <div className={"error_validation"}>
                             {this.state.errors['email']}
                         </div>
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Label>Пароль</Form.Label>
-                        <Form.Control
+                        <label>Пароль</label>
+                        <input
                             required
                             onChange={this.handleChange}
                             type="password"
                             name="password"
+
+                            className={"text_field"}
                             value={this.state.user.password}
                             placeholder="Введите пароль" />
-                        <Form.Label>Подтвержение пароля</Form.Label>
-                        <Form.Control
+                        <label>Подтвержение пароля</label>
+                        <input
                             required
                             onChange={this.handleChange}
                             type="password"
+                            className={"text_field"}
                             name="matchingPassword"
                             placeholder="Введите повторно пароль" />
                         <Form.Text className="text-muted">
@@ -143,11 +146,11 @@ class SignUP extends React.Component {
                         <div className={"error_validation"}>
                             {this.state.errors["password"]}
                         </div>
-                    </Form.Group>
-                    <Button variant="primary" type="Зарегистрироваться">
-                        Регистрация
-                    </Button>
-                </Form>
+                    <input type={"button"}
+                           onClick={this.registerUser}
+                           className={"action_btn"}
+                           value="Зарегистрироваться"/>
+                </form>
             </div>
 
         );

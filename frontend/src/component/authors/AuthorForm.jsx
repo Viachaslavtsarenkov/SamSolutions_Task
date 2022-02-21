@@ -1,7 +1,5 @@
-import React from "react";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../styles/auth/login.sass'
-import {Form, Button, FloatingLabel} from "react-bootstrap";
+import React from "react"
+import '../../styles/author/authors.sass'
 import AuthorizationService from "../../service/AuthorizationService";
 import {Redirect} from "react-router-dom";
 import axios from "axios";
@@ -63,38 +61,33 @@ class AuthorForm extends React.Component {
         }
         return (
             <div className={"wrapper"}>
-                <Form className={"login_form"}>
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label>Псевдоним</Form.Label>
-                        <Form.Control
+                <form className={"author_form"}>
+                        <label>Псевдоним</label>
+                        <input
                             required
                             onChange={this.handleChange}
                             type="text"
                             name="pseudonym"
                             placeholder="Введите псевдоним" />
-                    <FloatingLabel controlId="floatingTextarea2" label="Введите описание автора">
-                        <Form.Control
+                        <input
                             as="textarea"
                             name="description"
                             onChange={this.handleChange}
-                            placeholder="Leave a comment here"
-                            style={{ height: '400px', bottom: 30}}
+                            placeholder="Введите описание"
+                            style={{ height: '300px', bottom: 30}}
                         />
-                    </FloatingLabel>
-                    <Form.Label>Загрузите фото автора</Form.Label>
+                    <label>Загрузите фото автора</label>
                     <input
                         type="file"
                         required
                         onChange={this.uploadImg}
                         name="file"
                     />
-                    </Form.Group>
-                    <Button variant="primary"
+                    <input type={"button"} variant="primary"
                             onClick={this.createAuthor}
-                            style={{margin: 30}}>
-                        Submit
-                    </Button>
-                </Form>
+                           value={"Сохранить"}
+                    />
+                </form>
             </div>
         );
     }
