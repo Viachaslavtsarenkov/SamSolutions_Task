@@ -24,6 +24,8 @@
         <mail.version>1.4.7</mail.version>
         <lombok.version>1.18.22</lombok.version>
         <spring.auth.version>2.3.4.RELEASE</spring.auth.version>
+        <mockito.version>1.9.5</mockito.version>
+        <file.upload.dependency>1.4</file.upload.dependency>
     </properties>
 
     <dependencies>
@@ -118,6 +120,23 @@
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
             <version>${mail.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.8.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>${file.upload.dependency}</version>
         </dependency>
     </dependencies>
     <packaging>pom</packaging>
