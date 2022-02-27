@@ -33,10 +33,11 @@ public class BookServiceImpl implements BookService {
     public void saveBook(Book book, MultipartFile image) {
         File dest;
         try {
-            if(image.getSize() == 0L) {
+            if(image == null) {
                 book.setImageName(DEFAULT_FILE_PATH);
             } else {
                 String fileBookName = CodeGenerator.generateCode();
+                System.out.println(book);
                 book.setImageName(String.format(FILE_PATH, fileBookName));
                 dest = new File(book.getImageName());
                 image.transferTo(dest);
@@ -46,7 +47,6 @@ public class BookServiceImpl implements BookService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         bookRepository.save(book);
     }
 
@@ -56,7 +56,27 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void updateBook(Book book) {
+    public void updateBook(Book book, MultipartFile image) {
+        File dest;
+        try {
+            if(image != null) {
+                String fileName;
+                if(book.getImageName().equals(DEFAULT_FILE_PATH)) {
+                    fileName = String.format(FILE_PATH, CodeGenerator.generateCode());
+                } else {
+                    fileName = book.getImageName();
+                }
+
+                dest = new File(fileName);
+                book.setImageName(fileName);
+                image.transferTo(dest);
+            }
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            //todo
+            e.printStackTrace();
+        }
         bookRepository.save(book);
     }
 
@@ -67,6 +87,7 @@ public class BookServiceImpl implements BookService {
             book = Optional.of(bookRepository.findById(id)).get().orElseThrow();
         } catch (NoSuchElementException e ) {
             //throw new NoSuchBookException();
+            //todo
             e.printStackTrace();
         }
         return book;

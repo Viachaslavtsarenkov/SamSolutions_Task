@@ -3,12 +3,11 @@ package by.tsarenkov.common.model.entity;
 import by.tsarenkov.common.model.enumeration.Genre;
 import lombok.*;
 import org.hibernate.annotations.CollectionId;
+import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "book")
@@ -42,35 +41,26 @@ public class Book implements Serializable {
     private int amountPages;
     @Column(name="image")
     private String imageName;
-    @ManyToMany
-    @JoinTable(name = "author_book",
-            joinColumns = @JoinColumn(name = "id_author"),
-            inverseJoinColumns = @JoinColumn(name = "id_book")
+    @ManyToMany(fetch = FetchType.EAGER)
+    @ToString.Exclude
+    @JoinTable(
+            name = "author_book",
+            joinColumns = @JoinColumn(name = "id_book"),
+            inverseJoinColumns = @JoinColumn(name = "id_author")
     )
     private List<Author> authors = new ArrayList<>();
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "book_genre",
+            joinColumns = @JoinColumn(name = "id_book"),
+            inverseJoinColumns = @JoinColumn(name = "genre")
+    )
+    private Set<BookGenre> genres = new HashSet<>();
+    @ManyToMany(mappedBy = "cartBooks", fetch = FetchType.EAGER)
+    private Set<Cart> cart = new HashSet<>();
+    @ManyToMany(mappedBy = "saleBooks", fetch = FetchType.EAGER)
+    private Set<Sale> sales = new HashSet<>();
+    @ManyToMany(mappedBy = "paymentBooks", fetch = FetchType.EAGER)
+    private Set<Payment> payments = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(name = "book_genre",
-            joinColumns = @JoinColumn(name = "id_book"),
-            inverseJoinColumns = @JoinColumn(name = "id_genre")
-    )
-    private List<BookGenre> genre = new ArrayList<>();
-    @ManyToMany
-    @JoinTable(name = "books_cart",
-            joinColumns = @JoinColumn(name = "id_book"),
-            inverseJoinColumns = @JoinColumn(name = "id_cart")
-    )
-    private List<BookGenre> cart = new ArrayList<>();
-    @ManyToMany
-    @JoinTable(name = "sale_books",
-            joinColumns = @JoinColumn(name = "id_book"),
-            inverseJoinColumns = @JoinColumn(name = "id_sale")
-    )
-    private List<Sale> sales = new ArrayList<>();
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "payment_books",
-            joinColumns = @JoinColumn(name = "id_book"),
-            inverseJoinColumns = @JoinColumn(name = "id_payment")
-    )
-    private List<Payment> payments = new ArrayList<>();
 }

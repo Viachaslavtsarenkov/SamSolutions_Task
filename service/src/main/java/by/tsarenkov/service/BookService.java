@@ -9,7 +9,7 @@ import java.util.List;
 public interface BookService {
     void saveBook(Book book, MultipartFile image);
     void deleteBook(Long id);
-    void updateBook(Book book);
+    void updateBook(Book book, MultipartFile image);
     Book getBook(Long id);
     List<Book> getAllBook();
 }

@@ -10,9 +10,9 @@ const Book = () => (
         </Route>
         <Route path={"/books/new"} component={BookForm}>
         </Route>
-        <Route path={"/books/:id"} component={BookView}>
+        <Route path={"/books/:id/edit"} component={BookForm}>
         </Route>
-        <Route path={"/books/:id/edit"} component={BookList}>
+        <Route path={"/books/:id"} component={BookView}>
         </Route>
     </Switch>
 )
