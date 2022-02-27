@@ -1,23 +1,42 @@
-import React from "react"
+import React, {useEffect} from "react"
 import '../../styles/author/authors.sass'
 import AuthorizationService from "../../service/AuthorizationService";
-import {Redirect} from "react-router-dom";
+import {Redirect, useParams} from "react-router-dom";
 import axios from "axios";
 
 class AuthorForm extends React.Component {
+
+    componentDidMount() {
+        if(this.state.author.id != undefined) {
+            this.getAuthor(this.props.match.params.id);
+            this.setState({url: '/authors/' + this.props.match.params.id})
+        }
+    }
 
     constructor(props) {
         super(props);
         this.state = {
             author : {
+                id : this.props.match.params.id,
                 pseudonym: "",
                 description: "",
             },
-            file: null
+            file: null,
+            method : '',
+            url: '/authors'
         }
         this.handleChange = this.handleChange.bind(this);
         this.createAuthor = this.createAuthor.bind(this);
         this.uploadImg = this.uploadImg.bind(this)
+    }
+
+    getAuthor(id) {
+        const url = "/authors/";
+        axios.get(url + id).then((response)=>{
+            this.setState({ author : response.data})
+        }).catch((error) => {
+
+        })
     }
 
     handleChange(event) {
@@ -33,44 +52,51 @@ class AuthorForm extends React.Component {
         this.setState({file:event.target.files[0]})
     }
 
-    createAuthor(){
-        const url = "/authors";
+    createAuthor(e){
+        e.preventDefault();
         const formData = new FormData();
         formData.append("author",
             new Blob([JSON.stringify(this.state.author)], {
             type: "application/json"
         }))
-        formData.append('image', this.state.file,)
+        if (this.state.file != null) {
+            formData.append('image', this.state.file)
+        }
         axios({
             method: 'post',
-            url: url,
+            url: this.state.url,
             data: formData,
             header: {
                 "Content-Type": undefined
             },
         }).then(function (response) {
-                console.log(response);
-        }).catch(function (response) {
-            console.log(response.response.data);
+                return <Redirect to={"/authors"} />
+        }).catch(function (error) {
+            console.log(error.data);
         });
     }
 
+    saveChanges() {
+
+    }
+
     render() {
-        if(!AuthorizationService.currentUserHasRole("ADMIN")) {
-            return <Redirect to={"/"}/>
-        }
+
         return (
             <div className={"wrapper"}>
-                <form className={"author_form"}>
+                <form className={"author_form"} onSubmit={this.createAuthor}>
                         <label>Псевдоним</label>
                         <input
                             required
                             onChange={this.handleChange}
                             type="text"
                             name="pseudonym"
+                            value={this.state.author.pseudonym}
                             placeholder="Введите псевдоним" />
                         <input
-                            as="textarea"
+                            value={this.state.author.description}
+                            type="textarea"
+                            required
                             name="description"
                             onChange={this.handleChange}
                             placeholder="Введите описание"
@@ -79,12 +105,10 @@ class AuthorForm extends React.Component {
                     <label>Загрузите фото автора</label>
                     <input
                         type="file"
-                        required
                         onChange={this.uploadImg}
                         name="file"
                     />
-                    <input type={"button"} variant="primary"
-                            onClick={this.createAuthor}
+                    <input type={"submit"}
                            value={"Сохранить"}
                     />
                 </form>
