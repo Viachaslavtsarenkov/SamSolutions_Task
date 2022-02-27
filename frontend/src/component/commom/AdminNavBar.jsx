@@ -3,7 +3,6 @@ import {Link} from "react-router-dom";
 import user from "../../icon/user.png";
 import logOutIcon from "../../icon/logout.png"
 import React from "react";
-import cart from "../../icon/shopping-cart.png";
 
 function AdminNavBar() {
 
@@ -26,9 +25,6 @@ function AdminNavBar() {
                         <Link to="/orders" className={"nav_link"}>Заказы</Link>
                         <Link to="/users" className={"nav_link"}>Пользователи</Link>
                         <div className={"user_panel"}>
-                            <Link to="/login">
-                                <img src={user} width={"30px"} height={"30px"} alt={"person"}/>
-                            </Link>
                             <Link onClick={logOut}>
                                 <img src={logOutIcon} width={"30px"} height={"30px"} alt={"person"}/>
                             </Link>

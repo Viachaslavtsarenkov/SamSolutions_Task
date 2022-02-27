@@ -1,31 +1,41 @@
 import React from "react";
-import AuthorizationService from "../../service/AuthorizationService";
 import {Redirect} from "react-router-dom";
+import axios from "axios";
 class Activation extends React.Component {
+
+    componentDidMount() {
+        this.activateAccount = this.activateAccount.bind(this);
+        this.activateAccount();
+    }
 
     constructor(props) {
         super(props);
         const query = new URLSearchParams(this.props.location.search);
         this.state = {
             userActivation: {
-                mail : query.get('mail'),
+                email : query.get('mail'),
                 code : query.get('code')
-            }
+            },
+            redirect : false,
+            url : '',
         }
-        this.activationAccount();
     }
 
-    activationAccount() {
-
+    activateAccount() {
+        console.log(this.state.userActivation.email)
+        axios.post("/activation", this.state.userActivation)
+            .then((response) => {
+             this.setState({url : "/login"})
+        }).catch((error) => {
+            this.setState({url : "/error"})
+        })
     }
 
     render() {
-        if(AuthorizationService.getCurrentUser() != null) {
-            return <Redirect to={"/"}/>
-        }
-
         return (
-            <div></div>
+            <div>
+                <Redirect to={"/login"} />
+            </div>
         );
     }
 

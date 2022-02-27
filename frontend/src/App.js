@@ -7,6 +7,7 @@ import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import Activation from "./component/auth/Activation";
 import Author from "./component/authors/Author"
 import Book from "./component/books/Book"
+import Footer from "./component/commom/Footer";
 
 function App()  {
 
@@ -32,6 +33,7 @@ function App()  {
                     <Route exact path={"/activation"} component={Activation}>
                     </Route>
                     <Route path={"/books"} component={Book}></Route>
+                    <Footer/>
                 </div>
             </Switch>
         </Router>
