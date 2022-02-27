@@ -29,10 +29,10 @@ public class Payment {
     private Calendar calendar;
     @ManyToOne
     private User user;
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
     @JoinTable(name = "payment_books",
             joinColumns = @JoinColumn(name = "id_payment"),
             inverseJoinColumns = @JoinColumn(name = "id_book")
     )
-    private List<Book> books = new ArrayList<>();
+    private List<Book> paymentBooks = new ArrayList<>();
 }

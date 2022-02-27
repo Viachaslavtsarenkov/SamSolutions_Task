@@ -33,5 +33,5 @@ public class Sale {
             joinColumns = @JoinColumn(name = "id_sale"),
             inverseJoinColumns = @JoinColumn(name = "id_book")
     )
-    private List<Book> books = new ArrayList<>();
+    private List<Book> saleBooks = new ArrayList<>();
 }
