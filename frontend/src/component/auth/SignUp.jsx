@@ -4,6 +4,8 @@ import '../../styles/auth/login.sass'
 import {Form, Button} from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 import AuthorizationService from "../../service/AuthorizationService";
+import LocalizedStrings from "react-localization";
+import data from '../commom/Localization'
 
 class SignUP extends React.Component {
 
@@ -25,6 +27,7 @@ class SignUP extends React.Component {
             isEqual: true,
             errors : {},
             redirect: null,
+            lang : new LocalizedStrings({data})
         }
         this.handleChange = this.handleChange.bind(this);
         this.registerUser = this.registerUser.bind(this);
@@ -146,8 +149,7 @@ class SignUP extends React.Component {
                         <div className={"error_validation"}>
                             {this.state.errors["password"]}
                         </div>
-                    <input type={"button"}
-                           onClick={this.registerUser}
+                    <input type={"submit"}
                            className={"action_btn"}
                            value="Зарегистрироваться"/>
                 </form>

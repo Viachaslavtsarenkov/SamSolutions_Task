@@ -1,12 +1,10 @@
 package by.tsarenkov.common.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "author")
@@ -28,10 +26,7 @@ public class Author  implements Serializable {
     private String description;
     @Column(name="image_name")
     private String imageName;
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "author_book",
-            joinColumns = @JoinColumn(name = "id_author"),
-            inverseJoinColumns = @JoinColumn(name = "id_book")
-    )
-    private List<Book> books = new ArrayList<>();;
+    @ManyToMany(mappedBy = "authors", fetch = FetchType.EAGER)
+    @JsonIgnore
+    private List<Book> books = new ArrayList<>();
 }

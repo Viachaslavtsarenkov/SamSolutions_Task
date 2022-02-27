@@ -16,7 +16,9 @@ class LogIn extends React.Component {
                 password : ''
             },
             redirect: false,
+            error : ''
         }
+
         this.handleChange = this.handleChange.bind(this);
         this.loginUser = this.loginUser.bind(this);
     }
@@ -45,9 +47,8 @@ class LogIn extends React.Component {
             this.setState({ redirect: '/' });
         }).catch((error) => {
             if(error.response) {
-                this.setState({error : error.response.data})
+                this.setState({error : error.response.data.message});
             }
-
         })
     }
 
@@ -72,6 +73,11 @@ class LogIn extends React.Component {
                       type="password" className={"text_field"}
                       placeholder="Введите пароль" />
                <input type={"button"}  onClick={this.loginUser} variant="primary" value={"Войти"} className={"action_btn"}/>
+               {this.error !== '' && (
+                   <div className={"error_validation"}>
+                       {this.state.error}
+                   </div>
+               )}
                <Form.Text className="text-muted">
                    У вас есть аккаунт?
                </Form.Text>

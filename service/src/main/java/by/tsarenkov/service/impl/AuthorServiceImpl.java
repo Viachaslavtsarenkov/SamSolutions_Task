@@ -5,14 +5,14 @@ import by.tsarenkov.common.model.dto.AuthorDto;
 import by.tsarenkov.common.model.entity.Author;
 import by.tsarenkov.db.repository.AuthorRepository;
 import by.tsarenkov.service.AuthorService;
+import by.tsarenkov.service.constants.MessageResponse;
+import by.tsarenkov.service.exception.AuthorAlreadyExists;
 import by.tsarenkov.service.exception.NoSuchAuthorException;
 import by.tsarenkov.service.security.SecurityContextService;
 import by.tsarenkov.service.util.CodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,7 +35,10 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public void saveAuthor(AuthorDto authorDto, MultipartFile image) {
+    public void saveAuthor(AuthorDto authorDto, MultipartFile image) throws AuthorAlreadyExists {
+        if(authorRepository.existsByPseudonym(authorDto.getPseudonym())) {
+            throw new AuthorAlreadyExists(MessageResponse.AUTHOR_ALREADY_EXIST);
+        }
 
         Author author = Author.builder()
                 .pseudonym(authorDto.getPseudonym())
@@ -43,7 +46,7 @@ public class AuthorServiceImpl implements AuthorService {
                 .build();
         File dest;
         try {
-            if(image.getSize() == 0L) {
+            if(image == null) {
                 author.setImageName(DEFAULT_FILE_PATH);
             } else {
                 String fileName = CodeGenerator.generateCode();
@@ -70,9 +73,15 @@ public class AuthorServiceImpl implements AuthorService {
 
         File dest;
         try {
-            if(image.getSize() != 0L) {
-                String fileName = CodeGenerator.generateCode();
-                dest = new File(String.format(FILE_PATH, fileName));
+            if(image != null) {
+                String fileName;
+                if(author.getImageName().equals(DEFAULT_FILE_PATH)) {
+                    fileName = String.format(FILE_PATH, CodeGenerator.generateCode());
+                } else {
+                    fileName = author.getImageName();
+                }
+
+                dest = new File(fileName);
                 author.setImageName(fileName);
                 image.transferTo(dest);
             }

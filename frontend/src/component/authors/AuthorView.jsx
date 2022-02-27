@@ -17,23 +17,12 @@ function AuthorView() {
 
     useEffect(() => {
         const url = "/authors/"
-        console.log(id)
         axios.get(url + id).then((response)=>{
             setAuthor(response.data)
         }).catch((error) => {
 
         })
     }, []);
-
-    function getAuthor(id) {
-        const url = "/authors/";
-        axios.get((url, id) =>{
-        }).then((response)=>{
-            setAuthor(response.data)
-        }).catch((error) => {
-
-        })
-    }
 
     function deleteAuthor(id) {
         const url = "/authors/";
@@ -49,7 +38,6 @@ function AuthorView() {
         <div className={"wrapper"} >
             <div className={"author_view_container"}>
                 <img src={author.imageName} className={"author_picture"}/>
-
                 <div className={"author_description"}>
                     <h2>{author.pseudonym}</h2>
                     Об авторе<br></br>
@@ -70,7 +58,6 @@ function AuthorView() {
                             Удалить
                         </Link>
                     </div>
-
                 </div>
             </div>
 
