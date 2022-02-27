@@ -88,7 +88,6 @@ public class UserServiceImpl implements UserService {
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
         userRepository.findAll().forEach(users::add);
-        System.out.println(users);
         return users;
     }
 

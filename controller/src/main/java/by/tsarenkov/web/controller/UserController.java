@@ -14,6 +14,8 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
 
+    private static final String GET_USER_BY_ID_MAPPING = "/users/{id}";
+
     private UserService userService;
 
     @Autowired
@@ -21,7 +23,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(GET_USER_BY_ID_MAPPING)
     public void getUserById(@PathVariable Long id) {
         User user = userService.getUserById(id);
     }

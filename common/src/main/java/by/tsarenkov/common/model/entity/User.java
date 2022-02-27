@@ -34,22 +34,16 @@ public class User implements Serializable {
     private String email;
     @Column(name = "phone_number")
     private String phoneNumber;
-    //todo chagne address
+    //todo change address
     @Column(name = "address")
     private String address;
     @Column(name = "password")
     private String password;
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Cart cart;
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "books_cart",
-            joinColumns = @JoinColumn(name = "id_book"),
-            inverseJoinColumns = @JoinColumn(name = "id_cart")
-    )
-    private List<Book> books = new ArrayList<>();
     @Enumerated(EnumType.ORDINAL)
     private Role role;
-    @OneToMany
+    @OneToMany(mappedBy = "user")
     private List<Payment> payments = new ArrayList<>();
     @Column(name = "status")
     private UserStatus status;

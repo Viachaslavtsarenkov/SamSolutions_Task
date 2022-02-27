@@ -2,6 +2,7 @@ package by.tsarenkov.service.validator;
 
 import by.tsarenkov.common.model.dto.SignUpDto;
 import by.tsarenkov.common.model.entity.User;
+import by.tsarenkov.service.constants.MessageResponse;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
@@ -71,23 +72,23 @@ public class UserDataValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, SURNAME, REQUIRED_FIELD_ERROR);
         Matcher emailMatcher = validEmailRegex.matcher(email);
         if (!emailMatcher.matches()) {
-            errors.rejectValue(EMAIL, "error.validation.email");
+            errors.rejectValue(EMAIL, MessageResponse.EMAIL_ERROR);
         }
     }
 
     private void validatePhoneNumber(String phoneNumber, Errors errors) {
         Matcher phoneNumberMatcher = validPhoneNumber.matcher(phoneNumber);
         if (!phoneNumberMatcher.matches()) {
-            errors.rejectValue(PHONE_NUMBER,"error.validation.phoneNumber");
+            errors.rejectValue(PHONE_NUMBER,MessageResponse.PHONE_NUMBER_ERROR);
         }
     }
 
     private void validatePassword(String password, String matchingPassword , Errors errors) {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, SURNAME, REQUIRED_FIELD_ERROR);
         if(password.length() < 8) {
-            errors.rejectValue(PASSWORD, PASSWORD_SIZE_ERROR);
+            errors.rejectValue(PASSWORD, MessageResponse.SHORT_TEXT_ERROR);
         } else if(!password.equals(matchingPassword)) {
-            errors.rejectValue(PASSWORD, "passwords must be equal");
+            errors.rejectValue(PASSWORD, MessageResponse.PASSWORD_EQUALS_ERROR);
         }
     }
 }
