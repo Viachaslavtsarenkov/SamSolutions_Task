@@ -1,9 +1,9 @@
 import React from "react";
-import CustomerNavBar from './CustomerNavBar'
 import user from '../../icon/user.png'
 import jwtDecode from "jwt-decode";
 import AdminNavBar from "./AdminNavBar";
-import GuestNavBar from "./GuestNavBar";
+import CustomerNavBar from "./CustomerNavBar";
+import AuthorizationService from "../../service/AuthorizationService";
 
 class NavBar extends React.Component {
 
@@ -36,16 +36,12 @@ class NavBar extends React.Component {
     render() {
         return (
             <>
-                {this.state.ShowCustomerNavBar && (
-                    <CustomerNavBar/>
-                )}
                 {this.state.ShowAdminNavBar && (
                     <AdminNavBar/>
                 )}
-                {this.state.ShowGuestNavBar && (
-                    <GuestNavBar/>
+                {!AuthorizationService.currentUserHasRole("ADMIN") && (
+                    <CustomerNavBar/>
                 )}
-
             </>
 
         );

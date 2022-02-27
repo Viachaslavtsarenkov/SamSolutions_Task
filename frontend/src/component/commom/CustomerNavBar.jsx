@@ -1,47 +1,60 @@
 import React from 'react'
-import {Button, Container, Form, FormControl, Nav, Navbar} from "react-bootstrap";
 import logo from "../../icon/book.png";
 import {Link} from "react-router-dom";
 import cart from "../../icon/shopping-cart.png";
 import user from "../../icon/user.png";
+import "../../styles/common/header.sass";
+import AuthorizationService from "../../service/AuthorizationService";
+import logOutIcon from "../../icon/logout.png";
 
 function CustomerNavBar() {
 
     function logOut() {
-        localStorage.removeItem("user");
+        localStorage.removeItem("user")
         window.location.reload();
     }
 
     return (
-        <div className={"wrapper"}>
-        <Navbar bg="light" expand="lg">
-            <Container fluid>
-                <Navbar.Brand href="#">
-                    <img src={logo} width={"50px"} height={"50px"} alt={"book store"}/>
-                </Navbar.Brand>
-                <Navbar.Toggle aria-controls="navbarScroll" />
-                <Navbar.Collapse id="navbarScroll">
-                    <Nav
-                        className="me-auto my-2 my-lg-0"
-                        style={{ maxHeight: '100px' }}
-                        navbarScroll
-                    >
-                        <Link to="/main">Главная страницы</Link>
-                        <Link to="/signUp">Каталог книг</Link>
-                    </Nav>
-                    <Nav>
-                        <Link to="/cart">
-                            <img src={cart} width={"30px"} height={"30px"} alt={"cart"}/>
+        <>
+            <header className={"header"}>
+                <div className={"wrapper"}>
+                    <nav className={"header_menu"}>
+                        <Link to="/" className={"nav_link"}>
+                            <img  src={logo} width={"55px"} height={"55px"} alt={"book store"}/>
                         </Link>
-                        <Link to="/person">
-                            <img src={user} width={"30px"} height={"30px"} alt={"person"}/>
-                        </Link>
-                        <a onClick={logOut}> Выход</a>
-                    </Nav>
-                </Navbar.Collapse>
-            </Container>
-        </Navbar>
-    </div>
+                        <Link to="/books" className={"nav_link"}>Каталог книг</Link>
+                        <Link to="/signUp" className={"nav_link"}>Скидки</Link>
+                        <Link to="/signUp" className={"nav_link"}>О магазине</Link>
+                        <Link to="/signUp" className={"nav_link"}>Доставка</Link>
+                        <Link to="/signUp" className={"nav_link"}>Контакты</Link>
+                        <div className={"user_panel"}>
+                            <input className={"search_input"}/> <input type={"button"} className={"search_button"} value={"Поиск"}/>
+                            <Link to="/cart">
+                                <img src={cart} width={"30px"} height={"30px"} alt={"cart"}/>
+                            </Link>
+                            {AuthorizationService.currentUserHasRole("CUSTOMER") && (
+                                <>
+                                    <Link to="/person">
+                                        <img src={user} width={"30px"} height={"30px"} alt={"person"}/>
+                                    </Link>
+                                    <Link onClick={logOut}>
+                                        <img src={logOutIcon} width={"30px"} height={"30px"} alt={"person"}/>
+                                    </Link>
+                                </>
+
+                            )}
+                            {!AuthorizationService.currentUserHasRole("CUSTOMER") && (
+                                <Link to="/login">
+                                    <img src={user} width={"30px"} height={"30px"} alt={"person"}/>
+                                </Link>
+                                )}
+                        </div>
+                    </nav>
+
+                </div>
+            </header>
+        </>
+
     )
 }
 
