@@ -23,7 +23,8 @@ class AuthorForm extends React.Component {
             },
             file: null,
             method : '',
-            url: '/authors'
+            url: '/authors',
+            errorPseudonym : null,
         }
         this.handleChange = this.handleChange.bind(this);
         this.createAuthor = this.createAuthor.bind(this);
@@ -70,10 +71,10 @@ class AuthorForm extends React.Component {
                 "Content-Type": undefined
             },
         }).then(function (response) {
-                return <Redirect to={"/authors"} />
-        }).catch(function (error) {
-            console.log(error.data);
-        });
+            window.location = "main"
+        }).catch((error) => {
+            this.setState({errorPseudonym : error.response.data});
+        })
     }
 
     saveChanges() {
@@ -81,6 +82,9 @@ class AuthorForm extends React.Component {
     }
 
     render() {
+        if(!AuthorizationService.currentUserHasRole("ADMIN")) {
+            return <Redirect to={"/"}/>
+        }
 
         return (
             <div className={"wrapper"}>
@@ -91,13 +95,22 @@ class AuthorForm extends React.Component {
                             onChange={this.handleChange}
                             type="text"
                             name="pseudonym"
+                            minLength={1}
+                            maxLength={120}
                             value={this.state.author.pseudonym}
                             placeholder="Введите псевдоним" />
+                    {this.state.errorPseudonym != null && (
+                        <div className={"error_validation"}>
+                            "Псевдоним уже занят другим автором"
+                        </div>
+                    )}
                         <input
                             value={this.state.author.description}
                             type="textarea"
                             required
                             name="description"
+                            minLength={10}
+                            maxLength={1200}
                             onChange={this.handleChange}
                             placeholder="Введите описание"
                             style={{ height: '300px', bottom: 30}}
@@ -107,6 +120,7 @@ class AuthorForm extends React.Component {
                         type="file"
                         onChange={this.uploadImg}
                         name="file"
+                        accept={".jpg"}
                     />
                     <input type={"submit"}
                            value={"Сохранить"}

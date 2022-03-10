@@ -14,6 +14,8 @@ class AuthorsList extends React.Component {
                 pseudonym : '',
                 description: '',
                 }],
+            page : 0,
+            totalPages: 0
         }
     }
 
@@ -21,21 +23,27 @@ class AuthorsList extends React.Component {
         this.loadAuthors();
     }
 
+
     loadAuthors() {
-        axios.get('/authors/').then(
+        let url = '/authors?page=' + this.state.page;
+        axios.get(url).then(
             (response) => {
                 this.setState({
-                    authors: response.data
-                });
+                    authors: response.data['authors'],
+                    totalPages : response.data['totalPages']
+                })
+                console.log("pages" + response.data['totalPages'])
             }
         );
     }
 
 
     render() {
+        const authors = this.state.authors;
+
         return (
             <div className={"wrapper"}>
-                <Link to={"/authors/new"}>Добавить</Link>
+                <Link to={"/authors/new"} className={"add_btn"}>Добавить</Link>
                 <Table striped bordered hover variant="light" className={"authors_list"}>
                     <thead>
                         <tr>
@@ -45,9 +53,8 @@ class AuthorsList extends React.Component {
                             <th></th>
                         </tr>
                     </thead>
-
                     <tbody>
-                        {this.state.authors.map((author) => (
+                        {authors.map((author) => (
                             <tr>
                                 <td>
                                     {author.id}
@@ -70,6 +77,19 @@ class AuthorsList extends React.Component {
                         ))}
                     </tbody>
                 </Table>
+                <div className="pagination">
+                    <button onClick={() => (this.setState({page: this.state.page + 1}))} className="page">
+                        &larr;
+                    </button>
+                    {[...Array(this.state.totalPages).keys()].map((el) => (
+                        <button
+                            onClick={() => this.setState({page : el})}
+                        >{el + 1} </button>
+                    ))}
+                    <button onClick={() => (this.setState({page: this.state.page + 1}))} className="page">
+                        &rarr;
+                    </button>
+                </div>
             </div>
         )
     }
