@@ -5,6 +5,7 @@ import by.tsarenkov.common.model.entity.User;
 import by.tsarenkov.common.model.enumeration.UserStatus;
 import by.tsarenkov.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -12,14 +13,12 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class SecurityContextService {
+    @Autowired
     private final UserRepository userRepository;
 
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetailsImpl authenticatedUser = (UserDetailsImpl) authentication.getPrincipal();
-        String userEmail = authenticatedUser.getEmail();
-        System.out.println(userEmail);
-        return userRepository.getByEmail(userEmail);
+        return userRepository.getByEmail(authentication.getName());
     }
 
     public Long getCurrentUserId() {
