@@ -14,4 +14,6 @@ public interface AuthorRepository extends CrudRepository<Author, Long> {
     List<Author> findAuthorByPseudonymContaining(String pseudonym);
     boolean existsByPseudonym(String pseudonym);
     Page<Author> findAll(Pageable pageable);
+    Author findAuthorByPseudonym(String pseudonym);
+    boolean existsByPseudonymAndIdIsNot(String pseudonym, Long id);
 }

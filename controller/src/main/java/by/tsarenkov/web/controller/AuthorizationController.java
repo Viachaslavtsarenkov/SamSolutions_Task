@@ -1,14 +1,16 @@
-package by.tsarenkov.web.security.controller;
+package by.tsarenkov.web.controller;
 
 import by.tsarenkov.common.model.UserDetailsImpl;
 import by.tsarenkov.common.model.dto.ActivationDto;
 import by.tsarenkov.common.model.dto.LogInDto;
-import by.tsarenkov.common.model.dto.SignUpDto;
+import by.tsarenkov.common.model.dto.UserDto;
+import by.tsarenkov.common.model.entity.User;
 import by.tsarenkov.service.UserService;
 import by.tsarenkov.service.exception.ActivationAccountException;
 import by.tsarenkov.service.exception.EmailAlreadyTakenException;
 import by.tsarenkov.service.validator.UserDataValidator;
-import by.tsarenkov.web.constant.MessageResponse;
+import by.tsarenkov.web.constant.Message;
+import by.tsarenkov.web.controller.response.MessageResponse;
 import by.tsarenkov.web.controller.response.UserAuthenticationResponse;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -57,7 +59,7 @@ public class AuthorizationController {
     PasswordEncoder passwordEncoder;
 
     @PostMapping(value = POST_SIGN_IN_MAPPING, consumes = {"application/json"})
-    public ResponseEntity<?> registerUser(@RequestBody SignUpDto userDto, BindingResult result) {
+    public ResponseEntity<?> registerUser(@RequestBody UserDto userDto, BindingResult result) {
         Map<String, String> errors = new HashMap<>();
         userValidator.validate(userDto, result);
 
@@ -69,12 +71,20 @@ public class AuthorizationController {
             return ResponseEntity.badRequest().body(errors);
         }
         try {
-            userService.registerUser(userDto);
+            User user = User.builder()
+                    .name(userDto.getName())
+                    .surname(userDto.getSurname())
+                    .password(userDto.getPassword())
+                    .patronymic(userDto.getPatronymic())
+                    .phoneNumber(userDto.getPhoneNumber())
+                    .email(userDto.getEmail())
+                    .build();
+            userService.registerUser(user);
         } catch (EmailAlreadyTakenException e) {
-            return ResponseEntity.badRequest().body(new by.tsarenkov.web.controller.response.MessageResponse("Email already taken"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Email already taken"));
         }
 
-        return ResponseEntity.ok(new by.tsarenkov.web.controller.response.MessageResponse("Registration is done"));
+        return ResponseEntity.ok(new MessageResponse("Registration is done"));
     }
 
     @PostMapping(POST_LOGIN_MAPPING)
@@ -85,9 +95,9 @@ public class AuthorizationController {
                     new UsernamePasswordAuthenticationToken(userDto.getLogin(),
                            userDto.getPassword()));
             } catch (AccountStatusException e) {
-                return ResponseEntity.badRequest().body(new by.tsarenkov.web.controller.response.MessageResponse(MessageResponse.ACCOUNT_IS_NOT_ACTIVED));
+                return ResponseEntity.badRequest().body(new MessageResponse(Message.ACCOUNT_IS_NOT_ACTIVATED));
             } catch (AuthenticationException e) {
-                return ResponseEntity.badRequest().body(new by.tsarenkov.web.controller.response.MessageResponse(MessageResponse.BAD_CREDENTIAL));
+                return ResponseEntity.badRequest().body(new MessageResponse(Message.BAD_CREDENTIAL));
             }
         UserDetailsImpl authenticatedUser = (UserDetailsImpl) authentication.getPrincipal();
         String accessToken = JWT.create()

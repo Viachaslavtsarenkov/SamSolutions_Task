@@ -1,23 +1,25 @@
 package by.tsarenkov.service.impl;
 
-import by.tsarenkov.common.model.UserDetailsImpl;
 import by.tsarenkov.common.model.dto.AuthorDto;
 import by.tsarenkov.common.model.entity.Author;
+import by.tsarenkov.common.model.payload.AuthorPageResponse;
 import by.tsarenkov.db.repository.AuthorRepository;
 import by.tsarenkov.service.AuthorService;
 import by.tsarenkov.service.constants.MessageResponse;
-import by.tsarenkov.service.exception.AuthorAlreadyExists;
-import by.tsarenkov.service.exception.NoSuchAuthorException;
-import by.tsarenkov.service.security.SecurityContextService;
+import by.tsarenkov.service.exception.AuthorAlreadyExistsException;
+import by.tsarenkov.service.exception.AuthorNotFoundException;
 import by.tsarenkov.service.util.CodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -26,8 +28,6 @@ public class AuthorServiceImpl implements AuthorService {
     private AuthorRepository authorRepository;
     private String FILE_PATH = "/images/%s.jpg";
     private String DEFAULT_FILE_PATH = "/images/default.jpg";
-    @Autowired
-    SecurityContextService securityContextService;
 
     @Autowired
     public void setAuthorRepository(AuthorRepository authorRepository) {
@@ -35,15 +35,13 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public void saveAuthor(AuthorDto authorDto, MultipartFile image) throws AuthorAlreadyExists {
-        if(authorRepository.existsByPseudonym(authorDto.getPseudonym())) {
-            throw new AuthorAlreadyExists(MessageResponse.AUTHOR_ALREADY_EXIST);
+    @Transactional
+    public Author saveAuthor(Author author, MultipartFile image) throws AuthorAlreadyExistsException {
+
+        if(authorRepository.existsByPseudonym(author.getPseudonym())) {
+            throw new AuthorAlreadyExistsException(MessageResponse.AUTHOR_ALREADY_EXIST);
         }
 
-        Author author = Author.builder()
-                .pseudonym(authorDto.getPseudonym())
-                .description(authorDto.getDescription())
-                .build();
         File dest;
         try {
             if(image == null) {
@@ -60,18 +58,25 @@ public class AuthorServiceImpl implements AuthorService {
             e.printStackTrace();
         }
 
-        authorRepository.save(author);
+        return authorRepository.save(author);
     }
 
     @Override
+    @Transactional
     public void deleteAuthor(Long id) {
         authorRepository.deleteById(id);
     }
 
     @Override
-    public void updateAuthor(Author author, MultipartFile image) {
+    @Transactional
+    public void updateAuthor(Author author, MultipartFile image)
+            throws AuthorAlreadyExistsException {
 
         File dest;
+
+        if(authorRepository.existsByPseudonymAndIdIsNot(author.getPseudonym(), author.getId())) {
+            throw new AuthorAlreadyExistsException(MessageResponse.AUTHOR_ALREADY_EXIST);
+        }
         try {
             if(image != null) {
                 String fileName;
@@ -94,26 +99,24 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Author getAuthor(Long id) throws NoSuchAuthorException {
+    @Transactional
+    public Author getAuthor(Long id) throws AuthorNotFoundException {
         Author author;
-        try {
-            author = Optional.of(authorRepository.findById(id)).get().orElseThrow();
-        } catch (NoSuchElementException e ) {
-            throw new NoSuchAuthorException();
-        }
-
+        author = Optional.of(authorRepository.findById(id)).get()
+                .orElseThrow(AuthorNotFoundException::new);
         return author;
     }
 
     @Override
-    public List<Author> getAllAuthors() {
-        List<Author> authors = new ArrayList<>();
-        authorRepository.findAll().forEach(authors::add);
-        return authors;
+    @Transactional
+    public AuthorPageResponse getAllAuthors(int page, Sort sort) {
+        Page<Author> authors = authorRepository.findAll(PageRequest.of(page, 10, sort));
+        return new AuthorPageResponse(authors.getContent(), authors.getTotalPages());
     }
 
     @Override
+    @Transactional
     public List<Author> findAuthor(String pseudonym) {
-        return  authorRepository.findAuthorByPseudonymContaining(pseudonym);
+        return authorRepository.findAuthorByPseudonymContaining(pseudonym);
     }
 }

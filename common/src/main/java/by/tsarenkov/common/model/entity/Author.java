@@ -1,6 +1,7 @@
 package by.tsarenkov.common.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sun.istack.NotNull;
 import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -21,12 +22,15 @@ public class Author  implements Serializable {
     @Column(name = "id_author", unique = true)
     private Long id;
     @Column(name = "pseudonym")
+    @NotNull
     private String pseudonym;
-    @Column(name = "description")
+    @Column(name = "description", length = 1200)
     private String description;
     @Column(name="image_name")
+    @NotNull
     private String imageName;
-    @ManyToMany(mappedBy = "authors", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "authors")
+    @ToString.Exclude
     @JsonIgnore
     private List<Book> books = new ArrayList<>();
 }
