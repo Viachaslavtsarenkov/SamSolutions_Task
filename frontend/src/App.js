@@ -8,31 +8,29 @@ import Activation from "./component/auth/Activation";
 import Author from "./component/authors/Author"
 import Book from "./component/books/Book"
 import Footer from "./component/commom/Footer";
+import Sales from "./component/sales/Sales";
+import Cart from "./component/cart/Cart";
 
 function App()  {
 
     function logOut() {
         localStorage.removeItem("user");
     }
-    const [currentUser, setCurrentUser] = useState(0);
 
   return (
     <div className="App">
         <Router>
             <Switch>
-                <div>
+                <div className={"loc"}>
                     <NavBar/>
-                    <Route exact path={'/'} component={Main}>
-                    </Route>
-                    <Route exact path={"/login"} component={LogIn}>
-                    </Route>
-                    <Route exact path={"/registration"} component={SignUp}>
-                    </Route>
-                    <Route path={"/authors"} component={Author}>
-                    </Route>
-                    <Route exact path={"/activation"} component={Activation}>
-                    </Route>
-                    <Route path={"/books"} component={Book}></Route>
+                    <Route exact path={'/'} component={Main}/>
+                    <Route exact path={"/login"} component={LogIn}/>
+                    <Route exact path={"/registration"} component={SignUp}/>
+                    <Route path={"/authors"} component={Author}/>
+                    <Route exact path={"/activation"} component={Activation}/>
+                    <Route path={"/books"} component={Book}/>
+                    <Route path={"/sales"} component={Sales}/>
+                    <Route path={"/cart"} component={Cart}/>
                     <Footer/>
                 </div>
             </Switch>

@@ -22,7 +22,6 @@ class Activation extends React.Component {
     }
 
     activateAccount() {
-        console.log(this.state.userActivation.email)
         axios.post("/activation", this.state.userActivation)
             .then((response) => {
              this.setState({url : "/login"})
