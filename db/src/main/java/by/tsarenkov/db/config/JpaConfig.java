@@ -1,4 +1,4 @@
-package by.tsarenkov.web.config;
+package by.tsarenkov.db.config;
 
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.slf4j.Logger;
@@ -11,8 +11,6 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -42,7 +40,7 @@ public class JpaConfig {
         extraProperties.put("javax.persistence.jdbc.url", "jdbc:postgresql://localhost:5432/book_store");
         extraProperties.put("hibernate.format_sql", "true");
         extraProperties.put("hibernate.show_sql", "true");
-        extraProperties.put("hibernate.hbm2ddl.auto", "update");
+        extraProperties.put("hibernate.hbm2ddl.auto", "create");
         return extraProperties;
     }
 
@@ -65,4 +63,3 @@ public class JpaConfig {
     }
 
 }
-

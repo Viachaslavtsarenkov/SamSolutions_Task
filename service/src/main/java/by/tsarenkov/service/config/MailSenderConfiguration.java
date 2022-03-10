@@ -1,4 +1,4 @@
-package by.tsarenkov.web.config;
+package by.tsarenkov.service.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

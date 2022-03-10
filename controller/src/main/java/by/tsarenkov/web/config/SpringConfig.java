@@ -10,6 +10,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -24,7 +25,8 @@ import java.util.Properties;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan({"by.tsarenkov"})
+@ComponentScan({"by.tsarenkov", "by.tsarenkov.db.config", "by.tsarenkov.service.config"})
+@EnableTransactionManagement(proxyTargetClass = true)
 public class SpringConfig implements WebMvcConfigurer {
 
     private final ApplicationContext applicationContext;
@@ -58,7 +60,6 @@ public class SpringConfig implements WebMvcConfigurer {
         resolver.setTemplateEngine(templateEngine());
         resolver.setCharacterEncoding("UTF-8");
         registry.viewResolver(resolver);
-        System.out.println(System.getProperty("catalina.home"));
     }
 
     @Override
