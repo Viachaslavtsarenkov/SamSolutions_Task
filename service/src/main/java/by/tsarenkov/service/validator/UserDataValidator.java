@@ -1,6 +1,6 @@
 package by.tsarenkov.service.validator;
 
-import by.tsarenkov.common.model.dto.SignUpDto;
+import by.tsarenkov.common.model.dto.UserDto;
 import by.tsarenkov.common.model.entity.User;
 import by.tsarenkov.service.constants.MessageResponse;
 import org.springframework.context.annotation.PropertySource;
@@ -46,7 +46,7 @@ public class UserDataValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        SignUpDto user = (SignUpDto) target;
+        UserDto user = (UserDto) target;
         validateName(user.getName(), errors);
         validateSurname(user.getSurname(), errors);
         validatePassword(user.getPassword(), user.getMatchingPassword(), errors);

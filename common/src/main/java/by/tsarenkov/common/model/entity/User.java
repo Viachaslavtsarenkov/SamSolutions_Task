@@ -2,6 +2,7 @@ package by.tsarenkov.common.model.entity;
 
 import by.tsarenkov.common.model.enumeration.Role;
 import by.tsarenkov.common.model.enumeration.UserStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -34,16 +35,12 @@ public class User implements Serializable {
     private String email;
     @Column(name = "phone_number")
     private String phoneNumber;
-    //todo change address
-    @Column(name = "address")
     private String address;
     @Column(name = "password")
     private String password;
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Cart cart;
     @Enumerated(EnumType.ORDINAL)
     private Role role;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Payment> payments = new ArrayList<>();
     @Column(name = "status")
     private UserStatus status;
