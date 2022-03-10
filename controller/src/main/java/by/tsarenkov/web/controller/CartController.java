@@ -1,45 +1,31 @@
 package by.tsarenkov.web.controller;
 
-import by.tsarenkov.common.model.entity.Book;
-import by.tsarenkov.common.model.entity.Cart;
 import by.tsarenkov.service.CartService;
+import by.tsarenkov.service.exception.BookNotFountException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/cart")
-public class CartController {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+@RestController
+public class CartController {
 
     @Autowired
     private CartService cartService;
 
-    @GetMapping
-    public ResponseEntity<?> getCart() {
-        //todo getting id
-        return ResponseEntity.ok().body(cartService.getCart(1L));
-    }
-
-    @PostMapping()
-    public Cart saveBookToCart(@RequestBody Book book) {
-        //todo change after logging in
-        return null;
-    }
-
-    @DeleteMapping()
-    @PreAuthorize("hasRole('CUSTOMER')")
-    public Cart removeBookFromCart(@RequestBody Book book) {
-        //todo
-        return null;
-    }
-
-    @GetMapping()
-    @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<?> checkBookIntoCart(@Param(value = "book_id") Long id) {
-        return null;
+    @GetMapping("/cart")
+    public ResponseEntity<?> getCart(@RequestParam("books") String books) {
+        long[] array = Arrays.stream(books.split("\\*"))
+                .mapToLong(Long::parseLong).toArray();
+        List<Long> bookList =  new ArrayList<>();
+        for(int i = 0; i < array.length; ++i) {
+            bookList.add(array[i]);
+        }
+        System.out.println(books);
+        return ResponseEntity.ok().body(cartService.getCart(bookList));
     }
 
 }

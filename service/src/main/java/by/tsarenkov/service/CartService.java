@@ -1,12 +1,10 @@
 package by.tsarenkov.service;
 
-import by.tsarenkov.common.model.entity.Author;
-import by.tsarenkov.common.model.entity.Cart;
+import by.tsarenkov.common.model.entity.Book;
+import by.tsarenkov.service.exception.BookNotFountException;
 
 import java.util.List;
 
 public interface CartService {
-    void saveBookToCart(Long bookId, Long userId);
-    void deleteBookFromCart(Long bookId, Long userId);
-    Cart getCart(Long idUser);
+    List<Book> getCart(List<Long> ids);
 }
