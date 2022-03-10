@@ -1,6 +1,7 @@
 package by.tsarenkov.common.model.entity;
 
 import by.tsarenkov.common.model.enumeration.Genre;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CollectionId;
 import org.hibernate.annotations.Fetch;
@@ -25,7 +26,7 @@ public class Book implements Serializable {
     private Long id;
     @Column(name = "name")
     private String name;
-    @Column(name = "description")
+    @Column(name = "description", length = 1700)
     private String description;
     @Column(name = "price")
     private double price;
@@ -42,25 +43,26 @@ public class Book implements Serializable {
     @Column(name="image")
     private String imageName;
     @ManyToMany(fetch = FetchType.EAGER)
-    @ToString.Exclude
     @JoinTable(
             name = "author_book",
             joinColumns = @JoinColumn(name = "id_book"),
             inverseJoinColumns = @JoinColumn(name = "id_author")
     )
-    private List<Author> authors = new ArrayList<>();
+    private Set<Author> authors = new HashSet<>();
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "book_genre",
             joinColumns = @JoinColumn(name = "id_book"),
-            inverseJoinColumns = @JoinColumn(name = "genre")
+            inverseJoinColumns = @JoinColumn(name = "id_genre")
     )
     private Set<BookGenre> genres = new HashSet<>();
-    @ManyToMany(mappedBy = "cartBooks", fetch = FetchType.EAGER)
-    private Set<Cart> cart = new HashSet<>();
-    @ManyToMany(mappedBy = "saleBooks", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "saleBooks")
+    @ToString.Exclude
+    @JsonIgnore
     private Set<Sale> sales = new HashSet<>();
-    @ManyToMany(mappedBy = "paymentBooks", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "paymentBooks")
+    @ToString.Exclude
+    @JsonIgnore
     private Set<Payment> payments = new HashSet<>();
 
 }
