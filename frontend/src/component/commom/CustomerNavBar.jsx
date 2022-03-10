@@ -17,16 +17,16 @@ function CustomerNavBar() {
     return (
         <>
             <header className={"header"}>
+                <div className={"header_panel"}>
+                </div>
                 <div className={"wrapper"}>
                     <nav className={"header_menu"}>
                         <Link to="/" className={"nav_link"}>
                             <img  src={logo} width={"55px"} height={"55px"} alt={"book store"}/>
                         </Link>
                         <Link to="/books" className={"nav_link"}>Каталог книг</Link>
-                        <Link to="/signUp" className={"nav_link"}>Скидки</Link>
-                        <Link to="/signUp" className={"nav_link"}>О магазине</Link>
-                        <Link to="/signUp" className={"nav_link"}>Доставка</Link>
-                        <Link to="/signUp" className={"nav_link"}>Контакты</Link>
+                        <Link to="/sales" className={"nav_link"}>Скидки</Link>
+                        <Link to="/#about" className={"nav_link"}>О магазине</Link>
                         <div className={"user_panel"}>
                             <input className={"search_input"}/> <input type={"button"} className={"search_button"} value={"Поиск"}/>
                             <Link to="/cart">
