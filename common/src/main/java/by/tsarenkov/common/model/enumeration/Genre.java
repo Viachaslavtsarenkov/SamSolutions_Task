@@ -13,12 +13,10 @@ public enum Genre {
     HISTORY,
     PHILOSOPHY,
     SCIENCE,
-    MATH,
     RELIGION,
     ADVENTURE,
     KINDS,
     CLASSIC,
-    COMIC_BOOK,
     DRAMA,
     FAIRYTALE,
     FANTASY,
@@ -26,7 +24,5 @@ public enum Genre {
     MYSTERY,
     POETRY,
     ROMANCE,
-    SATIRE,
-    THRILLER,
-    WESTERN
+    THRILLER
 }
