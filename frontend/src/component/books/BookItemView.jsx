@@ -7,9 +7,13 @@ function BookItemView(props) {
 
     const book = props.value;
 
-    let [inCart, setInCart] = useState(localStorage
-        .getItem("books").includes("*" + book.id +"*"));
+    let [inCart, setInCart] = useState(false);
     useEffect(() => {
+        let cart = localStorage.getItem("books");
+        console.log(cart)
+        if(cart !== null) {
+            setInCart(cart.includes("*" + book.id + "*"))
+        }
     }, [inCart]);
 
     function addToCart(e) {
@@ -29,7 +33,7 @@ function BookItemView(props) {
         let cartBooks = localStorage.getItem("books");
         setInCart(false)
         localStorage.setItem("books", cartBooks
-            .replace("*" + book.id + "*", ""));
+            .replace("*" + book.id + "*", "*"));
 
     }
 
@@ -39,7 +43,7 @@ function BookItemView(props) {
                 <img src={book.imageName} className={"author_picture"} width={500} height={500}/>
                 <div className={"author_description"}>
                     <h2>{book.name}</h2>
-                    <p className={"price"}>{book.price}р</p>
+                    <p className={"price"}>{book.price} р.</p>
                     {!AuthorizationService.currentUserHasRole("ADMIN") && (
                         <></>
                     ) && inCart === false && (
@@ -75,6 +79,18 @@ function BookItemView(props) {
                 <div><span>Количество страниц:</span> {book.amountPages}</div>
                 <div><span>В наличии: </span>{book.inStock ? 'Да' : 'Нет'}</div>
                 <div><span>Описание: </span>{book.description}</div>
+                <div className={"book_item_authors_list"}>
+                    <span>Авторы: </span>
+                    {book.authors.map((author, index)=> (
+                        <div className={"book_item_author"}>
+                            <Link to={{
+                                pathname: "authors/" + author.id
+                            }}>
+                                {author.pseudonym}
+                            </Link>
+                        </div>
+                    ))}
+                </div>
             </div>
         </>
     )

@@ -5,8 +5,9 @@ import by.tsarenkov.common.model.payload.BookPageResponse;
 import by.tsarenkov.db.repository.BookRepository;
 import by.tsarenkov.service.BookService;
 import by.tsarenkov.service.exception.BookNotFountException;
-import by.tsarenkov.service.util.CodeGenerator;
 import by.tsarenkov.service.util.PictureLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,22 +16,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
+
+import static by.tsarenkov.service.constants.LogMessage.LOG_CREATED_MSG;
+import static by.tsarenkov.service.constants.LogMessage.LOG_UPDATED_MSG;
 
 @Service
 public class BookServiceImpl implements BookService {
 
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BookServiceImpl.class);
+
     private BookRepository bookRepository;
     @Autowired
     private PictureLoader pictureLoader;
-
-    private String FILE_PATH = "/images/%s.jpg";
-    private String DEFAULT_FILE_PATH = "/images/default.jpg";
 
     @Autowired
     public void setBookRepository(BookRepository bookRepository) {
@@ -39,41 +39,28 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public void saveBook(Book book, MultipartFile image) {
+    public Book saveBook(Book book, MultipartFile image) {
         String fileName = pictureLoader.loadPicture(image, book.getImageName());
         book.setImageName(fileName);
         bookRepository.save(book);
+        LOGGER.warn(String.format(LOG_CREATED_MSG, "Book", book.getId()));
+        return book;
     }
 
     @Override
     @Transactional
     public void deleteBook(Long id) {
+        //todo change flag
         bookRepository.deleteById(id);
     }
 
     @Override
     @Transactional
     public void updateBook(Book book, MultipartFile image) {
-        File dest;
-        try {
-            if(image != null) {
-                String fileName;
-                if(book.getImageName().equals(DEFAULT_FILE_PATH)) {
-                    fileName = String.format(FILE_PATH, CodeGenerator.generateCode());
-                } else {
-                    fileName = book.getImageName();
-                }
-
-                dest = new File(fileName);
-                book.setImageName(fileName);
-                image.transferTo(dest);
-            }
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String fileName = pictureLoader.loadPicture(image, book.getImageName());
+        book.setImageName(fileName);
         bookRepository.save(book);
+        LOGGER.warn(String.format(LOG_UPDATED_MSG, "Book", book.getId()));
     }
 
     @Override
@@ -82,7 +69,6 @@ public class BookServiceImpl implements BookService {
         Book book = null;
         book = Optional.of(bookRepository.findById(id)).get()
                 .orElseThrow(BookNotFountException::new);
-        System.out.println(book);
         return book;
     }
 

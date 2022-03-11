@@ -7,23 +7,7 @@ import BookAdminList from "./BookAdminList";
 
 function BookList() {
 
-    let [books, setBooks] = useState([{
-        id : '',
-        name : '',
-        description : '',
-        publishedYear : '',
-        weight : '',
-        materialCover : '',
-        amountPages : '',
-        imageName : '',
-        price : '',
-        inStock : false,
-        cart: [],
-        sales: [],
-        payments: [],
-        authors : [],
-        genres : [],
-    }])
+    let [books, setBooks] = useState([])
 
 
     const windowUrl = window.location.search;
@@ -57,7 +41,7 @@ function BookList() {
     return (
         <div className={"wrapper"}>
             <div className={"books_container"}>
-                {!AuthorizationService.currentUserHasRole("ADMIN") && books.length > 0 && (
+                {!AuthorizationService.currentUserHasRole("ADMIN") && (
                     <div className={"customer_book_panel"}>
                         <div className={"sorting_panel"}>
                             <select className={"sort_by"} onChange={changeOrder}>
@@ -68,9 +52,7 @@ function BookList() {
                         <div className={"book_list"}>
                             <BookListCustomerView value={books}/>
                         </div>
-
                     </div>
-
                 )
             }
             {AuthorizationService.currentUserHasRole("ADMIN") && (
@@ -78,32 +60,32 @@ function BookList() {
                     <Link to={"/books/new"} className={"add_btn"}>Добавить</Link>
                     <BookAdminList value={books}/>
                 </div>)}
-            </div>
-            <div className="pagination">
-                {page !== 0 && (
-                <button onClick={() => setPage(page - 1)} className="page">
-                    &larr;
-                </button>)}
-                {[...Array(totalPages).keys()].map((el,index) => (
+                <div className="pagination">
+                    {page !== 0 && (
+                        <button onClick={() => setPage(page - 1)} className="page">
+                            &larr;
+                        </button>)}
+                    {[...Array(totalPages).keys()].map((el,index) => (
 
-                   <div>
-                       {(index !== page) && (
-                           <button
-                               onClick={() => setPage(el)}
-                           >{el + 1} </button>
-                       )}
-                       {(index === page) && (
-                           <button className={"active_page"}
-                               onClick={() => setPage(el + 1)}
-                           >{el + 1} </button>
-                       )}
-                   </div>
+                        <div>
+                            {(index !== page) && (
+                                <button
+                                    onClick={() => setPage(el)}
+                                >{el + 1} </button>
+                            )}
+                            {(index === page) && (
+                                <button className={"active_page"}
+                                        onClick={() => setPage(el + 1)}
+                                >{el + 1} </button>
+                            )}
+                        </div>
 
-                ))}
-                {page + 1 !== totalPages && (
-                <button onClick={() => setPage(page + 1)} className="page">
-                    &rarr;
-                </button>)}
+                    ))}
+                    {page + 1 !== totalPages && (
+                        <button onClick={() => setPage(page + 1)} className="page">
+                            &rarr;
+                        </button>)}
+                </div>
             </div>
         </div>
     )

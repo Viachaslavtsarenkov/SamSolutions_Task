@@ -34,6 +34,7 @@ function BookForm() {
         pseudonym : '',
         description : ''
     }])
+    let[isRedirect, setIsRedirect] = useState(false);
 
     function getBook(id) {
         const url = "/books/";
@@ -41,7 +42,8 @@ function BookForm() {
         axios.get(url + id).then((response)=>{
             setBook(response.data);
         }).catch((error) => {
-
+            setURL("/error")
+            setIsRedirect(true)
         })
     }
 
@@ -57,15 +59,13 @@ function BookForm() {
     }
 
     function turnGenres() {
-        console.log(book)
         const container_genres = document.querySelector(".genres");
         container_genres.childNodes.forEach((node) => {
             let currentGenre = book.genres.find((f) => {
-               return f.id === node.dataset.genre;
+               return f.genre === +node.dataset.genre;
             })
             if(currentGenre !== undefined) {
                 node.classList.add("active_genre");
-
             }
         })
     }
@@ -85,7 +85,7 @@ function BookForm() {
             setBook({
                 ...book,
                'genres': book.genres.filter(function(f) {
-                   return f.genre !== genre
+                   return f.genre !== +genre
                })
             })
         } else {
@@ -118,26 +118,35 @@ function BookForm() {
         })
     }
 
-    function createBook(e) {
-        console.log(book)
+    function saveBook(e) {
         e.preventDefault();
-        const formData = new FormData();
-        formData.append("book",
-            new Blob([JSON.stringify(book)], {
-                type: "application/json"
-            }));
-        formData.append("image", file)
-        axios({
-            method: 'post',
-            url: url,
-            data: formData,
-            header: {
-                "Content-Type": undefined
-            },
-        }).then(function (response) {
-        }).catch((error) => {
-            console.log(error.response.data)
-        })
+        if(book.genres.length === 0) {
+            alert("Выберите жанр");
+        } else if(book.authors.length === 0) {
+            alert("Выберите автора");
+        } else {
+            const formData = new FormData();
+            formData.append("book",
+                new Blob([JSON.stringify(book)], {
+                    type: "application/json"
+                }));
+            formData.append("image", file)
+            axios({
+                method: 'post',
+                url: url,
+                data: formData,
+                header: {
+                    "Content-Type": undefined
+                },
+            }).then(function (response) {
+                if(book.id === undefined) {
+                    setURL("/books/" + response.data.message)
+                } else {
+                    setURL("/books/" + book.id)
+                }
+                setIsRedirect(true)
+            })
+        }
     }
 
     function addAuthor(e) {
@@ -169,12 +178,15 @@ function BookForm() {
     if(!AuthorizationService.currentUserHasRole("ADMIN")) {
         return <Redirect to={"/"}/>
     }
+    if(isRedirect) {
+        return <Redirect to={url}/>
+    }
 
     return (
 
         <div>
             {book.id !== '' ? turnGenres() : ''}
-            <form className={"book_form"} onSubmit={createBook}>
+            <form className={"book_form"} onSubmit={saveBook}>
                 <label>Название</label>
                 <input type={"text"}
                        required
@@ -276,6 +288,7 @@ function BookForm() {
                 <label>Год издания</label>
                 <input
                     required
+                    pattern="^[0-9]+$"
                     onChange={updateBook}
                     name={"publishedYear"}
                     maxLength={4}
@@ -287,7 +300,7 @@ function BookForm() {
                 <div className={"overlay panel_hidden"} onClick={turnAuthorPanel}>
                 </div>
                     <div className={"author_panel panel_hidden"}>
-                        <div className={"author_list"}>
+                        <div className={"book_author_search"}>
                             <input className={"authors_input_search"}
                                    list={"authors_datalist"}
                                    onChange={updateSearch}
@@ -302,7 +315,7 @@ function BookForm() {
                                    value={"Добавить"}
                                    onClick={addAuthor}/>
                         </div>
-                        <div className={"authors_list"}>
+                        <div className={"book_authors_list"}>
                             {book.authors.map((author, index) => (
                                 <div className={"book_author_item"}>
                                     <p>{author.id} {author.pseudonym}</p>
@@ -310,7 +323,7 @@ function BookForm() {
                                 </div>
                             ))}
                         </div>
-                        <div onClick={turnAuthorPanel}>Закрыть</div>
+                        <div onClick={turnAuthorPanel}>+</div>
                     </div>
                 <label>Вес</label>
                 <input type={"text"}

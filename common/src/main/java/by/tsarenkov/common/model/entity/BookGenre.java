@@ -2,6 +2,7 @@ package by.tsarenkov.common.model.entity;
 
 import by.tsarenkov.common.model.enumeration.Genre;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.*;
 
 import javax.persistence.*;

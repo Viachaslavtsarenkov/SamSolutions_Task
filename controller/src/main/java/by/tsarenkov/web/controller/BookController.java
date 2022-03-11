@@ -68,9 +68,8 @@ public class BookController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createBook(@RequestPart(value = "image", required = false) MultipartFile image,
                                      @RequestPart("book") Book book) {
-        System.out.println(book);
-        service.saveBook(book, image);
-        return ResponseEntity.ok(new MessageResponse("book is created"));
+        book = service.saveBook(book, image);
+        return ResponseEntity.ok(new MessageResponse(book.getId().toString()));
     }
 
     @PostMapping(value = BOOK_MAPPING_BY_ID, consumes = {"multipart/form-data"})

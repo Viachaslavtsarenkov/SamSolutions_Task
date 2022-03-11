@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface BookService {
-    void saveBook(Book book, MultipartFile image);
+    Book saveBook(Book book, MultipartFile image);
     void deleteBook(Long id);
     void updateBook(Book book, MultipartFile image);
     Book getBook(Long id) throws BookNotFountException;
