@@ -19,8 +19,6 @@ import java.util.Optional;
 @AllArgsConstructor
 public class CartServiceImpl implements CartService {
     private final BookRepository bookRepository;
-    private final UserRepository userRepository;
-
 
     @Override
     @Transactional

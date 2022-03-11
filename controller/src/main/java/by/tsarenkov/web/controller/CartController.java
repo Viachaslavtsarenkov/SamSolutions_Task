@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class CartController {
@@ -18,13 +19,11 @@ public class CartController {
 
     @GetMapping("/cart")
     public ResponseEntity<?> getCart(@RequestParam("books") String books) {
-        long[] array = Arrays.stream(books.split("\\*"))
-                .mapToLong(Long::parseLong).toArray();
-        List<Long> bookList =  new ArrayList<>();
-        for(int i = 0; i < array.length; ++i) {
-            bookList.add(array[i]);
-        }
-        System.out.println(books);
+        List<Long> bookList = Arrays.stream(books.split("\\*"))
+                .filter(s -> !s.equals(""))
+                .mapToLong(Long::parseLong)
+                .boxed()
+                .collect(Collectors.toList());
         return ResponseEntity.ok().body(cartService.getCart(bookList));
     }
 

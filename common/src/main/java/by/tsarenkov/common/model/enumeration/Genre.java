@@ -1,5 +1,7 @@
 package by.tsarenkov.common.model.enumeration;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum Genre {
     ART,
     AUTOBIOGRAPHY,
@@ -24,5 +26,10 @@ public enum Genre {
     MYSTERY,
     POETRY,
     ROMANCE,
-    THRILLER
+    THRILLER;
+
+    @JsonValue
+    public int value() {
+        return ordinal();
+    }
 }
