@@ -40,7 +40,7 @@ public class JpaConfig {
         extraProperties.put("javax.persistence.jdbc.url", "jdbc:postgresql://localhost:5432/book_store");
         extraProperties.put("hibernate.format_sql", "true");
         extraProperties.put("hibernate.show_sql", "true");
-        extraProperties.put("hibernate.hbm2ddl.auto", "create");
+        extraProperties.put("hibernate.hbm2ddl.auto", "update");
         return extraProperties;
     }
 
