@@ -11,6 +11,8 @@ import by.tsarenkov.service.exception.ActivationAccountException;
 import by.tsarenkov.service.exception.EmailAlreadyTakenException;
 import by.tsarenkov.service.util.CodeGenerator;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,9 +21,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static by.tsarenkov.service.constants.LogMessage.LOG_CREATED_MSG;
+
 @Service
 public class UserServiceImpl implements UserService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
     private MailServiceImpl mailService;
@@ -58,8 +63,8 @@ public class UserServiceImpl implements UserService {
         user.setCode(code);
 
         mailService.sendActivationMail(user.getEmail(), code);
-
-        return userRepository.save(user);
+        userRepository.save(user);
+        return user;
     }
 
     @Override

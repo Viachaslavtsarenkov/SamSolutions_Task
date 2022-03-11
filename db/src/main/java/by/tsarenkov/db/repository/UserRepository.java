@@ -13,6 +13,7 @@ import javax.transaction.Transactional;
 
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
+
     boolean existsByEmail(String email);
     @Modifying
     @Query("update User user set user.status = :newStatus where user.id = :id")
