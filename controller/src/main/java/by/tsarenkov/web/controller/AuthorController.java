@@ -53,10 +53,10 @@ public class AuthorController {
     }
 
     @GetMapping(AUTHOR_BY_ID_MAPPING)
-    public ResponseEntity<?> getOne(@PathVariable Long id) throws AuthorNotFoundException {
+    public ResponseEntity<?> getOne(@PathVariable Long id)
+            throws AuthorNotFoundException {
         Author author = null;
         author = service.getAuthor(id);
-        System.out.println(author);
         return ResponseEntity.ok(author);
     }
 
@@ -71,16 +71,16 @@ public class AuthorController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createAuthor(@RequestPart(value = "image", required = false) MultipartFile image,
                              @RequestPart("author") AuthorDto authorDto) {
+        Author author = Author.builder()
+                .pseudonym(authorDto.getPseudonym())
+                .description(authorDto.getDescription())
+                .build();
         try {
-            Author author = Author.builder()
-                    .pseudonym(authorDto.getPseudonym())
-                    .description(authorDto.getDescription())
-                    .build();
-            service.saveAuthor(author, image);
+            author = service.saveAuthor(author, image);
         } catch (AuthorAlreadyExistsException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-        return ResponseEntity.ok(new MessageResponse(Message.AUTHOR_CREATED));
+        return ResponseEntity.ok(new MessageResponse(author.getId().toString()));
     }
 
     @PostMapping(value = AUTHOR_BY_ID_MAPPING, consumes = {"multipart/form-data"})

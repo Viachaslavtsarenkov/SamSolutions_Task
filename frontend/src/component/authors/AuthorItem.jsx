@@ -8,11 +8,11 @@ function AuthorItem(props) {
 
     return (
         <div className={"author_view_container"}>
-            <img src={author.imageName} className={"author_picture"}/>
+            <img src={author.imageName} className={"author_picture"} width={500} height={500}/>
             <div className={"author_description"}>
                 <h2>{author.pseudonym}</h2>
                 <h3>Об авторе</h3>
-                {author.description}
+                <div className={"author_about"}>{author.description}</div>
                 {AuthorizationService.currentUserHasRole("ADMIN") && (
                 <div className={"action_btn_container"}>
                     <Link className={"action_link"}
