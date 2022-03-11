@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 
-## 0.4.1 [2022-03-11]
+## 0.4.3 [2022-03-11]
    ### Features:  
  - added tests [8bb2d7](https://github.com/Viachaslavtsarenkov/SamSolutions_Task/commit/8bb2d756227f9294bb68e8b8aa54d1a3baf9ace8)
  - implemented Cart [9ac4d01](https://github.com/Viachaslavtsarenkov/SamSolutions_Task/commit/9ac4d01bf0d6c818c4f821628bceef3b398ff861) 
