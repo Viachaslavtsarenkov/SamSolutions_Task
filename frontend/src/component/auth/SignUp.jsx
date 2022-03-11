@@ -47,20 +47,17 @@ class SignUP extends React.Component {
 
 
     registerUser(event) {
+        this.setState({errors : []})
         event.preventDefault();
         const {user} = this.state;
         axios.post("/signUp", this.state.user).then((response) => {
             this.setState({ redirect: '/login' });
         }).catch((error) => {
             this.setState({errors : error.response.data})
-            console.log(this.state.error)
-            this.checkValidityMessage();
         })
     }
 
-    checkValidityMessage() {
-        console.log(this.state.errors)
-    }
+
 
     render() {
         if(AuthorizationService.getCurrentUser() === null) {
@@ -80,6 +77,7 @@ class SignUP extends React.Component {
                             onChange={this.handleChange}
                             type="text"
                             name="surname"
+                            minLength={8}
                             value={this.state.user.surname}
                             placeholder="Введите имя" />
                         <div className={"error_validation"}>
@@ -91,6 +89,7 @@ class SignUP extends React.Component {
                             className={"text_field"}
                             onChange={this.handleChange}
                             type="text"
+                            minLength={2}
                             value={this.state.user.name}
                             name="name"
                             placeholder="Введите фамилию" />
@@ -114,6 +113,9 @@ class SignUP extends React.Component {
                             name="phoneNumber"
                             value={this.state.user.phoneNumber}
                             placeholder="Введите номер телефона" />
+                        <div className={"error_validation"}>
+                            {this.state.errors["phoneNumber"]}
+                        </div>
                         <label>Email</label>
                         <input
                             required
@@ -132,7 +134,7 @@ class SignUP extends React.Component {
                             onChange={this.handleChange}
                             type="password"
                             name="password"
-
+                            minLength={8}
                             className={"text_field"}
                             value={this.state.user.password}
                             placeholder="Введите пароль" />
