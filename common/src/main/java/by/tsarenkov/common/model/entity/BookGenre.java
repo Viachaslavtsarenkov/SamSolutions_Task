@@ -1,10 +1,14 @@
 package by.tsarenkov.common.model.entity;
 
 import by.tsarenkov.common.model.enumeration.Genre;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "genre")
@@ -16,16 +20,16 @@ import java.util.Collection;
 @ToString
 @EqualsAndHashCode
 public class BookGenre {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id_genre")
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Enumerated
     @Column(name = "genre")
     private Genre genre;
-    @ManyToMany
-    @JoinTable(name = "book_genre",
-            joinColumns = @JoinColumn(name = "id_genre"),
-            inverseJoinColumns = @JoinColumn(name = "id_book")
-    )
-    private Collection<Book> books;
+    @ManyToMany(mappedBy = "genres")
+    @ToString.Exclude
+    @JsonIgnore
+    private List<Book> genreBooks = new ArrayList<>();
 }

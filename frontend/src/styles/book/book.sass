@@ -1,0 +1,285 @@
+$font-family-content: Roboto
+.book_form
+  display: grid
+  grid-template-columns: 1fr 6fr
+  grid-gap: 20px
+  width: 800px
+  margin: 25px auto
+  padding: 25px
+  background: #FFFFFF
+  box-shadow: 0 0 15px 0px gray
+
+label
+  font-weight: 600
+
+.description
+  height: 120px
+
+.genres
+  display: flex
+  flex-wrap: wrap
+  justify-content: space-evenly
+  gap: 10px
+  border: 1px solid gray
+  padding: 20px
+
+
+.genre
+  margin-top: 5px
+  border: 1px solid red
+  border-radius: 15px
+  padding: 2px 5px
+  height: 30px
+  text-align: center
+
+.active_genre
+  border: 2px solid green
+
+.overlay
+  position: fixed
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  width: 100%
+  height: 100%
+  background-color: rgba(0, 0, 0, 0.85)
+
+
+.book_author_search
+  margin: 20px
+  display: flex
+  gap: 5px
+  flex-direction: row
+  height: 40px
+
+.book_authors_list
+  overflow-y: scroll
+  display: flex
+  flex-direction: column
+  gap: 15px
+  margin: 5px
+
+.book_author_item
+  display: flex
+  flex-direction: row
+  justify-content: space-between
+  background: olive
+  box-shadow: 0 0 15px 0px gray
+  gap: 5px
+  width: 300px
+
+.book_author_item input[type=button]
+  width: 200px
+
+.book_author_item p
+  padding: 5px
+  width: 80%
+
+.authors_input_search
+  width: 300px
+
+.author_panel
+  width: 800px
+  height: 500px
+  position: fixed
+  display: flex
+  flex-direction: row
+  margin: auto auto
+  left: 0
+  right: 0
+  border-radius: 20px
+  background: white
+  z-index: 10
+  opacity: 1
+
+.author_panel input[type=button]
+  width: 100px
+
+input[type=text]
+  outline: none
+  width: 300px
+  height: 40px
+
+.save_btn
+  margin: 0 auto
+  background-color: #297be6
+  color: white
+  padding: 10px 15px
+  border-radius: 10px
+  grid-column-start: 1
+  grid-column-end: 3
+
+
+.books_container
+  display: flex
+  flex-direction: row
+  flex-wrap: wrap
+  gap: 45px
+  margin: 40px auto
+
+.book_user_item
+  box-shadow: 5px 5px 15px 0px gray
+  width: 250px
+  height: 420px
+  display: flex
+  flex-direction: column
+  align-items: center
+  transition: 1s
+
+.book_user_item:hover
+  transform: scale(1.03)
+
+.book_user_item img
+  display: block
+  margin: 45px 0 0 0
+
+.book_item_name
+  margin: 20px 0
+  font-family: $font-family-content
+  font-size: 25px
+
+.book_item_price
+  font-size: 25px
+  font-weight: 600
+
+.show_book_item_btn
+  border: 2px solid black
+  text-decoration: none
+  padding: 10px 25px
+  margin: 30px 0 0 0
+  color: black
+  font-size: 20px
+  font-weight: 520
+  transition: 1s
+
+.show_book_item_btn:hover
+  background: red
+  color: white
+  border: none
+
+
+.book_list_table
+  width: 80%
+  border: 1px solid #dddddd
+  border-collapse: collapse
+  margin: 40px auto
+
+.book_list_table th
+  font-weight: bold
+  padding: 5px
+  background: #efefef
+  border: 1px solid #dddddd
+
+.book_list_table td
+  border: 1px solid #dddddd
+  padding: 5px
+
+.book_author_container
+  width: 100%
+
+.book_list
+  grid-column-start: 1
+  grid-column-end: 6
+  display: flex
+  flex-direction: row
+  flex-wrap: wrap
+  justify-content: center
+  gap: 25px
+
+.customer_book_panel
+  display: grid
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr
+  width: 100%
+  gap: 15px
+
+
+.sorting_panel
+  grid-column-start: 1
+  grid-column-end: 6
+  display: flex
+  flex-direction: row
+  justify-content: center
+  height: 50px
+
+
+.sort_by
+  background: transparent
+  outline: none
+  height: 30px
+
+.pagination
+  margin: 0 auto
+  display: flex
+  flex-direction: row
+  justify-content: center
+  padding: 20px
+  gap: 1px
+
+.pagination button
+  display: block
+  padding: 8px 16px
+  border: 1px solid #ddd
+
+
+
+
+.action_cart_btn
+  padding: 10px
+  margin: 100px auto
+  background-color: #4CAF50
+  color: white
+  font-size: 15px
+  font-weight: 700
+  border-radius: 5px
+  border: none
+
+.active_cart_btn
+  background: olive
+
+.book_description
+  width: 1000px
+  margin : 25px auto
+
+
+.book_description div
+  padding: 10px 5px
+
+.book_description div span
+  font-weight: bold
+  padding: 20px
+
+
+.book_description div:nth-child(2n)
+  background: #F5F6F2
+  box-shadow: 0 0 3px 0px gray
+
+.price
+  background: red
+  width: 50%
+  text-align: center
+  padding: 15px 70px
+  margin-top: 100px
+  color: white
+  border-radius: 5px
+  font-weight: 700
+
+.book_item_authors_list
+  display: flex
+  flex-direction: row
+  gap: 25px
+
+.book_item_author
+  min-width: 120px
+  background: #F5F6F2
+  text-align: center
+  align-self: center
+  border-radius: 5px
+  box-shadow: 0 0 15px 0px gray
+
+a
+  color: black
+  text-decoration: none
+
+.panel_hidden
+  display: none

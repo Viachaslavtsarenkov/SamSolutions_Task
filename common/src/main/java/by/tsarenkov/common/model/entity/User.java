@@ -1,9 +1,14 @@
 package by.tsarenkov.common.model.entity;
 
+import by.tsarenkov.common.model.enumeration.Role;
+import by.tsarenkov.common.model.enumeration.UserStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -30,21 +35,15 @@ public class User implements Serializable {
     private String email;
     @Column(name = "phone_number")
     private String phoneNumber;
-    @Column(name = "address")
     private String address;
     @Column(name = "password")
-    private char[] password;
-    @OneToOne(optional = false, mappedBy = "user")
-    private Cart cart;
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "books_cart",
-            joinColumns = @JoinColumn(name = "id_book"),
-            inverseJoinColumns = @JoinColumn(name = "id_cart")
-    )
-    private Collection<Book> books;
-    @ManyToOne
-    @JoinColumn(name = "id_role")
-    private UserRole role;
-    @OneToMany
-    private Collection<Payment> payments;
+    private String password;
+    @Enumerated(EnumType.ORDINAL)
+    private Role role;
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<Payment> payments = new ArrayList<>();
+    @Column(name = "status")
+    private UserStatus status;
+    @Column(name = "code")
+    private String code;
 }

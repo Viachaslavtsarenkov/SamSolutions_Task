@@ -3,8 +3,9 @@ package by.tsarenkov.common.model.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "payment")
@@ -28,10 +29,10 @@ public class Payment {
     private Calendar calendar;
     @ManyToOne
     private User user;
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "payment_books",
             joinColumns = @JoinColumn(name = "id_payment"),
             inverseJoinColumns = @JoinColumn(name = "id_book")
     )
-    private Collection<Book> books;
+    private List<Book> paymentBooks = new ArrayList<>();
 }
