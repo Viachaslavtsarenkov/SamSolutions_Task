@@ -17,7 +17,9 @@ public class PictureLoader {
         try {
             if(image == null) {
                 imageName = DEFAULT_FILE_PATH;
-            } else {
+            } else if(imageName.equals(DEFAULT_FILE_PATH)) {
+                imageName = String.format(FILE_PATH, CodeGenerator.generateCode());
+            }else {
                 String fileBookName = CodeGenerator.generateCode();
                 imageName = String.format(FILE_PATH, fileBookName);
                 dest = new File(imageName);
