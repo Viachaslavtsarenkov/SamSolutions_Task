@@ -5,6 +5,7 @@ import by.tsarenkov.common.model.entity.Author;
 import by.tsarenkov.db.repository.AuthorRepository;
 import by.tsarenkov.service.exception.AuthorAlreadyExistsException;
 import by.tsarenkov.service.impl.AuthorServiceImpl;
+import by.tsarenkov.service.util.PictureLoader;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -20,20 +21,21 @@ import org.springframework.web.multipart.MultipartFile;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class AuthorServiceTest {
+public class AuthorServiceImplTest {
 
     @InjectMocks
     private AuthorServiceImpl authorService;
     @Mock
+    PictureLoader pictureLoader;
+    @Mock
     private AuthorRepository authorRepository;
-
-
 
     private Long id = 1L;
     private static final String DEFAULT_FILE_PATH = "/images/default.jpg";
+    private static final String IMAGE_FILE_PATH = "/images/SDGFDDGSG.jpg";
 
     private Author author = Author.builder()
             .pseudonym("Pushkin")
@@ -48,30 +50,19 @@ public class AuthorServiceTest {
     );
 
 
-    @Test()
-    void shouldThrowAuthorAlreadyExistsException()
-            throws AuthorAlreadyExistsException {
+    @Test
+    void shouldThrowAuthorAlreadyExistsException() {
         given(authorRepository.existsByPseudonym(author.getPseudonym()))
                 .willReturn(true);
         assertThatThrownBy(() -> authorService.saveAuthor(author, null))
                 .isInstanceOf(AuthorAlreadyExistsException.class);
-
-    }
-
-    @Test
-    void shouldThrowAuthorAlreadyExistExceptionUpdate()
-            throws AuthorAlreadyExistsException {
-     /*          .willReturn(true);
-        author.setImageName(DEFAULT_FILE_PATH);
-        assertThatThrownBy(() -> authorService.updateAuthor(author, null))
-                .isInstanceOf(AuthorAlreadyExistsException.class);
-        Assertions.assertNotEquals(author.getImageName(), DEFAULT_FILE_PATH);*/
     }
 
     @Test
     void shouldSetAuthorDefaultImageName()
             throws AuthorAlreadyExistsException {
         given(authorRepository.existsByPseudonym(author.getPseudonym())).willReturn(false);
+        given(pictureLoader.loadPicture(null, author.getImageName())).willReturn(DEFAULT_FILE_PATH);
         authorService.saveAuthor(author, null);
         assertThat(author.getImageName()).isEqualTo(DEFAULT_FILE_PATH);
     }
@@ -80,8 +71,10 @@ public class AuthorServiceTest {
     void shouldSaveAuthorWithImage()
             throws AuthorAlreadyExistsException {
         given(authorRepository.existsByPseudonym(author.getPseudonym())).willReturn(false);
+        given(pictureLoader.loadPicture(image, author.getImageName())).willReturn(IMAGE_FILE_PATH);
+        given(authorRepository.save(author)).willReturn(author);
         authorService.saveAuthor(author, image);
-        assertThat(author.getImageName()).isNotEqualTo(DEFAULT_FILE_PATH);
+        assertThat(author.getImageName()).isEqualTo(IMAGE_FILE_PATH);
     }
 
 }
