@@ -9,6 +9,9 @@ import by.tsarenkov.service.constants.MessageResponse;
 import by.tsarenkov.service.exception.AuthorAlreadyExistsException;
 import by.tsarenkov.service.exception.AuthorNotFoundException;
 import by.tsarenkov.service.util.CodeGenerator;
+import by.tsarenkov.service.util.PictureLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,12 +25,16 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import static by.tsarenkov.service.constants.LogMessage.*;
+
 @Service
 public class AuthorServiceImpl implements AuthorService {
 
     private AuthorRepository authorRepository;
-    private String FILE_PATH = "/images/%s.jpg";
-    private String DEFAULT_FILE_PATH = "/images/default.jpg";
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthorService.class);
+
+    @Autowired
+    private PictureLoader pictureLoader;
 
     @Autowired
     public void setAuthorRepository(AuthorRepository authorRepository) {
@@ -41,30 +48,18 @@ public class AuthorServiceImpl implements AuthorService {
         if(authorRepository.existsByPseudonym(author.getPseudonym())) {
             throw new AuthorAlreadyExistsException(MessageResponse.AUTHOR_ALREADY_EXIST);
         }
-
-        File dest;
-        try {
-            if(image == null) {
-                author.setImageName(DEFAULT_FILE_PATH);
-            } else {
-                String fileName = CodeGenerator.generateCode();
-                author.setImageName(String.format(FILE_PATH, fileName));
-                dest = new File(author.getImageName());
-                image.transferTo(dest);
-            }
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return authorRepository.save(author);
+        String fileName = pictureLoader.loadPicture(image, author.getImageName());
+        author.setImageName(fileName);
+        authorRepository.save(author);
+        LOGGER.warn(String.format(LOG_CREATED_MSG, "Author", author.getId()));
+        return author;
     }
 
     @Override
     @Transactional
     public void deleteAuthor(Long id) {
         authorRepository.deleteById(id);
+        LOGGER.warn(String.format(LOG_DELETED_MSG, "Author", id));
     }
 
     @Override
@@ -72,30 +67,14 @@ public class AuthorServiceImpl implements AuthorService {
     public void updateAuthor(Author author, MultipartFile image)
             throws AuthorAlreadyExistsException {
 
-        File dest;
-
         if(authorRepository.existsByPseudonymAndIdIsNot(author.getPseudonym(), author.getId())) {
             throw new AuthorAlreadyExistsException(MessageResponse.AUTHOR_ALREADY_EXIST);
         }
-        try {
-            if(image != null) {
-                String fileName;
-                if(author.getImageName().equals(DEFAULT_FILE_PATH)) {
-                    fileName = String.format(FILE_PATH, CodeGenerator.generateCode());
-                } else {
-                    fileName = author.getImageName();
-                }
 
-                dest = new File(fileName);
-                author.setImageName(fileName);
-                image.transferTo(dest);
-            }
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String fileName = pictureLoader.loadPicture(image, author.getImageName());
+        author.setImageName(fileName);
         authorRepository.save(author);
+        LOGGER.warn(String.format(LOG_UPDATED_MSG, "Author", author.getId()));
     }
 
     @Override

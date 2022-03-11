@@ -7,7 +7,7 @@ import axios from "axios";
 class AuthorForm extends React.Component {
 
     componentDidMount() {
-        if(this.state.author.id != undefined) {
+        if(this.state.author.id !== undefined) {
             this.getAuthor(this.props.match.params.id);
             this.setState({url: '/authors/' + this.props.match.params.id})
         }
@@ -25,6 +25,8 @@ class AuthorForm extends React.Component {
             method : '',
             url: '/authors',
             errorPseudonym : null,
+            isSaved : false,
+            isFound : true
         }
         this.handleChange = this.handleChange.bind(this);
         this.createAuthor = this.createAuthor.bind(this);
@@ -36,7 +38,7 @@ class AuthorForm extends React.Component {
         axios.get(url + id).then((response)=>{
             this.setState({ author : response.data})
         }).catch((error) => {
-
+            this.setState({isFound: false})
         })
     }
 
@@ -70,9 +72,16 @@ class AuthorForm extends React.Component {
             header: {
                 "Content-Type": undefined
             },
-        }).then(function (response) {
-            window.location = "main"
-        }).catch((error) => {
+        }).then(response => {
+
+            if(this.state.author.id !== undefined) {
+                this.setState({
+                    url : this.state.url + "/" + response.data.message
+                });
+            }
+
+            this.setState({isSaved: true})
+        }).catch(error => {
             this.setState({errorPseudonym : error.response.data});
         })
     }
@@ -84,6 +93,14 @@ class AuthorForm extends React.Component {
     render() {
         if(!AuthorizationService.currentUserHasRole("ADMIN")) {
             return <Redirect to={"/"}/>
+        }
+
+        if(this.state.isSaved) {
+            return <Redirect to={this.state.url}/>
+        }
+
+        if(!this.state.isFound) {
+            return <Redirect to={"/error"}/>
         }
 
         return (
