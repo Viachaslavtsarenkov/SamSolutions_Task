@@ -1,6 +1,6 @@
 package by.tsarenkov.common.model.payload;
 
-import by.tsarenkov.common.model.entity.Sale;
+import by.tsarenkov.common.model.entity.Order;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public class SalePageResponse {
-    private List<Sale> sales;
+public class OrderPageResponse {
+    private List<Order> orders;
     private Integer totalPages;
 }

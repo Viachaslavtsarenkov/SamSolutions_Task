@@ -6,6 +6,8 @@ import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -15,11 +17,13 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@PropertySource(value = "classpath:paypal.properties", encoding = "UTF-8")
 public class PaypalService implements PaymentService {
-    @Autowired
-    private APIContext apiContext;
-   // //todo change url
-    private static final String SUCCESS_URL = "http://localhost:3000/";
+
+    private final APIContext apiContext;
+    private final Environment env;
+    private static final String SUCCESS_URL = "payment.success.url";
+    private static final String CANCEL_URL = "payment.cancel.url";
 
     @Override
     public Payment createPayment(Double total,
@@ -29,7 +33,6 @@ public class PaypalService implements PaymentService {
                               String description) throws PayPalRESTException {
         Amount amount = new Amount();
         amount.setCurrency(currency);
-        System.out.println(total);
         total = new BigDecimal(total)
                 .setScale(2, RoundingMode.HALF_UP)
                 .doubleValue();
@@ -46,10 +49,17 @@ public class PaypalService implements PaymentService {
         payment.setPayer(payer);
         payment.setTransactions(transactions);
         RedirectUrls redirectUrls = new RedirectUrls();
-        redirectUrls.setCancelUrl(SUCCESS_URL);
-        redirectUrls.setReturnUrl(SUCCESS_URL);
+        redirectUrls.setCancelUrl(env.getRequiredProperty(CANCEL_URL));
+        redirectUrls.setReturnUrl(env.getRequiredProperty(SUCCESS_URL));
         payment.setRedirectUrls(redirectUrls);
-        System.out.println("CREATED");
         return payment.create(apiContext);
+    }
+
+    public Payment executePayment(String paymentId, String payerId) throws PayPalRESTException{
+        Payment payment = new Payment();
+        payment.setId(paymentId);
+        PaymentExecution paymentExecute = new PaymentExecution();
+        paymentExecute.setPayerId(payerId);
+        return payment.execute(apiContext, paymentExecute);
     }
 }

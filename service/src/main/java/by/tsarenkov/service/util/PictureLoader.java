@@ -1,5 +1,6 @@
 package by.tsarenkov.service.util;
 
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,25 +13,16 @@ public class PictureLoader {
     private String FILE_PATH = "/images/%s.jpg";
     private String DEFAULT_FILE_PATH = "/images/default.jpg";
 
-    public String loadPicture(MultipartFile image, String imageName) {
-        File dest;
-        try {
-            if(image == null) {
-                imageName = DEFAULT_FILE_PATH;
-            } else if(imageName.equals(DEFAULT_FILE_PATH)) {
-                imageName = String.format(FILE_PATH, CodeGenerator.generateCode());
-            }else {
-                String fileBookName = CodeGenerator.generateCode();
-                imageName = String.format(FILE_PATH, fileBookName);
-                dest = new File(imageName);
-                image.transferTo(dest);
-            }
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+    public String loadPicture(MultipartFile image) {
+        String result = null;
+        try{
+            byte[] byteImage = Base64.encodeBase64(image.getBytes());
+            result = new String(byteImage);
+            System.out.println(result);
+        } catch(Exception e) {
             e.printStackTrace();
         }
-        return imageName;
+        return result;
     }
 
 }

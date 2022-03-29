@@ -10,4 +10,6 @@ public interface PaymentService  {
                           String intent,
                           String description)
             throws PayPalRESTException;
+    Payment executePayment(String paymentId, String payerId)
+            throws PayPalRESTException;
 }
