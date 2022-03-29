@@ -10,18 +10,17 @@ $font-family-content: 'Roboto'
   padding: 0
   margin: 0
 
-
 .wrapper
-  width: 1400px
-  margin: 0 auto
+  max-width: 1300px
+  margin: 10px auto
 
 
 a
   color: black
   font-family: $font-family-content
 
-
-input[type=submit]
+//todo change
+input[type=subgmit]
   padding: 5px 20px
   border-radius: 2px
   margin: 25px auto
@@ -32,9 +31,10 @@ input[type=submit]
 
 
 .footer
-  height: 80px
+  height: 40px
   width: 100%
   background: black
+  box-shadow: 0px 0px 10px 3px #19392E
 
 .add_btn
   width: 100px
@@ -50,8 +50,53 @@ input[type=submit]
   display: flex
   flex-direction: column
   justify-content: space-between
+  //todo
 
 
 .active_page
   background-color: #4CAF50
   color: white
+
+.code
+  font-size: 11px
+  color: gray
+
+.action_delete_btn
+  padding: 10px
+  border-radius: 10px
+  border: none
+  background: red
+  font-size: 15px
+  font-weight: 600
+  color: white
+
+.action_edit_btn
+  padding: 10px
+  border-radius: 10px
+  border: none
+  background: green
+  font-size: 15px
+  font-weight: 600
+  color: white
+
+.action_btn
+  border: 2px solid
+  background: transparent
+  color: #19392E
+  padding: 7px 25px
+  font-size: 18px
+  margin: 0 auto
+  text-decoration: none
+  transition: 0.5s
+  font-weight: 400
+
+
+.action_btn :hover
+  color: white
+  background: #19392E
+
+.error_validation
+  text-align: center
+  margin: 5px 0px
+  color: red
+  font-size: 12px

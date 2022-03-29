@@ -1,10 +1,10 @@
 package by.tsarenkov.service;
 
 import by.tsarenkov.common.model.entity.Book;
-import by.tsarenkov.service.exception.BookNotFountException;
 
 import java.util.List;
+import java.util.Set;
 
 public interface CartService {
-    List<Book> getCart(List<Long> ids);
+    List<Book> getCart(Set<Long> ids);
 }

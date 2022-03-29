@@ -4,8 +4,8 @@ import '../../styles/auth/login.sass'
 import {Form, Button} from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 import AuthorizationService from "../../service/AuthorizationService";
-import LocalizedStrings from "react-localization";
-import data from '../commom/Localization'
+import localization from '../localization/RegistrationLocalization'
+import validationLocale from '../localization/ValidationLocalization'
 
 class SignUP extends React.Component {
 
@@ -27,7 +27,7 @@ class SignUP extends React.Component {
             isEqual: true,
             errors : {},
             redirect: null,
-            lang : new LocalizedStrings({data})
+            lang : 'ru'
         }
         this.handleChange = this.handleChange.bind(this);
         this.registerUser = this.registerUser.bind(this);
@@ -53,7 +53,7 @@ class SignUP extends React.Component {
         axios.post("/signUp", this.state.user).then((response) => {
             this.setState({ redirect: '/login' });
         }).catch((error) => {
-            this.setState({errors : error.response.data})
+           this.setState({errors: {"emailError" : ""}})
         })
     }
 
@@ -70,90 +70,124 @@ class SignUP extends React.Component {
         return (
             <div className={"wrapper"}>
                 <form onSubmit={this.registerUser} className={"sign_up_form"}>
-                        <label>Фамилия</label>
+                        <label>
+                            {localization.locale[this.state.lang].surname}
+                        </label>
                         <input
                             required
                             className={"text_field"}
                             onChange={this.handleChange}
                             type="text"
                             name="surname"
-                            minLength={8}
+                            autoComplete={"off"}
+                            title={validationLocale.locale[this.state.lang].fieldSimpleText}
+                            minLength={2}
+                            pattern={"[A-Za-zА-Яа-яЁё]{2,}"}
                             value={this.state.user.surname}
-                            placeholder="Введите имя" />
+                            placeholder= {localization.locale[this.state.lang].surnamePlaceHolder}/>
                         <div className={"error_validation"}>
                             {this.state.errors['surname']}
                         </div>
-                        <label>Имя</label>
+                        <label>
+                            {localization.locale[this.state.lang].name}
+                        </label>
                         <input
                             required
                             className={"text_field"}
                             onChange={this.handleChange}
                             type="text"
-                            minLength={2}
+                            pattern={"[A-Za-zА-Яа-яЁё]{2,}"}
+                            autoComplete={"off"}
+                            title={validationLocale.locale[this.state.lang].fieldSimpleText}
                             value={this.state.user.name}
                             name="name"
-                            placeholder="Введите фамилию" />
+                            placeholder={localization.locale[this.state.lang].namePlaceHolder} />
                         <div className={"error_validation"}>
                             {this.state.errors['name']}
                         </div>
-                        <label>Отчество</label>
+                        <label>
+                            {localization.locale[this.state.lang].patronymic}
+                        </label>
                         <input
                             onChange={this.handleChange}
                             type="text"
                             className={"text_field"}
                             value={this.state.user.patronymic}
                             name="patronymic"
-                            placeholder="Введите отчество" />
-                        <label>Номер телефона</label>
+                            required
+                            autoComplete={"off"}
+                            pattern={"[A-Za-zА-Яа-яЁё]{2,}"}
+                            title={validationLocale.locale[this.state.lang].fieldSimpleText}
+                            placeholder={localization.locale[this.state.lang].patronymic} />
+                        <label>
+                            {localization.locale[this.state.lang].phone}
+                        </label>
                         <input
                             required
                             onChange={this.handleChange}
-                            type="text"
+                            type="tel"
                             className={"text_field"}
                             name="phoneNumber"
+                            pattern={"[\+](375)[0-9]{9}"}
                             value={this.state.user.phoneNumber}
-                            placeholder="Введите номер телефона" />
+                            title={validationLocale.locale[this.state.lang].fieldPhoneNumber}
+                            placeholder={localization.locale[this.state.lang].phonePlaceHolder}/>
                         <div className={"error_validation"}>
                             {this.state.errors["phoneNumber"]}
                         </div>
-                        <label>Email</label>
+                        <label>
+                            {localization.locale[this.state.lang].email}
+                        </label>
                         <input
                             required
                             onChange={this.handleChange}
                             type="email"
                             name="email"
+                            minLength={8}
+                            maxLength={100}
                             className={"text_field"}
                             value={this.state.user.email}
-                            placeholder="Введите email" />
-                        <div className={"error_validation"}>
-                            {this.state.errors['email']}
-                        </div>
-                        <label>Пароль</label>
+                            title={validationLocale.locale[this.state.lang].fieldPassword}
+                            placeholder={localization.locale[this.state.lang].placeholderLogin} />
+                        {this.state.errors['emailError'] !== undefined && (
+                            <div className={"error_validation"}>
+                                shdfksdhfdkl
+                            </div>
+                        ) }
+                        <label>
+                            {localization.locale[this.state.lang].passwordTitle}
+                        </label>
                         <input
                             required
                             onChange={this.handleChange}
                             type="password"
                             name="password"
-                            minLength={8}
+                            pattern={"[A-Za-zА-Яа-яЁё0-9]{8,}"}
                             className={"text_field"}
+                            title={validationLocale.locale[this.state.lang].fieldPassword}
                             value={this.state.user.password}
-                            placeholder="Введите пароль" />
-                        <label>Подтвержение пароля</label>
+                            placeholder={localization.locale[this.state.lang].placeholderPassword} />
+                        <label>
+                            {localization.locale[this.state.lang].repeatedPassword}
+                        </label>
                         <input
                             required
                             onChange={this.handleChange}
                             type="password"
                             className={"text_field"}
                             name="matchingPassword"
-                            placeholder="Введите повторно пароль" />
+                            placeholder={localization.locale[this.state.lang]
+                                .repeatedPasswordPlaceHolder} />
                         <Form.Text className="text-muted">
                         </Form.Text>
                         <div className={"error_validation"}>
-                            {this.state.errors["password"]}
+                            {this.state.errors["password"] !== undefined && (
+                                <div>Пароли должны совпадать</div>
+                            )}
                         </div>
                     <input type={"submit"}
                            className={"action_btn"}
-                           value="Зарегистрироваться"/>
+                           value={localization.locale[this.state.lang].register}/>
                 </form>
             </div>
 

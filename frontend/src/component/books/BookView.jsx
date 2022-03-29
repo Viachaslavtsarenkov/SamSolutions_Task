@@ -15,7 +15,7 @@ function BookView() {
         weight: '',
         materialCover: '',
         amountPages: '',
-        imageName: '',
+        image: {imageContent : ''},
         price: '',
         inStock: false,
         cart: [],

@@ -10,11 +10,10 @@ function BookItemView(props) {
     let [inCart, setInCart] = useState(false);
     useEffect(() => {
         let cart = localStorage.getItem("books");
-        console.log(cart)
         if(cart !== null) {
             setInCart(cart.includes("*" + book.id + "*"))
         }
-    }, [inCart]);
+    }, [inCart, book]);
 
     function addToCart(e) {
         let cartBooks = localStorage.getItem("books");
@@ -24,11 +23,10 @@ function BookItemView(props) {
             cartBooks = cartBooks + book.id + "*";
         }
         localStorage.setItem("books", cartBooks)
-
         setInCart(true);
 
     }
-
+    //todo delete
     function removeFromCart(e) {
         let cartBooks = localStorage.getItem("books");
         setInCart(false)
@@ -37,38 +35,67 @@ function BookItemView(props) {
 
     }
 
+    function deleteBook(e) {
+        axios.delete("/books/" + book.id)
+            .then((response) => {
+                book.inStock = true;
+        })
+    }
+
     return (
         <>
             <div className={"author_view_container"}>
-                <img src={book.imageName} className={"author_picture"} width={500} height={500}/>
+                <img src={"data:image/jpg;base64," + book.image.imageContent}
+                     className={"author_picture"} width={500} height={500}/>
                 <div className={"author_description"}>
                     <h2>{book.name}</h2>
-                    <p className={"price"}>{book.price} р.</p>
-                    {!AuthorizationService.currentUserHasRole("ADMIN") && (
+                    {book['discounts'].length === 0 && (
+                        <div className={"price"}>
+                            {book.price}
+                        </div>
+                    )}
+                    {book['discounts'].length !== 0 && (
+                        <div className={"view_sale_price_container"}>
+                            <div className={"view_price_sale"}>
+                                {book.price}
+                            </div>
+                            <div className={"view_discount_price"}>
+                                {book['discountPrice']}
+                            </div>
+                        </div>
+
+                    )}
+                    {!AuthorizationService.currentUserHasRole("ROLE_ADMIN") && (
                         <></>
                     ) && inCart === false && (
                     <input type={"button"}
                            className={"action_cart_btn"}
                            value={"Добавить в козину"} onClick={addToCart}/>)}
 
-                    {!AuthorizationService.currentUserHasRole("ADMIN") && (
+                    {!AuthorizationService.currentUserHasRole("ROLE_ADMIN") && (
                         <></>
                     ) && inCart === true && (
                         <input type={"button"}
                                className={"action_cart_btn active_cart_btn"}
-                               value={"Удалить из корзины"} onClick={removeFromCart}/>)}
+                               value={"Удалить из корзины"}
+                               onClick={removeFromCart}/>)}
 
-                    {AuthorizationService.currentUserHasRole("ADMIN") && (
+                    {AuthorizationService.currentUserHasRole("ROLE_ADMIN") && (
                             <div className={"action_btn_container"}>
                                 <Link className={"action_link"}
                                       to={{
                                           pathname : "/books/" + book.id + "/edit"
                                       }}> Редактировать </Link>
-                                <Link className={"action_link delete_btn"}
-                                      to={{
-                                          pathname : "/books/" + book.id + "/"
-                                      }} >Удалить</Link>
+                                {book.inStock && (<button className={"action_link delete_btn"}
+                                        onClick={deleteBook}
+                                       >Удалить</button>)
+                                }
                             </div>
+                    )}
+                    {!book.inStock && (
+                        <div>
+                            Нет в наличии
+                        </div>
                     )}
                 </div>
             </div>
@@ -84,7 +111,7 @@ function BookItemView(props) {
                     {book.authors.map((author, index)=> (
                         <div className={"book_item_author"}>
                             <Link to={{
-                                pathname: "authors/" + author.id
+                                pathname: "/authors/" + author.id
                             }}>
                                 {author.pseudonym}
                             </Link>

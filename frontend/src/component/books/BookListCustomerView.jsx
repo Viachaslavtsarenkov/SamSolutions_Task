@@ -1,8 +1,6 @@
 import {Link} from "react-router-dom";
 import React, {useEffect, useState} from "react";
-import axios from "axios";
-import AuthorizationService from "../../service/AuthorizationService";
-
+import Locale from '../localization/BookLocalization'
 
 function BookListCustomerView(props) {
 
@@ -12,15 +10,25 @@ function BookListCustomerView(props) {
         <>
             {books.map((book, index) => (
                 <div className={"book_user_item"}>
-                    <img src={book.imageName} width={120} height={120} />
+                    <img src={"data:image/jpg;base64," + book.image.imageContent} height={120} />
                     <h2 className={"book_item_name"}>{book.name}</h2>
-                    <p className={"book_item_price"}>{book.price}</p>
-                    <Link className = "show_book_item_btn" to={{
+                    {book['discounts'].length !== 0 && (
+                        <div className={"book_container_price"}>
+                            <p className={"old_price"}>{book.price}</p>
+                            <p className={"discountPrice"}>
+                                {book['discountPrice']}
+                            </p>
+                        </div>)}
+                    {book['discounts'].length === 0 && (
+                        <div className={"book_container_price"}>
+                            <p className={"book_item_price"}>{book.price}</p>
+                        </div>)}
+                    <Link className = "action_btn" to={{
                         pathname: "/books/" + book.id
-                    }}> Посмотреть</Link>
+                    }}> {Locale.locale['ru']['see']}</Link>
                 </div>
             ))}
         </>
     )
-};
+}
 export default BookListCustomerView;

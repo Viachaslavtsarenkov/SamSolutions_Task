@@ -2,10 +2,14 @@ import './../../styles/book/book.sass';
 import './../../styles/common/common.sass'
 import axios from "axios";
 import React, {useEffect, useState} from "react";
+import '../../styles/common/search.sass'
 import {Link, Redirect, useParams} from "react-router-dom";
 import AuthorizationService from "../../service/AuthorizationService";
+import validationLocalization from  '../localization/ValidationLocalization';
 
 function BookForm() {
+
+    let [lang, setLang] = useState("ru");
 
     let [book, setBook] = useState({
         id : '',
@@ -17,7 +21,7 @@ function BookForm() {
         amountPages : '',
         imageName : '',
         price : '',
-        inStock : false,
+        inStock : true,
         cart: [],
         sales: [],
         payments: [],
@@ -34,7 +38,8 @@ function BookForm() {
         pseudonym : '',
         description : ''
     }])
-    let[isRedirect, setIsRedirect] = useState(false);
+    let [isRedirect, setIsRedirect] = useState(false);
+    let [newAuthor, setNewAuthor] = useState({});
 
     function getBook(id) {
         const url = "/books/";
@@ -52,7 +57,7 @@ function BookForm() {
             getBook(id);
             turnGenres();
         }
-        }, []);
+        }, [book, newAuthor]);
 
     function uploadImage(event) {
         setFile(event.target.files[0])
@@ -62,7 +67,7 @@ function BookForm() {
         const container_genres = document.querySelector(".genres");
         container_genres.childNodes.forEach((node) => {
             let currentGenre = book.genres.find((f) => {
-               return f.genre === +node.dataset.genre;
+               return f.id === +node.dataset.genre;
             })
             if(currentGenre !== undefined) {
                 node.classList.add("active_genre");
@@ -85,14 +90,14 @@ function BookForm() {
             setBook({
                 ...book,
                'genres': book.genres.filter(function(f) {
-                   return f.genre !== +genre
+                   return f.id !== +genre
                })
             })
         } else {
             setBook({
                 ...book,
                 'genres': [...book.genres,
-                    {'genre' : genre}
+                    {'id' : +genre}
                 ]
             })
             e.target.classList.add("active_genre")
@@ -101,7 +106,7 @@ function BookForm() {
 
     function turnAuthorPanel(e) {
         const authorOverlay= document.querySelector(".overlay")
-        const authorPanel= document.querySelector(".author_panel")
+        const authorPanel= document.querySelector(".search_panel")
         authorPanel.classList.toggle("panel_hidden")
         authorOverlay.classList.toggle("panel_hidden")
     }
@@ -139,30 +144,39 @@ function BookForm() {
                     "Content-Type": undefined
                 },
             }).then(function (response) {
-                if(book.id === undefined) {
-                    setURL("/books/" + response.data.message)
-                } else {
-                    setURL("/books/" + book.id)
-                }
-                setIsRedirect(true)
+                alert("Сохранено");
+               //  setURL(book.id !== ''
+               //    ? url.concat("/",id)
+             //      : url.concat("/",response.data.message));
+               //  setIsRedirect(true);
             })
         }
     }
 
     function addAuthor(e) {
-        const list = document.getElementById('authors_datalist')
-        const searcher = document.querySelector('.authors_input_search');
-        let index = list.options.namedItem(searcher.value).getAttribute('data-index');
-        e.preventDefault();
-        if(!book.authors.includes(authors[index])) {
-        let currentAuthor = [...book.authors, authors[index]];
-            setBook({
-                ...book,
-                authors : currentAuthor
-            })
-        } else {
-            alert("Данный автор уже добавлен")
-        }
+       e.preventDefault();
+       const searcher = document.querySelector('.input_search_connection');
+       let idAuthor = searcher.value.split(".")[0];
+       if(!checkAuthor(idAuthor)) {
+           getAuthor(idAuthor);
+           let currentAuthor = [...book.authors, newAuthor];
+           setBook({
+               ...book,
+               authors : currentAuthor
+           })
+       } else {
+           alert("Данный автор уже добавлен")
+       }
+    }
+
+    function checkAuthor(idAuthor) {
+        let result = false
+        book.authors.forEach((author)=> {
+            if(+author.id === +idAuthor) {
+                result = true;
+            }
+        })
+        return result;
     }
 
     function deleteAuthor(e) {
@@ -175,7 +189,14 @@ function BookForm() {
         })
     }
 
-    if(!AuthorizationService.currentUserHasRole("ADMIN")) {
+    function getAuthor(idAuthor) {
+        axios.get("/authors/" + idAuthor)
+            .then((response) => {
+                setNewAuthor(response.data);
+        })
+    }
+
+    if(!AuthorizationService.currentUserHasRole("ROLE_ADMIN")) {
         return <Redirect to={"/"}/>
     }
     if(isRedirect) {
@@ -185,14 +206,14 @@ function BookForm() {
     return (
 
         <div>
-            {book.id !== '' ? turnGenres() : ''}
             <form className={"book_form"} onSubmit={saveBook}>
                 <label>Название</label>
                 <input type={"text"}
                        required
-                       maxLength={100}
                        onChange={updateBook}
                        name={"name"}
+                       pattern={"[0-9a-zA-ZА-ЯЁа-яё ]{1,}"}
+                       title={validationLocalization.locale[lang].bookNameValidation}
                        value={book.name}
                 />
                 <label>Описание</label>
@@ -202,6 +223,8 @@ function BookForm() {
                           onChange={updateBook}
                           className={"description"}
                           name={"description"}
+                          pattern={"[0-9a-zA-ZА-ЯЁа-яё]{1,}"}
+                          title={validationLocalization.locale[lang].descriptionValidation}
                           value={book.description}
                 />
                 <label>Жанр</label>
@@ -219,7 +242,7 @@ function BookForm() {
                     <div className={"genre"}
                          onClick={chooseGenre}
                          data-genre={"3"}>
-                        Бизнесс литература
+                        Бизнес литература
                     </div>
                     <div className={"genre"}
                          onClick={chooseGenre}
@@ -250,7 +273,7 @@ function BookForm() {
                          data-genre={"12"}>Религия</div>
                     <div className={"genre"}
                          onClick={chooseGenre}
-                         data-genre={"13"}>Преключения</div>
+                         data-genre={"13"}>Приключения</div>
                     <div className={"genre"}
                          onClick={chooseGenre}
                          data-genre={"14"}>Детская литература</div>
@@ -268,85 +291,57 @@ function BookForm() {
                          data-genre={"18"}>Фэнтези</div>
                     <div className={"genre"}
                          onClick={chooseGenre}
-                         data-genre={"19"}>Фэнтези</div>
+                         data-genre={"19"}>Ужасы</div>
                     <div className={"genre"}
                          onClick={chooseGenre}
-                         data-genre={"20"}>Ужасы</div>
+                         data-genre={"20"}>Мистика</div>
                     <div className={"genre"}
                          onClick={chooseGenre}
-                         data-genre={"21"}>Мистика</div>
+                         data-genre={"21"}>Поэмы</div>
                     <div className={"genre"}
                          onClick={chooseGenre}
-                         data-genre={"23"}>Поэмы</div>
+                         data-genre={"22"}>Романы</div>
                     <div className={"genre"}
                          onClick={chooseGenre}
-                         data-genre={"24"}>Романы</div>
-                    <div className={"genre"}
-                         onClick={chooseGenre}
-                         data-genre={"25"}>Триллеры</div>
+                         data-genre={"23"}>Триллеры</div>
                 </div>
                 <label>Год издания</label>
                 <input
                     required
-                    pattern="^[0-9]+$"
                     onChange={updateBook}
                     name={"publishedYear"}
-                    maxLength={4}
+                    pattern={"[0-9]{1,4}"}
+                    title={validationLocalization.locale[lang].yearValidation}
                     value={book.publishedYear}
                     type={"text"}/>
-
                 <label>Авторы</label>
-                <div type={"button"} className={"author_btn"} onClick={turnAuthorPanel}>Выбрать авторов</div>
-                <div className={"overlay panel_hidden"} onClick={turnAuthorPanel}>
-                </div>
-                    <div className={"author_panel panel_hidden"}>
-                        <div className={"book_author_search"}>
-                            <input className={"authors_input_search"}
-                                   list={"authors_datalist"}
-                                   onChange={updateSearch}
-                            />
-                            <datalist id="authors_datalist">
-                                {authors.map((author, index) => (
-                                    <option data-index={index} name={author.pseudonym} value={author.pseudonym}/>
-                                ))}
-                            </datalist>
-
-                            <input type={"button"}
-                                   value={"Добавить"}
-                                   onClick={addAuthor}/>
-                        </div>
-                        <div className={"book_authors_list"}>
-                            {book.authors.map((author, index) => (
-                                <div className={"book_author_item"}>
-                                    <p>{author.id} {author.pseudonym}</p>
-                                    <input type="button" value="Удалить" onClick={deleteAuthor} data-index={index}/>
-                                </div>
-                            ))}
-                        </div>
-                        <div onClick={turnAuthorPanel}>+</div>
-                    </div>
+                <div type={"button"}
+                     className={"author_btn"}
+                     onClick={turnAuthorPanel}>Выбрать авторов</div>
                 <label>Вес</label>
                 <input type={"text"}
                        onChange={updateBook}
                        required
-                       pattern="^[0-9]+$"
-                       maxLength={5}
+                       pattern={"[0-9]{1,4}"}
+                       title={validationLocalization.locale[lang].weightValidation}
                        value={book.weight}
                        name={"weight"}
+
                 />
                 <label>Переплет</label>
                 <input type={"text"}
                        required
-                       maxLength={40}
                        onChange={updateBook}
                        name={"materialCover"}
                        value={book.materialCover}
+                       pattern={"[a-zA-ZА-ЯЁа-яё]{1,50}"}
+                       title={validationLocalization.locale[lang].descriptionValidation}
                 />
                 <label>Количество страниц</label>
                 <input type={"text"}
                        required
-                       pattern="^[0-9]+$"
-                       maxLength={4}
+                       pattern={"[0-9]{1,4}"}
+                       title={validationLocalization.locale[lang].pagesValidation}
                        onChange={updateBook}
                        name={"amountPages"}
                        value={book.amountPages}
@@ -354,20 +349,51 @@ function BookForm() {
                 <label>Фото</label>
                 <input type={"file"}
                        accept={"jpg"}
+                       max={4}
                        onChange={uploadImage}
                     name={"image"}
                 />
                 <label>Цена</label>
                 <input type={"price"}
                        required
-                       pattern="^\d+(.)\d{0,2}$"
+                       pattern="(0\.((0[1-9]{1})|([1-9]{1}([0-9]{1})?)))|(([1-9]+[0-9]*)(\.([0-9]{1,2}))?)"
+                       title={validationLocalization.locale[lang].priceValidation}
                        value={book.price}
                        onChange={updateBook}
                        name={"price"}
                 />
+                <div className={"overlay panel_hidden"}
+                       onClick={turnAuthorPanel}>
+                 </div>
+                <div className={"search_panel panel_hidden"}>
+                    <div className={"search_container"}>
+                        <input className={"input_search_connection"}
+                               list={"search_result_datalist"}
+                               onChange={updateSearch}
+                        />
+                        <datalist id="search_result_datalist">
+                            {authors.map((author, index) => (
+                                <option value={author.id + "." + author.pseudonym}/>
+                            ))}
+                        </datalist>
+
+                        <input type={"button"}
+                               value={"Добавить"}
+                               onClick={addAuthor}/>
+                    </div>
+                    <div className={"search_list"}>
+                        {book.authors.map((author, index) => (
+                            <div className={"search_item"}>
+                                <p>{author.id} {author.pseudonym}</p>
+                                <input type="button" value="Удалить" onClick={deleteAuthor} data-index={index}/>
+                            </div>
+                        ))}
+                    </div>
+                </div>
                 <input type={"submit"} value={"Сохранить"}
                        className={"save_btn"}/>
             </form>
+
         </div>
     )
 }
