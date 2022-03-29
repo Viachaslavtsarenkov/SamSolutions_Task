@@ -1,56 +1,64 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import '../../styles/common/common.sass'
 import '../../styles/author/authors.sass'
 import {Table} from "react-bootstrap";
-import {Link} from "react-router-dom";
-class AuthorsList extends React.Component {
+import {Link, Redirect, useParams} from "react-router-dom";
+import Pagination from "../commom/Pagination";
+import AuthorizationService from "../../service/AuthorizationService";
+import {useHistory} from "react-router-dom"
+import Util from "../../service/Util";
+import localization from '../localization/AuthorLocalization';
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            authors: [
-                {id : '',
-                pseudonym : '',
-                description: '',
-                }],
-            page : 0,
-            totalPages: 0
+function AuthorsList() {
+
+    let lang = "ru";
+    const history = useHistory()
+    let [page, setPage] = useState(Util.getPage);
+    let [authors, setAuthors] = useState([{}]);
+    let [totalPages, setTotalPages] = useState(0);
+
+
+    useEffect(() => {
+        if(page !== 0) {
+            toPage(page);
         }
+        loadAuthors();
+    }, [page])
+
+
+    function toPage(el) {
+        Util.setUrl(Util.setPageParam(el),history)
+        setPage(el);
     }
 
-    componentDidMount() {
-        this.loadAuthors();
-    }
-
-
-    loadAuthors() {
-        let url = '/authors?page=' + this.state.page;
-        axios.get(url).then(
+    function loadAuthors() {
+        console.log()
+        axios.get("/authors?" + Util.getPageParam()).then(
             (response) => {
-                this.setState({
-                    authors: response.data['authors'],
-                    totalPages : response.data['totalPages']
-                })
-                console.log("pages" + response.data['totalPages'])
+                setAuthors(response.data['authors']);
+                setTotalPages(response.data['totalPages']);
             }
         );
     }
 
-
-    render() {
-        const authors = this.state.authors;
-
-        return (
-            <div className={"wrapper"}>
-                <Link to={"/authors/new"} className={"add_btn"}>Добавить</Link>
-                <Table striped bordered hover variant="light" className={"authors_list"}>
+    if(!AuthorizationService.currentUserHasRole("ROLE_ADMIN")) {
+        return <Redirect to={"/"}/>
+    }
+    return (
+        <div className={"wrapper"}>
+            <Link to={"/authors/new"} className={"add_btn"}>
+                {localization.locale[lang].add}
+            </Link>
+            {totalPages !== 0 && (
+                <div>
+                    <Table striped bordered hover variant="light" className={"authors_list"}>
                     <thead>
                         <tr>
-                            <th>Идентификатор</th>
-                            <th>Псевдоним</th>
-                            <th>Описание</th>
-                            <th></th>
+                            <th>{localization.locale[lang].id}</th>
+                            <th>{localization.locale[lang].pseudonym}</th>
+                            <th>{localization.locale[lang].description}</th>
+                            <th> </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -63,36 +71,31 @@ class AuthorsList extends React.Component {
                                     {author.pseudonym}
                                 </td>
                                 <td>
-                                    {author.description}
+                                    {author.description.substring(0, 50)}...
                                 </td>
                                 <td>
                                     <Link to={{
-                                            pathname: "authors/" + author.id,
-                                            state: author
-                                        }}>
-                                        Посмотреть
+                                        pathname: "authors/" + author.id
+                                    }}>
+                                        {localization.locale[lang].see}
                                     </Link>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </Table>
-                <div className="pagination">
-                    <button onClick={() => (this.setState({page: this.state.page + 1}))} className="page">
-                        &larr;
-                    </button>
-                    {[...Array(this.state.totalPages).keys()].map((el) => (
-                        <button
-                            onClick={() => this.setState({page : el})}
-                        >{el + 1} </button>
-                    ))}
-                    <button onClick={() => (this.setState({page: this.state.page + 1}))} className="page">
-                        &rarr;
-                    </button>
-                </div>
-            </div>
-        )
-    }
+                <Pagination
+                    page={page}
+                    totalPages={totalPages}
+                    toPage={toPage}
+                    />
+                </div>)}
+            {totalPages === 0 && (
+                <p>Список авторов пуст</p>
+            )}
+        </div>
+    );
+
 }
 
 export default AuthorsList;

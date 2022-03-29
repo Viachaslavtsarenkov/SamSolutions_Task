@@ -1,13 +1,11 @@
 package by.tsarenkov.common.model.entity;
 
-import by.tsarenkov.common.model.enumeration.Genre;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
-import org.hibernate.annotations.CollectionId;
-import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.*;
 
 @Entity
@@ -18,7 +16,6 @@ import java.util.*;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
 public class Book implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,7 +26,9 @@ public class Book implements Serializable {
     @Column(name = "description", length = 1700)
     private String description;
     @Column(name = "price")
-    private double price;
+    private Double price;
+    @Transient
+    private Double discountPrice;
     @Column(name="weight")
     private double weight;
     @Column(name="published_year")
@@ -40,29 +39,51 @@ public class Book implements Serializable {
     private String materialCover;
     @Column(name = "amount_pages")
     private int amountPages;
-    @Column(name="image")
-    private String imageName;
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE, orphanRemoval = true)
+    @JoinColumn(name = "id_image")
+    private BookImage image;
     @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIgnoreProperties("books")
     @JoinTable(
             name = "author_book",
             joinColumns = @JoinColumn(name = "id_book"),
             inverseJoinColumns = @JoinColumn(name = "id_author")
     )
     private Set<Author> authors = new HashSet<>();
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "book_genre",
+            name = "genre_books",
             joinColumns = @JoinColumn(name = "id_book"),
             inverseJoinColumns = @JoinColumn(name = "id_genre")
     )
     private Set<BookGenre> genres = new HashSet<>();
-    @ManyToMany(mappedBy = "saleBooks")
-    @ToString.Exclude
+    @ManyToMany(mappedBy = "books", fetch = FetchType.EAGER)
+    @JsonIgnoreProperties("books")
+    private Set<Discount> discounts = new HashSet<>();
+    @ManyToMany(mappedBy = "orderBooks")
     @JsonIgnore
-    private Set<Sale> sales = new HashSet<>();
-    @ManyToMany(mappedBy = "paymentBooks")
-    @ToString.Exclude
-    @JsonIgnore
-    private Set<Payment> payments = new HashSet<>();
+    private Set<Order> orders = new HashSet<>();
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return Double.compare(book.weight, weight) == 0 &&
+                publishedYear == book.publishedYear &&
+                inStock == book.inStock &&
+                amountPages == book.amountPages &&
+                id.equals(book.id) && name.equals(book.name) &&
+                Objects.equals(description, book.description) &&
+                price.equals(book.price) &&
+                Objects.equals(discountPrice, book.discountPrice) &&
+                Objects.equals(materialCover, book.materialCover);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description,
+                price, discountPrice, weight, publishedYear,
+                inStock, materialCover, amountPages);
+    }
 }

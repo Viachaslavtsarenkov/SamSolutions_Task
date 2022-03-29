@@ -1,4 +1,5 @@
 $font-family-content: Roboto
+
 .book_form
   display: grid
   grid-template-columns: 1fr 6fr
@@ -60,42 +61,6 @@ label
   gap: 15px
   margin: 5px
 
-.book_author_item
-  display: flex
-  flex-direction: row
-  justify-content: space-between
-  background: olive
-  box-shadow: 0 0 15px 0px gray
-  gap: 5px
-  width: 300px
-
-.book_author_item input[type=button]
-  width: 200px
-
-.book_author_item p
-  padding: 5px
-  width: 80%
-
-.authors_input_search
-  width: 300px
-
-.author_panel
-  width: 800px
-  height: 500px
-  position: fixed
-  display: flex
-  flex-direction: row
-  margin: auto auto
-  left: 0
-  right: 0
-  border-radius: 20px
-  background: white
-  z-index: 10
-  opacity: 1
-
-.author_panel input[type=button]
-  width: 100px
-
 input[type=text]
   outline: none
   width: 300px
@@ -120,12 +85,14 @@ input[type=text]
 
 .book_user_item
   box-shadow: 5px 5px 15px 0px gray
-  width: 250px
+  width: 280px
   height: 420px
   display: flex
   flex-direction: column
   align-items: center
   transition: 1s
+
+.book_user_item
 
 .book_user_item:hover
   transform: scale(1.03)
@@ -160,10 +127,13 @@ input[type=text]
 
 
 .book_list_table
-  width: 80%
+  max-width: 800px
   border: 1px solid #dddddd
   border-collapse: collapse
   margin: 40px auto
+
+.book_list_table th
+  font-size: 15px
 
 .book_list_table th
   font-weight: bold
@@ -199,14 +169,46 @@ input[type=text]
   grid-column-end: 6
   display: flex
   flex-direction: row
-  justify-content: center
   height: 50px
+  align-items: center
+  border-radius: 5px
+  background: #BDC5C0
+  box-shadow: 0 0 3px 2px #A65D50
 
+
+.sorting_panel p
+  vertical-align: center
+  margin: 0 10px
 
 .sort_by
   background: transparent
   outline: none
   height: 30px
+
+.sort_by select
+  background: black
+
+.price_criteria_container
+  display: flex
+  margin-left: 20px
+
+.price_criteria_container input
+  height: 30px
+  width: 100px
+
+.book_search_btn
+  display: block
+  margin-left: 15px
+
+.all_books_check_container
+  display: flex
+  vertical-align: center
+
+
+.in_stock
+  display: block
+  margin: auto
+
 
 .pagination
   margin: 0 auto
@@ -220,9 +222,6 @@ input[type=text]
   display: block
   padding: 8px 16px
   border: 1px solid #ddd
-
-
-
 
 .action_cart_btn
   padding: 10px
@@ -277,9 +276,42 @@ input[type=text]
   border-radius: 5px
   box-shadow: 0 0 15px 0px gray
 
+.view_sale_price_container
+  width: 120px
+  height: 100px
+  margin: 100px 0 0 20px
+
+.view_discount_price
+  color: white
+  width: 100px
+  background: red
+  border-radius: 5px
+  font-weight: 700
+  text-align: center
+  padding: 5px 10px
+
+
+.view_price_sale
+  color: black
+  text-align: right
+  text-decoration: line-through red
+
 a
   color: black
   text-decoration: none
 
-.panel_hidden
-  display: none
+.book_container_price
+  height: 100px
+  width: 100%
+  text-align: center
+  display: flex
+  flex-direction: column
+  justify-content: center
+
+.discountPrice
+  color: red
+  font-weight: 600
+  font-size: 25px
+
+.old_price
+  text-decoration: line-through

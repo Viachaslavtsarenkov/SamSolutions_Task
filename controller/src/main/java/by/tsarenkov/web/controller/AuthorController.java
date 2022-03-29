@@ -10,6 +10,7 @@ import by.tsarenkov.service.impl.AuthorServiceImpl;
 import by.tsarenkov.service.security.SecurityContextService;
 import by.tsarenkov.web.constant.Message;
 import by.tsarenkov.web.controller.response.MessageResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -21,27 +22,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping()
+@RequiredArgsConstructor
 public class AuthorController {
 
     private static final String AUTHOR_BY_ID_MAPPING = "/authors/{id}";
     private static final String AUTHORS_MAPPING = "/authors";
     private static final String SEARCH_AUTHOR_MAPPING = "/authors/search";
     private static final String PSEUDONYM_SORT_FIELD = "pseudonym";
+    private final AuthorService service;
 
-    private AuthorService service;
-    @Autowired
-    SecurityContextService securityContextService;
-
-    @Autowired
-    public void setService(AuthorServiceImpl service) {
-        this.service = service;
-    }
 
     @GetMapping(value = AUTHORS_MAPPING)
-    public ResponseEntity<?> getAuthors(@RequestParam(name = "page", required = false) Integer page,
-                                        @RequestParam(name = "order", required = false) String order,
-                                        @RequestParam(name = "size", required = false) Integer size) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> getAuthors(@RequestParam(name = "page",
+            required = false, defaultValue = "0") Integer page,
+                                        @RequestParam(name = "order",
+                                                required = false) String order,
+                                        @RequestParam(name = "size",
+                                                required = false, defaultValue = "10") Integer size) {
+
         List<Sort.Order> sorts= new ArrayList<>();
         if(order == null || order.equals("ASC")) {
             sorts.add(new Sort.Order(Sort.Direction.ASC,PSEUDONYM_SORT_FIELD));

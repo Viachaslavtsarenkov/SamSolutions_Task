@@ -2,7 +2,9 @@ package by.tsarenkov.service.impl;
 
 import by.tsarenkov.common.model.dto.AuthorDto;
 import by.tsarenkov.common.model.entity.Author;
+import by.tsarenkov.common.model.entity.AuthorImage;
 import by.tsarenkov.common.model.payload.AuthorPageResponse;
+import by.tsarenkov.db.repository.AuthorImageRepository;
 import by.tsarenkov.db.repository.AuthorRepository;
 import by.tsarenkov.service.AuthorService;
 import by.tsarenkov.service.constants.MessageResponse;
@@ -10,6 +12,8 @@ import by.tsarenkov.service.exception.AuthorAlreadyExistsException;
 import by.tsarenkov.service.exception.AuthorNotFoundException;
 import by.tsarenkov.service.util.CodeGenerator;
 import by.tsarenkov.service.util.PictureLoader;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,18 +32,13 @@ import java.util.Optional;
 import static by.tsarenkov.service.constants.LogMessage.*;
 
 @Service
+@RequiredArgsConstructor
 public class AuthorServiceImpl implements AuthorService {
 
-    private AuthorRepository authorRepository;
+    private final AuthorRepository authorRepository;
+    private final AuthorImageRepository authorImageRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthorService.class);
-
-    @Autowired
-    private PictureLoader pictureLoader;
-
-    @Autowired
-    public void setAuthorRepository(AuthorRepository authorRepository) {
-        this.authorRepository = authorRepository;
-    }
+    private final PictureLoader pictureLoader;
 
     @Override
     @Transactional
@@ -48,8 +47,16 @@ public class AuthorServiceImpl implements AuthorService {
         if(authorRepository.existsByPseudonym(author.getPseudonym())) {
             throw new AuthorAlreadyExistsException(MessageResponse.AUTHOR_ALREADY_EXIST);
         }
-        String fileName = pictureLoader.loadPicture(image, author.getImageName());
-        author.setImageName(fileName);
+
+        if(image != null) {
+            String fileName = pictureLoader.loadPicture(image);
+            AuthorImage authorImage = AuthorImage.builder()
+                    .imageContent(fileName)
+                    .build();
+            authorImageRepository.save(authorImage);
+            author.setImage(authorImage);
+        }
+
         authorRepository.save(author);
         LOGGER.warn(String.format(LOG_CREATED_MSG, "Author", author.getId()));
         return author;
@@ -71,8 +78,12 @@ public class AuthorServiceImpl implements AuthorService {
             throw new AuthorAlreadyExistsException(MessageResponse.AUTHOR_ALREADY_EXIST);
         }
 
-        String fileName = pictureLoader.loadPicture(image, author.getImageName());
-        author.setImageName(fileName);
+        if(image != null) {
+            String file = pictureLoader.loadPicture(image);
+            AuthorImage authorImage = author.getImage();
+            authorImage.setImageContent(file);
+        }
+
         authorRepository.save(author);
         LOGGER.warn(String.format(LOG_UPDATED_MSG, "Author", author.getId()));
     }
@@ -80,8 +91,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     @Transactional
     public Author getAuthor(Long id) throws AuthorNotFoundException {
-        Author author;
-        author = Optional.of(authorRepository.findById(id)).get()
+        Author author = Optional.of(authorRepository.findById(id)).get()
                 .orElseThrow(AuthorNotFoundException::new);
         return author;
     }
@@ -96,6 +106,6 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     @Transactional
     public List<Author> findAuthor(String pseudonym) {
-        return authorRepository.findAuthorByPseudonymContaining(pseudonym);
+        return authorRepository.findAuthorByPseudonymStartingWith(pseudonym);
     }
 }

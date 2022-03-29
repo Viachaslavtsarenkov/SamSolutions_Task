@@ -1,8 +1,9 @@
 import React, {useEffect} from "react"
 import '../../styles/author/authors.sass'
 import AuthorizationService from "../../service/AuthorizationService";
-import {Redirect, useParams} from "react-router-dom";
+import {Redirect} from "react-router-dom";
 import axios from "axios";
+import localization from "../localization/AuthorLocalization";
 
 class AuthorForm extends React.Component {
 
@@ -20,13 +21,15 @@ class AuthorForm extends React.Component {
                 id : this.props.match.params.id,
                 pseudonym: "",
                 description: "",
+                image : {imageContent : ''}
             },
             file: null,
             method : '',
             url: '/authors',
             errorPseudonym : null,
             isSaved : false,
-            isFound : true
+            isFound : true,
+            lang : "ru"
         }
         this.handleChange = this.handleChange.bind(this);
         this.createAuthor = this.createAuthor.bind(this);
@@ -73,13 +76,12 @@ class AuthorForm extends React.Component {
                 "Content-Type": undefined
             },
         }).then(response => {
-
-            if(this.state.author.id !== undefined) {
-                this.setState({
-                    url : this.state.url + "/" + response.data.message
-                });
-            }
-
+            alert(localization.locale[this.state.lang].modificationMessage);
+            this.setState({
+                url : this.state.author.id === undefined
+                    ? this.state.url + "/" + response.data.message
+                    : this.state.url
+            })
             this.setState({isSaved: true})
         }).catch(error => {
             this.setState({errorPseudonym : error.response.data});
@@ -91,22 +93,19 @@ class AuthorForm extends React.Component {
     }
 
     render() {
-        if(!AuthorizationService.currentUserHasRole("ADMIN")) {
+        if(!AuthorizationService.currentUserHasRole("ROLE_ADMIN")) {
             return <Redirect to={"/"}/>
         }
-
         if(this.state.isSaved) {
             return <Redirect to={this.state.url}/>
-        }
-
-        if(!this.state.isFound) {
-            return <Redirect to={"/error"}/>
         }
 
         return (
             <div className={"wrapper"}>
                 <form className={"author_form"} onSubmit={this.createAuthor}>
-                        <label>Псевдоним</label>
+                        <label>
+                            {localization.locale[this.state.lang].pseudonym}
+                        </label>
                         <input
                             required
                             onChange={this.handleChange}
@@ -115,10 +114,10 @@ class AuthorForm extends React.Component {
                             minLength={1}
                             maxLength={120}
                             value={this.state.author.pseudonym}
-                            placeholder="Введите псевдоним" />
+                            placeholder={localization.locale[this.state.lang].pseudonymPlaceHolder} />
                     {this.state.errorPseudonym != null && (
                         <div className={"error_validation"}>
-                            "Псевдоним уже занят другим автором"
+                            {localization.locale[this.state.lang].pseudonymTaken}
                         </div>
                     )}
                         <input
@@ -129,10 +128,12 @@ class AuthorForm extends React.Component {
                             minLength={10}
                             maxLength={1200}
                             onChange={this.handleChange}
-                            placeholder="Введите описание"
+                            placeholder={localization.locale[this.state.lang].descriptionPlaceHolder}
                             style={{ height: '300px', bottom: 30}}
                         />
-                    <label>Загрузите фото автора</label>
+                    <label>
+                        {localization.locale[this.state.lang].loadPhoto}
+                    </label>
                     <input
                         type="file"
                         onChange={this.uploadImg}
@@ -140,7 +141,7 @@ class AuthorForm extends React.Component {
                         accept={".jpg"}
                     />
                     <input type={"submit"}
-                           value={"Сохранить"}
+                           value={localization.locale[this.state.lang].save}
                     />
                 </form>
             </div>

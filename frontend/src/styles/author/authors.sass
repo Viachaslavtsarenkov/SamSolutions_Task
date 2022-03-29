@@ -1,10 +1,11 @@
-
+*
+  word-wrap: anywhere
 
 .author_view_container
   display: flex
   flex-direction: row
   width: 1000px
-  box-shadow: 5px 5px 15px px gray
+  box-shadow: 5px 5px 15px 0px gray
   margin: 50px auto
 
 .author_picture
@@ -23,12 +24,17 @@
   text-align: center
   padding: 25px
 
+.author_about
+  width: 80%
+  word-wrap: anywhere
+
 .book_author_about
   width: 85%
   text-align: justify
 
 .authors_list
   max-width: 1000px
+  min-width: 700px
   margin: 20px auto
 
 .action_link
@@ -61,3 +67,20 @@
   gap: 5px
   padding: 25px
   box-shadow: 5px 5px 15px 0 gray
+
+.author_book_container
+  display: flex
+  flex-direction: row
+  gap: 25px
+  margin: 50px auto
+  width: 700px
+  flex-wrap: wrap
+
+.author_item_books
+  min-width: 120px
+  background: #F5F6F2
+  text-align: center
+  align-self: center
+  border-radius: 5px
+  box-shadow: 0 0 15px 0px gray
+  padding: 10px 20px
