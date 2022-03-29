@@ -1,10 +1,11 @@
 import React from "react";
 import axios from "axios";
+import {Form} from 'react-bootstrap';
+import {Link, Redirect} from "react-router-dom";
+import AuthorizationService from '../../service/AuthorizationService';
+import registrationLocale from '../localization/RegistrationLocalization'
 import '../../styles/auth/login.sass';
 import '../../styles/common/common.sass';
-import {Form, Button} from 'react-bootstrap';
-import {Link, NavLink, Redirect} from "react-router-dom";
-import AuthorizationService from '../../service/AuthorizationService';
 
 class LogIn extends React.Component {
 
@@ -16,7 +17,8 @@ class LogIn extends React.Component {
                 password : ''
             },
             redirect: false,
-            error : ''
+            error : '',
+            lang : 'ru'
         }
 
         this.handleChange = this.handleChange.bind(this);
@@ -39,7 +41,8 @@ class LogIn extends React.Component {
     loginUser(event) {
         event.preventDefault();
         const {user} = this.state;
-        axios.post("/login", this.state.user).then((response) => {
+        axios.post("/login", this.state.user)
+            .then((response) => {
             if (response.data["jwt"]) {
                 localStorage.setItem('user', JSON.stringify(response.data));
                 window.location.reload();
@@ -59,29 +62,37 @@ class LogIn extends React.Component {
        return (
        <div className={"wrapper"}>
            <form onSubmit={this.loginUser} className={"login_form"}>
-               <label className={"form_description"}>Войдите в свой аккаунт</label>
+               <label className={"form_description"}>
+                  {registrationLocale.locale[this.state.lang].loginTitle}
+               </label>
                <label>Email</label>
                <input name={"login"}
                       onChange={this.handleChange}
                       type="email"
                       className={"text_field"}
-                      placeholder="Введите email" />
-
-               <label>Пароль</label>
+                      placeholder={registrationLocale.locale[this.state.lang].placeholderLogin} />
+               <label>
+                   {registrationLocale.locale[this.state.lang].passwordTitle}
+               </label>
                <input name={"password"}
                       onChange={this.handleChange}
                       type="password" className={"text_field"}
-                      placeholder="Введите пароль" />
-               <input type={"button"}  onClick={this.loginUser} variant="primary" value={"Войти"} className={"action_btn"}/>
-               {this.error !== '' && (
+                      placeholder={registrationLocale.locale[this.state.lang].placeholderPassword} />
+               <input type={"button"}  onClick={this.loginUser}
+                      variant="primary"
+                      value={registrationLocale.locale[this.state.lang].login}
+                      className={"action_btn"}/>
+               {this.state.error !== '' && (
                    <div className={"error_validation"}>
-                       {this.state.error}
+                       {registrationLocale.locale[this.state.lang][this.state.error]}
                    </div>
                )}
                <Form.Text className="text-muted">
-                   У вас есть аккаунт?
+                   {registrationLocale.locale[this.state.lang].account}
                </Form.Text>
-                   <Link to = "/registration">Зарегистрироваться</Link>
+                   <Link to = "/registration" >
+                       {registrationLocale.locale[this.state.lang].register}
+                   </Link>
            </form>
        </div>
        )

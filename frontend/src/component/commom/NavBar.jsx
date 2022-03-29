@@ -20,10 +20,9 @@ class NavBar extends React.Component {
         let user = localStorage.getItem('user');
         if (user != null) {
             user = jwtDecode(user);
-            console.log(user);
             this.setState( {
-                ShowCustomerNavBar: user.role.includes('CUSTOMER'),
-                ShowAdminNavBar: user.role.includes('ADMIN')
+                ShowCustomerNavBar: user.role.includes('ROLE_CUSTOMER'),
+                ShowAdminNavBar: user.role.includes('ROLE_ADMIN')
             });
         } else {
             this.setState({
@@ -39,7 +38,7 @@ class NavBar extends React.Component {
                 {this.state.ShowAdminNavBar && (
                     <AdminNavBar/>
                 )}
-                {!AuthorizationService.currentUserHasRole("ADMIN") && (
+                {!AuthorizationService.currentUserHasRole("ROLE_ADMIN") && (
                     <CustomerNavBar/>
                 )}
             </>
