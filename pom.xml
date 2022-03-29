@@ -9,13 +9,12 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <spring.version>5.3.15</spring.version>
-        <spring.secutiry.version>5.6.1</spring.secutiry.version>
         <hibernate.version>5.4.1.Final</hibernate.version>
         <jstl.version>1.2</jstl.version>
         <jsp.version>2.3.1</jsp.version>
         <servlet.version>3.1.0</servlet.version>
         <postgreslq.version>42.3.1</postgreslq.version>
-        <h2.version>2.1.210</h2.version>
+        <h2.version>1.3.175</h2.version>
         <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
         <springframeword.data.version>2.6.1</springframeword.data.version>
         <spring-security.version>5.6.1</spring-security.version>
@@ -24,8 +23,11 @@
         <mail.version>1.4.7</mail.version>
         <lombok.version>1.18.22</lombok.version>
         <spring.auth.version>2.3.4.RELEASE</spring.auth.version>
-        <mockito.version>1.9.5</mockito.version>
+        <mockito.version>2.19.0</mockito.version>
         <file.upload.dependency>1.4</file.upload.dependency>
+        <assertj.vervion>3.22.0</assertj.vervion>
+        <paypal.version>1.14.0</paypal.version>
+        <junit.version>4.12</junit.version>
     </properties>
 
     <dependencies>
@@ -89,12 +91,12 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
-            <version>${spring.secutiry.version}</version>
+            <version>${spring-security.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
-            <version>${spring.secutiry.version}</version>
+            <version>${spring-security.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
@@ -124,7 +126,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>2.19.0</version>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -136,13 +138,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>2.19.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>1.10.6</version>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -153,7 +149,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -165,14 +161,18 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>3.22.0</version>
+            <version>${assertj.vervion}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.googlecode.catch-exception</groupId>
-            <artifactId>catch-exception</artifactId>
-            <version>1.2.0</version>
-            <scope>test</scope>
+            <groupId>com.paypal.sdk</groupId>
+            <artifactId>rest-api-sdk</artifactId>
+            <version>${paypal.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
         </dependency>
     </dependencies>
     <packaging>pom</packaging>

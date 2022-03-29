@@ -8,8 +8,11 @@ import Activation from "./component/auth/Activation";
 import Author from "./component/authors/Author"
 import Book from "./component/books/Book"
 import Footer from "./component/commom/Footer";
-import Sales from "./component/sales/Sales";
+import Discounts from "./component/discounts/Discounts";
 import Cart from "./component/cart/Cart";
+import User from "./component/users/User";
+import Orders from "./component/orders/Orders";
+import UserProfile from "./component/users/UserProfile";
 
 function App()  {
 
@@ -29,8 +32,11 @@ function App()  {
                     <Route path={"/authors"} component={Author}/>
                     <Route exact path={"/activation"} component={Activation}/>
                     <Route path={"/books"} component={Book}/>
-                    <Route path={"/sales"} component={Sales}/>
+                    <Route path={"/discounts"} component={Discounts}/>
                     <Route path={"/cart"} component={Cart}/>
+                    <Route path={"/users"} component={User}/>
+                    <Route path={"/orders"} component={Orders}/>
+                    <Route exact path={"/profile"} component={UserProfile}/>
                     <Footer/>
                 </div>
             </Switch>
