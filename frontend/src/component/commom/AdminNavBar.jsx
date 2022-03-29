@@ -12,7 +12,7 @@ function AdminNavBar() {
     }
 
     return (
-        <>
+        <React.Fragment>
             <header className={"header"}>
                 <div className={"wrapper"}>
                     <nav className={"header_menu"}>
@@ -20,12 +20,12 @@ function AdminNavBar() {
                             <img  src={logo} width={"55px"} height={"55px"} alt={"book store"}/>
                         </Link>
                         <Link to="/books" className={"nav_link"}>Каталог книг</Link>
-                        <Link to="/sales" className={"nav_link"}>Скидки</Link>
+                        <Link to="/discounts" className={"nav_link"}>Скидки</Link>
                         <Link to="/authors" className={"nav_link"}>Авторы</Link>
                         <Link to="/orders" className={"nav_link"}>Заказы</Link>
                         <Link to="/users" className={"nav_link"}>Пользователи</Link>
                         <div className={"user_panel"}>
-                            <Link onClick={logOut}>
+                            <Link onClick={logOut} to={"/login"}>
                                 <img src={logOutIcon} width={"30px"} height={"30px"} alt={"person"}/>
                             </Link>
                         </div>
@@ -33,7 +33,7 @@ function AdminNavBar() {
 
                 </div>
             </header>
-        </>
+        </React.Fragment>
     )
 }
 

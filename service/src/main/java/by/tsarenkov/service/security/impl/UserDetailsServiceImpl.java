@@ -27,14 +27,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private Set<SimpleGrantedAuthority> getAuthorities(User user)
           throws UsernameNotFoundException {
         Set<SimpleGrantedAuthority> authority = new HashSet<>();
-        authority.add(new SimpleGrantedAuthority(user.getRole().toString()));
+        authority.add(new SimpleGrantedAuthority(user.getRole().getRole().toString()));
         return authority;
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.getByEmail(email);
-        System.out.println(user.getPassword());
         return new UserDetailsImpl(
                 user.getEmail(),
                 user.getPassword(),

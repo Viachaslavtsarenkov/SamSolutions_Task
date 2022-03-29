@@ -2,6 +2,8 @@ package by.tsarenkov.db.repository;
 
 import by.tsarenkov.common.model.entity.User;
 import by.tsarenkov.common.model.enumeration.UserStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -18,17 +20,17 @@ public interface UserRepository extends CrudRepository<User, Long> {
     @Modifying
     @Query("update User user set user.status = :newStatus where user.id = :id")
     void changeUserStatus(@Param(value = "id") Long id, @Param(value = "newStatus") UserStatus newStatus);
-    @Transactional
     @Modifying
     @Query("update User user set user.status = :newStatus where user.email = :email and user.code = :code")
     void activateUser(@Param(value = "email") String email,
                       @Param(value = "newStatus") UserStatus newStatus,
                       @Param(value = "code") String code);
-    @Transactional
     @Modifying
     @Query("update User user set user.password = :password where user.email = :email")
     void resetUserPassword(@Param(value = "password") String password,
                            @Param(value = "email") String email);
 
     User getByEmail(String email);
+
+    Page<User> findAll(Pageable pageable);
 }

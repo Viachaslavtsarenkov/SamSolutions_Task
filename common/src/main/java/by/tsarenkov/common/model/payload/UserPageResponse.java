@@ -11,6 +11,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 public class UserPageResponse {
-    private List<User> user;
+    private List<User> users;
     private Integer totalPages;
 }

@@ -43,7 +43,7 @@ public class UserServiceImplTest {
         given(userRepository.existsByEmail(user.getEmail())).willReturn(false);
         given(passwordEncoder.encode(user.getEmail())).willReturn(password);
         userService.registerUser(user);
-        assertThat(user.getRole()).isEqualTo(Role.CUSTOMER);
+        assertThat(user.getRole()).isEqualTo(Role.ROLE_CUSTOMER);
         assertThat(user.getPassword()).isEqualTo(password);
         assertThat(user.getStatus()).isEqualTo(UserStatus.NO_ACTIVATED);
         assertThat(user.getCode()).isNotEmpty();
