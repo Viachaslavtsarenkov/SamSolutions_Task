@@ -1,28 +1,27 @@
 package by.tsarenkov.common.model.entity;
 
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
+import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.List;
+import java.util.Date;
+import java.util.*;
 
 @Entity
-@Table(name ="sale")
+@Table(name ="discount")
+@Proxy(lazy = false)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @ToString
-public class Sale {
+public class Discount {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id_sale")
-    private Long idSale;
+    @Column(name = "id_discount")
+    private Long id;
     @Column(name = "start_date")
     private Date startDate;
     @Column(name = "end_date")
@@ -32,9 +31,11 @@ public class Sale {
     @Column(name = "discount_factor")
     private double discountFactor;
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "sale_books",
-            joinColumns = @JoinColumn(name = "id_sale"),
+    @ToString.Exclude
+    @JsonIgnoreProperties("discounts")
+    @JoinTable(name = "discount_books",
+            joinColumns = @JoinColumn(name = "id_discount"),
             inverseJoinColumns = @JoinColumn(name = "id_book")
     )
-    private List<Book> saleBooks = new ArrayList<>();
+    private Set<Book> books = new HashSet<>();
 }
