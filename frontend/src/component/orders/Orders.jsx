@@ -7,12 +7,14 @@ import OrderForm from "./OrderForm";
 import OrdersList from "./OrdersList";
 import OrderView from "./OrderView";
 import Payment from "./Payment";
+import PaymentError from "./PaymentError";
 
 const Orders = () => (
     <Switch>
         <Route exact path={"/orders"} component={OrdersList}/>
         <Route path={"/orders/new"} component={OrderForm}/>
         <Route path={"/orders/payment"} component={Payment}/>
+        <Route path={"/orders/error"} component={PaymentError}/>
         <Route path={"/orders/:id"} component={OrderView}/>
     </Switch>
 )

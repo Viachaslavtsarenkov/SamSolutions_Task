@@ -6,6 +6,8 @@ import axios from "axios";
 import AuthorizationService from "./service/AuthorizationService"
 
 axios.defaults.headers['Authorization'] = AuthorizationService.authHeader().Authorization
+axios.defaults.headers.common['Content-Type'] = 'application/json';
+axios.defaults.headers.put['Content-Type'] = 'application/json';
 
 ReactDOM.render(
   <React.StrictMode>

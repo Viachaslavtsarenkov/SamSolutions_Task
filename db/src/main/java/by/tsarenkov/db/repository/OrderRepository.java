@@ -20,5 +20,4 @@ public interface OrderRepository extends CrudRepository<Order, Long> {
     @Query("update Order o set o.paymentStatus = :newStatus where o.paymentId = :id")
     void changePaymentStatus(@Param(value = "newStatus") PaymentStatus newStatus,
                           @Param(value = "id") String paymentId);
-    Order findByIdAndUserId(Long idOrder, Long idUser);
 }

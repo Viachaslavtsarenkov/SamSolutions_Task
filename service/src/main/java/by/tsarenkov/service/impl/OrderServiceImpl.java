@@ -32,6 +32,7 @@ public class OrderServiceImpl implements OrderService {
     private final SecurityContextService securityContextService;
     private final PaypalService paymentService;
     private final BookService bookService;
+    private final MailServiceImpl mailService;
 
     @Override
     @Transactional
@@ -107,7 +108,9 @@ public class OrderServiceImpl implements OrderService {
     public Order executeOrder(String paymentId, String payerId) throws PayPalRESTException{
         paymentService.executePayment(paymentId, payerId);
         orderRepository.changePaymentStatus(PaymentStatus.PAID, paymentId);
-        //todo email sending
+
+        //todo sending email
+        //mailService.sendActivationMail();
         return null;
     }
 

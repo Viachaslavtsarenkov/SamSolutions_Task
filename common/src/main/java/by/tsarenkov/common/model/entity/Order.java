@@ -22,7 +22,6 @@ import java.util.*;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -58,4 +57,27 @@ public class Order {
             inverseJoinColumns = @JoinColumn(name = "id_book")
     )
     private Set<Book> orderBooks = new HashSet<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return count == order.count && Objects.equals(id, order.id)
+                && Objects.equals(amount, order.amount)
+                && Objects.equals(date, order.date)
+                && status == order.status
+                && Objects.equals(address, order.address)
+                && Objects.equals(paymentUrl, order.paymentUrl)
+                && paymentStatus == order.paymentStatus
+                && Objects.equals(paymentId, order.paymentId)
+                && Objects.equals(user, order.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, amount, count,
+                date, status, address,
+                paymentUrl, paymentStatus, paymentId);
+    }
 }

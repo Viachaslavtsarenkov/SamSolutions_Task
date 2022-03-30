@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {Redirect, useHistory, useParams} from "react-router-dom";
+import {Link, Redirect, useHistory, useParams} from "react-router-dom";
 import axios from "axios";
 
 function  Payment() {
@@ -18,9 +18,14 @@ function  Payment() {
         })
     }
     return (
-        <>
-            <Redirect to={"/profile"} />
-        </>
+        <div className={"wrapper"}>
+            <div>
+                <p>Оплата пошла успешно</p>
+                <Link to={"/profile"}>
+                    Перейти в личный кабинет
+                </Link>
+            </div>
+        </div>
     )
 };
 
