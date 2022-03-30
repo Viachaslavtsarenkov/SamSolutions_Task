@@ -24,7 +24,8 @@ public class AccountServiceImpl implements AccountService {
         Long id = securityContextService.getCurrentUserId();
         User user = Optional.of(userRepository.findById(id)).get()
                 .orElseThrow(UserNotFoundException::new);
-        return null;
+        System.out.println(user.getOrders().size() + "=================================================");
+        return user;
     }
 
     @Override

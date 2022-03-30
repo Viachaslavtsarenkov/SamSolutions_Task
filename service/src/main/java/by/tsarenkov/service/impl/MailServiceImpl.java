@@ -4,6 +4,7 @@ import by.tsarenkov.service.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,8 @@ public class MailServiceImpl implements MailService {
     private JavaMailSender mailSender;
     @Autowired
     private SimpleMailMessage preConfiguredMessage;
+    @Autowired
+    private Environment environment;
 
     @Value("${activation.message}")
     private String activationMessage;
@@ -27,5 +30,15 @@ public class MailServiceImpl implements MailService {
         preConfiguredMessage.setText(String.format(activationMessage, email, code));
         mailSender.send(preConfiguredMessage);
     }
+
+    @Override
+    public void sendMail(String email, String key) {
+        preConfiguredMessage.setTo(email);
+        preConfiguredMessage.setSubject("Activation");
+        preConfiguredMessage.setText(String.format(activationMessage, email
+                , environment.getRequiredProperty(key)));
+        mailSender.send(preConfiguredMessage);
+    }
+
 
 }

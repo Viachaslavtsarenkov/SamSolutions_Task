@@ -43,7 +43,7 @@ public class User implements Serializable {
     @ManyToOne
     @JoinColumn(name = "id_role")
     private UserRole role;
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnoreProperties({"user", "orderBooks"})
     @ToString.Exclude
     private Set<Order> orders = new HashSet<>();

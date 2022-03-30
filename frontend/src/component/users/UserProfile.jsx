@@ -1,4 +1,4 @@
-import {Link, useParams} from "react-router-dom";
+import {Link, Redirect, useParams} from "react-router-dom";
 import axios from "axios";
 import React, {useEffect, useState} from "react";
 import '../../styles/user/user.sass';
@@ -10,23 +10,23 @@ function UserProfile() {
     let [user, setUser] = useState();
 
     useEffect(() => {
-        if(AuthorizationService.currentUserHasRole("ROLE_CUSTOMER")) {
-
-        }
         getProfile();
     }, [])
 
     function getProfile() {
         let url = "/users/" + id;
         if(AuthorizationService.currentUserHasRole("ROLE_CUSTOMER")) {
-            url = "/users/profile";
+            url = "/profile";
         }
+        console.log(AuthorizationService.currentUserHasRole("ROLE_CUSTOMER"))
         axios.get(url)
             .then((response) => {
-          setUser(response.data)
+                 setUser(response.data)
+                    console.log(response.data)
             }).catch((error) => {
         })
     }
+
 
     return (
         <div>
@@ -34,13 +34,14 @@ function UserProfile() {
             <div className={"user_container"}>
                 <h2>Информация о пользователе</h2>
                 <div className={"user_info"}>
+                    {console.log(user['orders'])}
                     <p><span>Имя:</span> {user['name']}</p>
                     <p><span>Фамилия:</span> {user['surname']}</p>
                     <p><span>Отчество:</span> {user['patronymic']}</p>
                     <p><span>Email:</span> {user['email']}</p>
                     <p><span>Номер телефона:</span> {user['phoneNumber']}</p>
-                    {console.log(user["orders"])}
                 </div>
+                {user['orders'].length !== 0 && (
                 <div className={"user_orders"}>
                     <h2>Заказы</h2>
                     <table className={"book_list_table"}>
@@ -54,7 +55,7 @@ function UserProfile() {
                             </tr>
                         </thead>
                         <tbody>
-                            {user['orders'].map((order, index) => (
+                        { user['orders'].map((order, index) => (
                                 <tr>
                                     <td>{order.id}</td>
                                     <td>{new Date(order.date).toLocaleDateString()}</td>
@@ -78,10 +79,10 @@ function UserProfile() {
                             ))}
                         </tbody>
                     </table>
-                </div>
+                </div>)}
             </div>
             )}
         </div>
     )
-};
+}
 export default UserProfile;

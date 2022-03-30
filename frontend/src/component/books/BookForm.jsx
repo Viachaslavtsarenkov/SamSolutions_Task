@@ -145,10 +145,10 @@ function BookForm() {
                 },
             }).then(function (response) {
                 alert("Сохранено");
-               //  setURL(book.id !== ''
-               //    ? url.concat("/",id)
-             //      : url.concat("/",response.data.message));
-               //  setIsRedirect(true);
+                 setURL(book.id !== ''
+                   ? url.concat("/",id)
+                   : url.concat("/",response.data.message));
+                 setIsRedirect(true);
             })
         }
     }

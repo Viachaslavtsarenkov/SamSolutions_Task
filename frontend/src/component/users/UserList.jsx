@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import {Link, useHistory} from "react-router-dom";
+import {Link, Redirect, useHistory} from "react-router-dom";
 import Pagination from "../commom/Pagination";
 import Util from "../../service/Util";
+import AuthorizationService from "../../service/AuthorizationService";
 
 function UserList() {
 
@@ -30,6 +31,10 @@ function UserList() {
     function toPage(el) {
         Util.setUrl(Util.setPageParam(el),history)
         setPage(el);
+    }
+
+    if(!AuthorizationService.currentUserHasRole("ROLE_ADMIN")) {
+        return <Redirect to={"/"}/>
     }
 
     return (
