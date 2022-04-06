@@ -39,10 +39,10 @@
 * Cart(adding/removing books)
 
 ### Additional Info
- *Don't forget to enter email address and password in the properties file for correct email sending
+ * Don't forget to enter email address and password in the properties file for correct email sending
  **mail.username = your email**
  **mail.password = your password**
- Also for payment systems(PayPal) you have to add: payment client id and payment secret key
+ * Also for payment systems(PayPal) you have to add: payment client id and payment secret key
  **paypal.client.id = your id**
  **paypal.client.secret = your key**
  
