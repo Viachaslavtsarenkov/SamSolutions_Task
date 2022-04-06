@@ -3,7 +3,7 @@
  ### Technologies used
 * Spring, Spring Boot, Spring Security, Spring Data JPA
 * React
-* MySql
+* PostgreSQL
 * Slf4j
 * JUnit 5, Mockito, H2 db
 
