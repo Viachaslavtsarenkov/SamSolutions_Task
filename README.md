@@ -1,7 +1,7 @@
 # Book store
 
  ### Technologies used
-* Spring, Spring Boot, Spring Security, Spring Data JPA
+* Spring, Spring MVC, Spring Security, Spring Data JPA
 * React
 * PostgreSQL
 * Slf4j
