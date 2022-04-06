@@ -40,10 +40,11 @@
 
 ### Additional Info
  * Don't forget to enter email address and password in the properties file for correct email sending <br/>
- **mail.username = your email**
+ **mail.username = your email** <br/>
  **mail.password = your password**
  * Also for payment systems(PayPal) you have to add: payment client id and payment secret key <br/>
- **paypal.client.id = your id**
+ **paypal.client.id = your id** <br/>
  **paypal.client.secret = your key**
+
  
  
