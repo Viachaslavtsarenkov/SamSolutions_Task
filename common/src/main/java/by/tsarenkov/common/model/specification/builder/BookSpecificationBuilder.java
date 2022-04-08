@@ -14,7 +14,7 @@ public class BookSpecificationBuilder {
     private final List<SearchCriteria> params;
 
     public BookSpecificationBuilder() {
-        params = new ArrayList<SearchCriteria>();
+        params = new ArrayList<>();
     }
 
     public BookSpecificationBuilder with(String key, String operation, Object value) {
@@ -34,11 +34,7 @@ public class BookSpecificationBuilder {
         Specification result = specs.get(0);
 
         for (int i = 1; i < params.size(); i++) {
-            result = params.get(i)
-                    .isOrPredicate()
-                    ? Specification.where(result)
-                    .or(specs.get(i))
-                    : Specification.where(result)
+            result =  Specification.where(result)
                     .and(specs.get(i));
         }
         return result;

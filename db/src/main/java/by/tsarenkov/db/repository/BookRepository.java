@@ -20,12 +20,11 @@ import java.util.Set;
 
 @Repository
 public interface BookRepository extends CrudRepository<Book, Long>, JpaSpecificationExecutor<Book> {
-    List<Book> findBookByNameContaining(String name);
+    List<Book> findBookByNameIgnoreCaseContaining(String name);
     List<Book> findAllByIdIn(Set<Long> ids);
     @Modifying
     @Query("update Book book set book.inStock = :inStock where book.id = :id")
     void changeInStockStatus(@Param(value = "inStock") Boolean inStock ,
                       @Param(value = "id") Long id);
     Page<Book> findAll(@Nullable Specification<Book> spec, @NotNull Pageable pageable);
-    //Integer countAll(Specification<Book> spec);
 }

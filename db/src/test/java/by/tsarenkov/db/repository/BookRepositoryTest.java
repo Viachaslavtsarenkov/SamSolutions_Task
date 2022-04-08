@@ -1,7 +1,9 @@
 package by.tsarenkov.db.repository;
 
 import by.tsarenkov.common.model.entity.Author;
+import by.tsarenkov.common.model.entity.AuthorImage;
 import by.tsarenkov.common.model.entity.Book;
+import by.tsarenkov.common.model.entity.BookImage;
 import by.tsarenkov.db.config.JpaTestConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -26,12 +28,7 @@ public class BookRepositoryTest {
     @Mock
     private AuthorRepository authorRepository;
 
-    private Author author = Author.builder()
-            .pseudonym("Pushkin")
-            .description("Russian poet")
-            .build();
-
-    private Book testBook = Book.builder()
+    private final Book testBook = Book.builder()
             .name("The queen's Gambit")
             .description("")
             .amountPages(12)
@@ -44,6 +41,10 @@ public class BookRepositoryTest {
     @Test
     public void ShouldSaveBook() {
         Set<Author> authorsList = new HashSet<>();
+        BookImage image = new BookImage();
+        image.setImageContent("image");
+        testBook.setImage(image);
+        testBook.setAuthors(authorsList);
         bookRepository.save(testBook);
         Assertions.assertEquals(testBook.getId(),
                 bookRepository.findById(testBook.getId()).get().getId());

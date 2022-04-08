@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "image_book")
@@ -24,4 +25,18 @@ public class BookImage implements Serializable {
     @OneToOne(mappedBy = "image")
     @JsonIgnore
     private Book book;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BookImage bookImage = (BookImage) o;
+        return Objects.equals(id, bookImage.id)
+                && Objects.equals(imageContent, bookImage.imageContent);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, imageContent);
+    }
 }

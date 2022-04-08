@@ -36,9 +36,9 @@ public class BookController {
 
     @GetMapping(BOOK_MAPPING)
     public ResponseEntity<?> getBooks(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-                               @RequestParam(value = "order", required = false) String order,
-                               @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
-                               @RequestParam(value = "sortby", required = false, defaultValue = "price") String sortBy,
+                                      @RequestParam(value = "order", required = false) String order,
+                                      @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
+                                      @RequestParam(value = "sortby", required = false, defaultValue = "price") String sortBy,
                                       @RequestParam(value = "search", required = false) String search) {
 
         BookSpecificationBuilder builder = new BookSpecificationBuilder();
@@ -47,23 +47,21 @@ public class BookController {
         while (matcher.find()) {
             builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
         }
+
         Specification<Book> spec = builder.build();
+        List<Sort.Order> sorts = new ArrayList<>();
+        String sortField;
 
-        List<Sort.Order> sorts= new ArrayList<>();
-        String sortField = null;
-
-        if(sortBy != null) {
+        if (sortBy != null) {
             sortField = sortBy;
         } else {
             sortField = PRICE_SORT_FIELD;
         }
-
-        if(order == null || order.equals("ASC")) {
+        if (order == null || order.equals("ASC")) {
             sorts.add(new Sort.Order(Sort.Direction.ASC, sortField));
         } else {
             sorts.add(new Sort.Order(Sort.Direction.DESC, sortField));
         }
-
         BookPageResponse books = service.findAllBook(spec, page, Sort.by(sorts));
         return ResponseEntity.ok().body(
                 books);
@@ -72,8 +70,7 @@ public class BookController {
     @GetMapping(BOOK_MAPPING_BY_ID)
     public Book getOne(@PathVariable Long id)
             throws BookNotFoundException {
-        Book book = service.getBook(id);
-        return book;
+        return service.getBook(id);
     }
 
     @DeleteMapping(BOOK_MAPPING_BY_ID)
@@ -82,10 +79,10 @@ public class BookController {
         service.deleteBook(id);
     }
 
-    @PostMapping(value = BOOK_MAPPING,consumes = {"multipart/form-data"})
+    @PostMapping(value = BOOK_MAPPING, consumes = {"multipart/form-data"})
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createBook(@RequestPart(value = "image", required = false) MultipartFile image,
-                                     @RequestPart("book") Book book) {
+                                        @RequestPart("book") Book book) {
 
         book = service.saveBook(book, image);
         return ResponseEntity.ok(new MessageResponse(book.getId().toString()));
@@ -98,6 +95,7 @@ public class BookController {
         service.updateBook(book, image);
         return ResponseEntity.ok("book is updated");
     }
+
     @GetMapping("/books/search")
     public ResponseEntity<?> findBookByAuthorOrId(@RequestParam("searchString") String searchString) {
         return ResponseEntity.ok()
@@ -112,17 +110,5 @@ public class BookController {
                 .boxed()
                 .collect(Collectors.toSet());
         return ResponseEntity.ok().body(service.getCart(bookList));
-    }
-
-    @GetMapping("/books/count")
-    public Integer getCountBookOfSearchCriteria(@PathVariable(value = "search") String search) {
-       /* BookSpecificationBuilder builder = new BookSpecificationBuilder();
-        Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
-        Matcher matcher = pattern.matcher(search + ",");
-        while (matcher.find()) {
-            builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
-        }
-        Specification<Book> spec = builder.build();*/
-        return null;// service.getCountBooks(spec);
     }
 }

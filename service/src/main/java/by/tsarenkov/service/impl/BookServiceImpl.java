@@ -43,15 +43,19 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public Book saveBook(Book book, MultipartFile image) {
-        String file = pictureLoader.loadPicture(image);
+        BookImage bookImage;
         if(image != null) {
-            BookImage bookImage = BookImage.builder()
+            String file = pictureLoader.loadPicture(image);
+            bookImage = BookImage.builder()
                     .imageContent(file)
                     .build();
-            bookImageRepository.save(bookImage);
-            book.setImage(bookImage);
+        } else {
+            bookImage = BookImage.builder()
+                    .build();
         }
-        bookRepository.save(book);
+        bookImage = bookImageRepository.save(bookImage);
+        book.setImage(bookImage);
+        book = bookRepository.save(book);
         LOGGER.warn(String.format(LOG_CREATED_MSG, "Book", book.getId()));
         return book;
     }
@@ -87,7 +91,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public BookPageResponse findAllBook(Specification<Book> spec, int page, Sort sort) {
-        Page<Book> books = bookRepository.findAll(spec, PageRequest.of(page, 10, sort));
+        Page<Book> books = bookRepository.findAll(spec, PageRequest.of(page, 8, sort));
         books.getContent()
                 .forEach(this::checkActualDiscount);
         return new BookPageResponse(books.getContent(), books.getTotalPages());
@@ -96,7 +100,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<Book> findBooksByNameOrId(String searchString) {
         List<Book> bookList = bookRepository
-                .findBookByNameContaining(searchString);
+                .findBookByNameIgnoreCaseContaining(searchString);
         bookList.forEach(this::checkActualDiscount);
         return  bookList;
     }
