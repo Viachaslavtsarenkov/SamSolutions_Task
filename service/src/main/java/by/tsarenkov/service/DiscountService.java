@@ -7,10 +7,10 @@ import by.tsarenkov.service.exception.DiscountNotFoundException;
 import java.sql.Date;
 
 public interface DiscountService {
-    Discount saveSale(Discount discount);
-    void deleteSale(Long id);
-    Discount getSaleById(Long id) throws DiscountNotFoundException;
-    void updateSale(Discount discount);
+    Discount saveDiscount(Discount discount);
+    void deleteDiscount(Long id);
+    Discount getDiscountById(Long id) throws DiscountNotFoundException;
+    void updateDiscount(Discount discount);
     DiscountPageResponse findAllDiscounts(int page, int size);
-    boolean existsBookOnDiscount(Long id, Date endDate, Date startDate);
+    boolean existsBookOnDiscount(Long idDiscount, Long id, Date endDate, Date startDate);
 }

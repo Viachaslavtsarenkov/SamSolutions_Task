@@ -38,4 +38,21 @@ public class Discount {
             inverseJoinColumns = @JoinColumn(name = "id_book")
     )
     private Set<Book> books = new HashSet<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Discount discount = (Discount) o;
+        return Double.compare(discount.discountFactor, discountFactor) == 0
+                && Objects.equals(id, discount.id)
+                && Objects.equals(startDate, discount.startDate)
+                && Objects.equals(endDate, discount.endDate)
+                && Objects.equals(name, discount.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, startDate, endDate, name, discountFactor);
+    }
 }

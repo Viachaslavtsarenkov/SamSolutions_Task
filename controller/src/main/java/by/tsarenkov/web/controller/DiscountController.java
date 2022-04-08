@@ -17,31 +17,32 @@ public class DiscountController {
 
     private static final String DISCOUNT_MAPPING = "/discounts";
     private static final String DISCOUNT_MAPPING_BY_ID = "/discounts/{id}";
+    private static final String DISCOUNT_CHECK = "/discounts/check";
 
     private final DiscountService discountService;
 
     @PostMapping(value = DISCOUNT_MAPPING)
     public ResponseEntity<?> saveNewDiscount(@RequestBody Discount discount) {
-        discountService.saveSale(discount);
+        discountService.saveDiscount(discount);
         return ResponseEntity.ok().body(discount.getId());
     }
 
     @PatchMapping(DISCOUNT_MAPPING_BY_ID)
     public void updateDiscount(@PathVariable Long id,
                                         @RequestBody Discount discount) {
-        discountService.updateSale(discount);
+        discountService.updateDiscount(discount);
     }
 
     @DeleteMapping(DISCOUNT_MAPPING_BY_ID)
     public ResponseEntity<?> deleteDiscount(@PathVariable Long id) {
-        discountService.deleteSale(id);
-        return ResponseEntity.ok().body(new MessageResponse("sale was deleted"));
+        discountService.deleteDiscount(id);
+        return ResponseEntity.ok().body(new MessageResponse("The discount was deleted"));
     }
 
     @GetMapping(DISCOUNT_MAPPING_BY_ID)
     public ResponseEntity<?> findDiscount(@PathVariable Long id)
             throws DiscountNotFoundException {
-        return ResponseEntity.ok().body(discountService.getSaleById(id));
+        return ResponseEntity.ok().body(discountService.getDiscountById(id));
     }
 
     @GetMapping(DISCOUNT_MAPPING)
@@ -53,11 +54,13 @@ public class DiscountController {
         return discountService.findAllDiscounts(page, size);
     }
 
-    @GetMapping("/discounts/check")
+    @GetMapping(DISCOUNT_CHECK)
     public ResponseEntity<?> checkBookOnDiscount(@RequestParam(value = "id") Long bookId,
                                    @RequestParam(value = "startDate") Date startDate,
-                                   @RequestParam(value = "endDate") Date endDate) {
+                                   @RequestParam(value = "endDate") Date endDate,
+                                   @RequestParam(value = "idDiscount", defaultValue = "0") Long idDiscount) {
         return  ResponseEntity.ok()
-                .body(discountService.existsBookOnDiscount(bookId, startDate, endDate));
+                .body(discountService
+                        .existsBookOnDiscount(idDiscount,bookId, startDate, endDate));
     }
 }

@@ -8,13 +8,10 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
-import java.util.Set;
 
 @Repository
 public interface DiscountRepository extends CrudRepository<Discount, Long> {
     Page<Discount> findAll(Pageable pageable);
-    boolean existsDiscountByBooksContainingAndStartDateLessThanEqualAndEndDateGreaterThanEqual
-            (Book books, Date startDate, Date endDate);
-    boolean existsDiscountByBooksContaining
-            (Book books);
+    boolean existsDiscountByIdIsNotAndBooksContainingAndStartDateLessThanEqualAndEndDateGreaterThanEqual
+            (Long id, Book books, Date startDate, Date endDate);
 }

@@ -31,7 +31,7 @@ public class DiscountServiceImpl implements DiscountService {
 
     @Override
     @Transactional
-    public Discount saveSale(Discount discount) {
+    public Discount saveDiscount(Discount discount) {
         discountRepository.save(discount);
         LOGGER.warn(String.format(LOG_CREATED_MSG, "Discount", discount.getId()));
         return discount;
@@ -39,14 +39,14 @@ public class DiscountServiceImpl implements DiscountService {
 
     @Override
     @Transactional
-    public void deleteSale(Long id) {
+    public void deleteDiscount(Long id) {
         discountRepository.deleteById(id);
         LOGGER.warn(String.format(LOG_DELETED_MSG, "Sale", id));
     }
 
     @Transactional
     @Override
-    public Discount getSaleById(Long id) throws DiscountNotFoundException {
+    public Discount getDiscountById(Long id) throws DiscountNotFoundException {
         Discount discount = Optional.of(discountRepository.findById(id)).get()
                 .orElseThrow(DiscountNotFoundException::new);
         return discount;
@@ -54,7 +54,7 @@ public class DiscountServiceImpl implements DiscountService {
 
     @Override
     @Transactional
-    public void updateSale(Discount discount) {
+    public void updateDiscount(Discount discount) {
         discountRepository.save(discount);
         LOGGER.warn(String.format(LOG_UPDATED_MSG, "Sale", discount.getId()));
     }
@@ -67,12 +67,12 @@ public class DiscountServiceImpl implements DiscountService {
     }
 
     @Override
-    public boolean existsBookOnDiscount(Long id, Date startDate, Date endDate) {
+    public boolean existsBookOnDiscount(Long idDiscount, Long id, Date startDate, Date endDate) {
         Book book = Optional.of(bookRepository.findById(id))
                 .get()
                 .orElseThrow();
         return discountRepository
-                .existsDiscountByBooksContainingAndStartDateLessThanEqualAndEndDateGreaterThanEqual
-                (book, endDate, startDate);
+                .existsDiscountByIdIsNotAndBooksContainingAndStartDateLessThanEqualAndEndDateGreaterThanEqual
+                (idDiscount, book, endDate, startDate);
     }
 }
