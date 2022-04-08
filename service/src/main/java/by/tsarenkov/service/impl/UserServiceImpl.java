@@ -1,10 +1,8 @@
 package by.tsarenkov.service.impl;
 
 import by.tsarenkov.common.model.dto.ActivationDto;
-import by.tsarenkov.common.model.dto.UserDto;
 import by.tsarenkov.common.model.entity.User;
 import by.tsarenkov.common.model.entity.UserRole;
-import by.tsarenkov.common.model.enumeration.Role;
 import by.tsarenkov.common.model.enumeration.UserStatus;
 import by.tsarenkov.common.model.payload.UserPageResponse;
 import by.tsarenkov.db.repository.RoleRepository;
@@ -14,19 +12,15 @@ import by.tsarenkov.service.exception.ActivationAccountException;
 import by.tsarenkov.service.exception.EmailAlreadyTakenException;
 import by.tsarenkov.service.exception.UserNotFoundException;
 import by.tsarenkov.service.util.CodeGenerator;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static by.tsarenkov.service.constants.LogMessage.LOG_CREATED_MSG;
@@ -90,10 +84,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User getUserById(Long id) throws UserNotFoundException {
-        User user = Optional.of(userRepository.findById(id)).get()
+        return Optional.of(userRepository.findById(id)).get()
                 .orElseThrow(UserNotFoundException::new);
-        user.getOrders().size();
-        return user;
     }
 
     @Override

@@ -45,7 +45,7 @@ public class SpringConfig implements WebMvcConfigurer {
     @Bean(name = "multipartResolver")
     public CommonsMultipartResolver multipartResolver() {
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-        multipartResolver.setMaxUploadSize(500000);
+        multipartResolver.setMaxUploadSize(50000000);
         return multipartResolver;
     }
 

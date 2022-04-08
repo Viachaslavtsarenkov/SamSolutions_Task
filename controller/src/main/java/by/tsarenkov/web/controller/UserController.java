@@ -28,12 +28,6 @@ public class UserController {
         return ResponseEntity.ok().body(user);
     }
 
-    @PatchMapping(USER_BY_ID_MAPPING)
-    @PreAuthorize("hasRole('CUSTOMER')")
-    public void updateUser(@PathVariable Long id, @RequestBody User user) {
-        userService.updateUser(user);
-    }
-
     @GetMapping(USER_MAPPING)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getAllUsers(@RequestParam(value = "page", required = false,

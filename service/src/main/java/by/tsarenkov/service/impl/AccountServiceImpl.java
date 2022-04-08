@@ -22,15 +22,14 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public User getUserProfile() throws UserNotFoundException{
         Long id = securityContextService.getCurrentUserId();
-        User user = Optional.of(userRepository.findById(id)).get()
+        return Optional.of(userRepository.findById(id)).get()
                 .orElseThrow(UserNotFoundException::new);
-        System.out.println(user.getOrders().size() + "=================================================");
-        return user;
     }
 
     @Override
     public Order getUserOrder(Long idOrder) {
         Long id = securityContextService.getCurrentUserId();
+        //todo
         return null;
     }
 }
