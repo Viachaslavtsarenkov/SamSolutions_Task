@@ -48,14 +48,18 @@ public class AuthorServiceImpl implements AuthorService {
             throw new AuthorAlreadyExistsException(MessageResponse.AUTHOR_ALREADY_EXIST);
         }
 
+        AuthorImage authorImage;
+
         if(image != null) {
             String fileName = pictureLoader.loadPicture(image);
-            AuthorImage authorImage = AuthorImage.builder()
+            authorImage = AuthorImage.builder()
                     .imageContent(fileName)
                     .build();
-            authorImageRepository.save(authorImage);
-            author.setImage(authorImage);
+        } else {
+            authorImage = new AuthorImage();
         }
+        authorImageRepository.save(authorImage);
+        author.setImage(authorImage);
 
         authorRepository.save(author);
         LOGGER.warn(String.format(LOG_CREATED_MSG, "Author", author.getId()));
@@ -81,6 +85,7 @@ public class AuthorServiceImpl implements AuthorService {
         if(image != null) {
             String file = pictureLoader.loadPicture(image);
             AuthorImage authorImage = author.getImage();
+            authorImage = authorImageRepository.save(authorImage);
             authorImage.setImageContent(file);
         }
 

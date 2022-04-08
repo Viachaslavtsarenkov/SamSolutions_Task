@@ -1,4 +1,4 @@
-import React, {useEffect} from "react"
+import React from "react"
 import '../../styles/author/authors.sass'
 import AuthorizationService from "../../service/AuthorizationService";
 import {Redirect} from "react-router-dom";
@@ -40,7 +40,8 @@ class AuthorForm extends React.Component {
         const url = "/authors/";
         axios.get(url + id).then((response)=>{
             this.setState({ author : response.data})
-        }).catch((error) => {
+        }).catch(() => {
+            this.setState({url : "/404"})
             this.setState({isFound: false})
         })
     }
@@ -55,7 +56,13 @@ class AuthorForm extends React.Component {
     }
 
     uploadImg(event) {
-        this.setState({file:event.target.files[0]})
+        alert(event.target.files[0].size )
+        if(event.target.files[0].size < 2000000) {
+            this.setState({file:event.target.files[0]})
+        } else {
+            alert("Размер файла должен быть меньше 2мб")
+            event.target.value = "";
+        }
     }
 
     createAuthor(e){
@@ -87,16 +94,11 @@ class AuthorForm extends React.Component {
             this.setState({errorPseudonym : error.response.data});
         })
     }
-
-    saveChanges() {
-
-    }
-
     render() {
         if(!AuthorizationService.currentUserHasRole("ROLE_ADMIN")) {
             return <Redirect to={"/"}/>
         }
-        if(this.state.isSaved) {
+        if(this.state.isSaved || !this.state.isFound) {
             return <Redirect to={this.state.url}/>
         }
 

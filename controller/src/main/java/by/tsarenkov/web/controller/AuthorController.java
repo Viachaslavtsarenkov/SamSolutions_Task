@@ -6,12 +6,10 @@ import by.tsarenkov.common.model.payload.AuthorPageResponse;
 import by.tsarenkov.service.AuthorService;
 import by.tsarenkov.service.exception.AuthorAlreadyExistsException;
 import by.tsarenkov.service.exception.AuthorNotFoundException;
-import by.tsarenkov.service.impl.AuthorServiceImpl;
 import by.tsarenkov.service.security.SecurityContextService;
 import by.tsarenkov.web.constant.Message;
 import by.tsarenkov.web.controller.response.MessageResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -48,7 +46,7 @@ public class AuthorController {
             sorts.add(new Sort.Order(Sort.Direction.DESC,PSEUDONYM_SORT_FIELD));
         }
         AuthorPageResponse authors = service.getAllAuthors(page, Sort.by(sorts));
-       return ResponseEntity.ok().body(authors);
+        return ResponseEntity.ok().body(authors);
     }
 
     @GetMapping(AUTHOR_BY_ID_MAPPING)

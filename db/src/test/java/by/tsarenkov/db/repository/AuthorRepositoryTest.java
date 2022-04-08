@@ -22,6 +22,7 @@ import java.util.Optional;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { JpaTestConfig.class })
 @WebAppConfiguration
+
 public class AuthorRepositoryTest {
 
     @Autowired

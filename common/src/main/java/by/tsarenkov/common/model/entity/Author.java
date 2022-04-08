@@ -26,6 +26,7 @@ public class Author  implements Serializable {
     @NotNull
     private String pseudonym;
     @Column(name = "description", length = 1200)
+    @NotNull
     private String description;
     @ManyToMany(mappedBy = "authors", fetch = FetchType.EAGER)
     @ToString.Exclude
