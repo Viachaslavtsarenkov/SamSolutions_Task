@@ -28,7 +28,8 @@ const locale = ({
         patronymicPlaceHolder: 'Введите отчество',
         phone : 'Номер телефона',
         phonePlaceHolder : 'Введите номер телефона',
-        email : 'Email'
+        email : 'Email',
+        emailTaken : "Адрес электронной почты уже занят"
 
     }
 });

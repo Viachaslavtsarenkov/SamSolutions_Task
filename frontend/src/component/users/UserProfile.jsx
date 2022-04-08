@@ -8,6 +8,7 @@ function UserProfile() {
 
     let {id} = useParams();
     let [user, setUser] = useState();
+    let [isRedirect, setIsRedirect] = useState(false);
 
     useEffect(() => {
         getProfile();
@@ -18,15 +19,21 @@ function UserProfile() {
         if(AuthorizationService.currentUserHasRole("ROLE_CUSTOMER")) {
             url = "/profile";
         }
-        console.log(AuthorizationService.currentUserHasRole("ROLE_CUSTOMER"))
         axios.get(url)
             .then((response) => {
                  setUser(response.data)
-                    console.log(response.data)
-            }).catch((error) => {
+            }).catch(() => {
+                setIsRedirect(true);
         })
     }
 
+    if(isRedirect) {
+        return <Redirect to={"/404"}/>
+    }
+
+    if(AuthorizationService.getCurrentUser() === undefined) {
+        return <Redirect to={"/"}/>
+    }
 
     return (
         <div>
@@ -34,7 +41,6 @@ function UserProfile() {
             <div className={"user_container"}>
                 <h2>Информация о пользователе</h2>
                 <div className={"user_info"}>
-                    {console.log(user['orders'])}
                     <p><span>Имя:</span> {user['name']}</p>
                     <p><span>Фамилия:</span> {user['surname']}</p>
                     <p><span>Отчество:</span> {user['patronymic']}</p>
@@ -55,13 +61,13 @@ function UserProfile() {
                             </tr>
                         </thead>
                         <tbody>
-                        { user['orders'].map((order, index) => (
-                                <tr>
+                        { user['orders'].map((order) => (
+                                <tr key={order.id}>
                                     <td>{order.id}</td>
                                     <td>{new Date(order.date).toLocaleDateString()}</td>
                                     <td>
                                         {order['paymentStatus'] === "NO_PAID" && (
-                                            <a href={order['paymentUrl']} target={'_blank'}>
+                                            <a href={order['paymentUrl']}>
                                                 Оплатить
                                             </a>
                                         )}

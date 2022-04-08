@@ -1,16 +1,15 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import '../../styles/order/order.sass'
-import {Link, Redirect, useHistory, useParams} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import AuthorizationService from "../../service/AuthorizationService";
 
 function OrderForm(props) {
 
-    const history = useHistory();
     let[order, setOrder] = useState({})
-    let[isSaved, setIsSaved] = useState(false);
-    let[url, setUrl] = useState('');
-    let[books, setBooks] = useState(props.location.search);
+    let[isSaved] = useState(false);
+    let[url] = useState('');
+    let[books] = useState(props.location.search);
 
     useEffect(() => {
        getOrderBooks();
@@ -21,7 +20,7 @@ function OrderForm(props) {
             .then((response) => {
                 setOrder(response.data)
                 console.log(response.data)
-        }).catch((error) => {
+        }).catch(() => {
         })
     }
 
@@ -43,6 +42,7 @@ function OrderForm(props) {
     if(isSaved) {
         return <Redirect to={url}/>
     }
+
     if(!AuthorizationService.currentUserHasRole("ROLE_CUSTOMER")) {
         return <Redirect to={'/login'}/>
     }
@@ -61,7 +61,7 @@ function OrderForm(props) {
                     <p>Товары</p>
                     <div className={"order_books_list"}>
                         {order['orderBooks'] !== undefined
-                        && order['orderBooks'].map((book, index) => (
+                        && order['orderBooks'].map((book) => (
                             <div>
                                 <Link to={{
                                     pathname : "/books/" + book.id
@@ -78,7 +78,7 @@ function OrderForm(props) {
                     <div><span>Итого</span>&nbsp;&nbsp;{order['amount']}</div>
                     <Link to={"/cart"} className={"change_order_btn"}>
                         Изменить заказ
-                    </Link><br></br>
+                    </Link><br/>
                     <input
                         className={"action_btn"}
                         type={"submit"}

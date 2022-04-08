@@ -4,12 +4,13 @@ import {Link, Redirect, useHistory} from "react-router-dom";
 import Pagination from "../commom/Pagination";
 import Util from "../../service/Util";
 import AuthorizationService from "../../service/AuthorizationService";
+import loading from "../../icon/loading.gif";
 
 function UserList() {
 
     const history = useHistory();
     let [users, setUsers] = useState([{}]);
-    let [totalPages, setTotalPages] = useState(0);
+    let [totalPages, setTotalPages] = useState(-1);
     let [page, setPage] = useState(Util.getPage());
 
     useEffect(() => {
@@ -48,8 +49,8 @@ function UserList() {
                     <th>Статус</th>
                     <th>Действие</th>
                 </tr>
-                {users.map((user, index) => (
-                    <tr>
+                {users.map((user) => (
+                    <tr key={user.id}>
                         <td>{user.id}</td>
                         <td>{user.name} {user.surname} {user.patronymic}</td>
                         <td>{user.email}</td>
@@ -63,11 +64,18 @@ function UserList() {
                     </tr>
                 ))}
             </table>
-            <Pagination
-                page={page}
-                totalPages={totalPages}
-                toPage={toPage}
-            />
+            {totalPages === -1 && (
+                <div className={"loading_container"}>
+                    <img src={loading} width={50} alt={"loading"}/>
+                </div>
+            )}
+            {totalPages > 0 && (
+                <Pagination
+                    page={page}
+                    totalPages={totalPages}
+                    toPage={toPage}
+                />
+            )}
         </div>
     )
 }

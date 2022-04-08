@@ -1,14 +1,18 @@
-import {Link, useParams} from "react-router-dom";
+import {Link, useParams, Redirect} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import AuthorizationService from "../../service/AuthorizationService";
+import OrderLocalization from "../localization/OrderLocalization";
 
 function OrderView() {
 
     let {id} = useParams();
     const [order, setOrder] = useState()
-    let [status, setStatus] = useState('');
+    let [status] = useState('');
     let [isSaved, setIsSaved] = useState(false);
+    let [isRedirect, setIsRedirect] = useState(false);
+    let  [url, setUrl] = useState("");
+    let lang = "ru";
 
     useEffect(() => {
         findOrder(id)
@@ -19,9 +23,11 @@ function OrderView() {
             .then((response) => {
             setOrder(response.data);
             setIsSaved(false);
-        }).catch((error) => {
-
+        }).catch(() => {
+            setUrl("/404")
+            setIsRedirect(true);
         })
+
     }
 
     function changeStatus() {
@@ -32,15 +38,19 @@ function OrderView() {
         })
     }
 
-    function saveStatus(e) {
+    function saveStatus() {
         setOrder({
             ...order,
             status : status
         })
         axios.patch('/orders/' + order['id'], order)
-            .then((response) => {
+            .then(() => {
             setIsSaved(true);
         })
+    }
+
+    if(isRedirect) {
+        return <Redirect to={url}/>
     }
 
     return (
@@ -61,12 +71,13 @@ function OrderView() {
                     {new Date(order['date']).toLocaleDateString()}
                 </p>
                 <p>
-                    <span>Статус заказа:</span>
-                    {order['status']}
+                    <span>Статус заказа  : </span>
+                    {OrderLocalization.locale[lang][order['status']]}
+
                 </p>
                 <p>
                     <span>Статус оплаты:</span>
-                    {order['paymentStatus']}
+                    {OrderLocalization.locale[lang][order['paymentStatus']]}
                 </p>
                 <p>
                     <span>Покупатель:</span>
@@ -110,5 +121,5 @@ function OrderView() {
             )}
         </div>
     )
-};
+}
 export default OrderView;

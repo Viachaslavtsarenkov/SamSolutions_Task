@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import '../../styles/common/cart.sass'
-import {Link, Redirect} from "react-router-dom";
+import {Redirect} from "react-router-dom";
 import AuthorizationService from "../../service/AuthorizationService";
 import UtilCart from "../../service/UtilCart";
+import noPic from "../../icon/nopic.png";
 
-function Cart() {
+function Cart(props) {
     let [cart, setCart] = useState([]);
     let [cartLocal, setCartLocal] = useState(UtilCart.getFromCart);
     let [order, setOrder] = useState([]);
@@ -23,12 +24,6 @@ function Cart() {
             .then((response) =>{
             setCart(response.data);
         })
-    }
-
-    function deleteFromCart(e) {
-        localStorage.setItem("books", cartLocal
-            .replace("*" + e.target.value + "*", "*"));
-        setCartLocal(localStorage.getItem("books"));
     }
 
     function chooseBook(e) {
@@ -55,12 +50,13 @@ function Cart() {
             {cart.length !== 0 && (
             <div className={"cart_container"}>
                 {cart.map((book) => (
-                    <div className={"cart_item"}>
+                    <div className={"cart_item"} key={book.id}>
                         {book.inStock && (
                             <input type={"checkbox"} onClick={chooseBook} value={book.id}/>
                         )}
 
-                        <img src={"data:image/jpg;base64," + book.image.imageContent} width={80} />
+                        <img src={book.image.imageContent === null ?
+                            noPic : "data:image/jpg;base64," + book.image.imageContent} height={100} alt={"book"}/>
                         <div className={"cart_item_description"}>
                             <h2>{book.name}</h2>
                             {book['discounts'].length === 0 && (
@@ -79,14 +75,15 @@ function Cart() {
                                 </div>
                             )}
                             {!book.inStock && (
-                                <div className={"code"}>
+                                <div className={"code"} align={"center"}>
                                     Нет в наличии
                                 </div>
                             )}
                             <button className={"action_btn"}
                                     onClick={() => {
                                         UtilCart.removeFromCart(book.id);
-                                        setCartLocal(UtilCart.getFromCart())
+                                        setCartLocal(UtilCart.getFromCart());
+                                        props.cart();
                                     }}
                                     value={book.id}>
                                 Удалить из корзины
@@ -101,7 +98,7 @@ function Cart() {
             </div>
             )}
 
-            {cart.length === 0 && (
+            {UtilCart.getCountFromCart() === 0 && (
                 <div className={"empty_cart"}>
                     Нет товаров в корзине
                 </div>

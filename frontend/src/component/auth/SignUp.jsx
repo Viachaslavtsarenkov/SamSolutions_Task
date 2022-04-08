@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import '../../styles/auth/login.sass'
-import {Form, Button} from 'react-bootstrap';
+import {Form} from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 import AuthorizationService from "../../service/AuthorizationService";
 import localization from '../localization/RegistrationLocalization'
@@ -49,10 +49,9 @@ class SignUP extends React.Component {
     registerUser(event) {
         this.setState({errors : []})
         event.preventDefault();
-        const {user} = this.state;
-        axios.post("/signUp", this.state.user).then((response) => {
+        axios.post("/signUp", this.state.user).then(() => {
             this.setState({ redirect: '/login' });
-        }).catch((error) => {
+        }).catch(() => {
            this.setState({errors: {"emailError" : ""}})
         })
     }
@@ -66,7 +65,7 @@ class SignUP extends React.Component {
         if (this.state.redirect) {
             return <Redirect to={this.state.redirect} />;
         }
-        const {user} = this.state;
+
         return (
             <div className={"wrapper"}>
                 <form onSubmit={this.registerUser} className={"sign_up_form"}>
@@ -143,6 +142,7 @@ class SignUP extends React.Component {
                             onChange={this.handleChange}
                             type="email"
                             name="email"
+                            autoComplete="off"
                             minLength={8}
                             maxLength={100}
                             className={"text_field"}
@@ -151,7 +151,7 @@ class SignUP extends React.Component {
                             placeholder={localization.locale[this.state.lang].placeholderLogin} />
                         {this.state.errors['emailError'] !== undefined && (
                             <div className={"error_validation"}>
-                                shdfksdhfdkl
+                                {localization.locale[this.state.lang].emailTaken}
                             </div>
                         ) }
                         <label>

@@ -11,7 +11,7 @@ class AuthorizationService {
     currentUserHasRole(role) {
         if (!this.getCurrentUser()) {
             return false;
-        } {
+        } else {
             return this.getCurrentUser().role.includes(role);
         }
 
@@ -20,6 +20,7 @@ class AuthorizationService {
     authHeader() {
         const user = JSON.parse(localStorage.getItem('user'));
         if (user && user.jwt) {
+            console.log("ff")
             return { Authorization: 'Bearer ' + user.jwt };
         } else {
             return {};

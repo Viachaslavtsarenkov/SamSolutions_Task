@@ -6,17 +6,11 @@ import user from "../../icon/user.png";
 import "../../styles/common/header.sass";
 import AuthorizationService from "../../service/AuthorizationService";
 import logOutIcon from "../../icon/logout.png";
-import UtilCart from "../../service/UtilCart";
+import CommonLocalization from "../localization/CommonLocalization";
 
-function CustomerNavBar() {
+function CustomerNavBar(props) {
 
-
-    let [countBooks, setCountBooks] = useState(UtilCart.getCountFromCart);
-
-    function logOut() {
-        localStorage.removeItem("user")
-        window.location.reload();
-    }
+    let [lang] = useState("ru");
 
     return (
         <>
@@ -32,11 +26,16 @@ function CustomerNavBar() {
                             </div>
                         </Link>
                         <div className={"customer_nav"}>
-                            <Link to="/books" className={"nav_link"}>Home</Link>
-                            <Link to="/books" className={"nav_link"}>Collection</Link>
+                            <Link to="/" className={"nav_link"}>
+                                {CommonLocalization.locale[lang].home}
+                            </Link>
+                            <Link to="/books" className={"nav_link"}>
+                                {CommonLocalization.locale[lang].collection}
+                            </Link>
                             <div className={"user_panel"}>
                                  <Link to="/cart">
-                                    <div>
+                                    <div className={"cart_count_container"}>
+                                        <p className={"count"}>{props.count}</p>
                                         <img src={cart} width={"30px"} height={"30px"} alt={"cart"}/>
                                     </div>
                                 </Link>
@@ -45,7 +44,7 @@ function CustomerNavBar() {
                                         <Link to="/profile">
                                             <img src={user} width={"30px"} height={"30px"} alt={"person"}/>
                                         </Link>
-                                        <Link onClick={logOut}>
+                                        <Link onClick={() => props.logout()}>
                                             <img src={logOutIcon} width={"30px"} height={"30px"} alt={"person"}/>
                                         </Link>
                                     </>

@@ -18,6 +18,7 @@ const locale = ({
         placeholderPassword: 'Введите пароль',
         loginError : "Логин или пароль введены неверно",
         statusError : "Проверьте электронную почту и активируйте учетрую запись"
+        /// []
     }
 });
 export default {locale};

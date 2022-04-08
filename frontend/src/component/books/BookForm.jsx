@@ -3,13 +3,15 @@ import './../../styles/common/common.sass'
 import axios from "axios";
 import React, {useEffect, useState} from "react";
 import '../../styles/common/search.sass'
-import {Link, Redirect, useParams} from "react-router-dom";
+import {Redirect, useParams} from "react-router-dom";
 import AuthorizationService from "../../service/AuthorizationService";
 import validationLocalization from  '../localization/ValidationLocalization';
+import bookLocalization from "../localization/BookLocalization";
+import GenrePanel from "./GenrePanel";
 
 function BookForm() {
 
-    let [lang, setLang] = useState("ru");
+    let [lang] = useState("ru");
 
     let [book, setBook] = useState({
         id : '',
@@ -31,7 +33,7 @@ function BookForm() {
 
     let {id} = useParams();
     let [url,setURL] = useState("/books")
-    let [file, setFile] = useState(null);
+    let [file] = useState(null);
     let [searchString, setSearchString] = useState('');
     let [authors, setAuthors] = useState([{
         id : '',
@@ -46,8 +48,8 @@ function BookForm() {
         setURL(url + id)
         axios.get(url + id).then((response)=>{
             setBook(response.data);
-        }).catch((error) => {
-            setURL("/error")
+        }).catch(() => {
+            setURL("/404")
             setIsRedirect(true)
         })
     }
@@ -57,10 +59,16 @@ function BookForm() {
             getBook(id);
             turnGenres();
         }
-        }, [book, newAuthor]);
+        }, [newAuthor]);
 
     function uploadImage(event) {
-        setFile(event.target.files[0])
+        alert(event.target.files[0].size )
+        if(event.target.files[0].size < 2000000) {
+            this.setState({file:event.target.files[0]})
+        } else {
+            alert("Размер файла должен быть меньше 2мб")
+            event.target.value = "";
+        }
     }
 
     function turnGenres() {
@@ -104,7 +112,7 @@ function BookForm() {
         }
     }
 
-    function turnAuthorPanel(e) {
+    function turnAuthorPanel() {
         const authorOverlay= document.querySelector(".overlay")
         const authorPanel= document.querySelector(".search_panel")
         authorPanel.classList.toggle("panel_hidden")
@@ -126,9 +134,9 @@ function BookForm() {
     function saveBook(e) {
         e.preventDefault();
         if(book.genres.length === 0) {
-            alert("Выберите жанр");
+            alert(bookLocalization.locale[lang].msgGenre);
         } else if(book.authors.length === 0) {
-            alert("Выберите автора");
+            alert(bookLocalization.locale[lang].msgAuthor);
         } else {
             const formData = new FormData();
             formData.append("book",
@@ -144,7 +152,7 @@ function BookForm() {
                     "Content-Type": undefined
                 },
             }).then(function (response) {
-                alert("Сохранено");
+                alert(bookLocalization.locale[lang].msgSaved);
                  setURL(book.id !== ''
                    ? url.concat("/",id)
                    : url.concat("/",response.data.message));
@@ -165,7 +173,7 @@ function BookForm() {
                authors : currentAuthor
            })
        } else {
-           alert("Данный автор уже добавлен")
+           alert(bookLocalization.locale[lang].authorAlreadyAdded)
        }
     }
 
@@ -207,7 +215,9 @@ function BookForm() {
 
         <div>
             <form className={"book_form"} onSubmit={saveBook}>
-                <label>Название</label>
+                <label>
+                    {bookLocalization.locale[lang].name}
+                </label>
                 <input type={"text"}
                        required
                        onChange={updateBook}
@@ -216,96 +226,24 @@ function BookForm() {
                        title={validationLocalization.locale[lang].bookNameValidation}
                        value={book.name}
                 />
-                <label>Описание</label>
-                <textarea type={"text"}
-                          required
+                <label>
+                    {bookLocalization.locale[lang].description}
+                </label>
+                <textarea required
                           maxLength={1200}
                           onChange={updateBook}
                           className={"description"}
                           name={"description"}
-                          pattern={"[0-9a-zA-ZА-ЯЁа-яё]{1,}"}
                           title={validationLocalization.locale[lang].descriptionValidation}
                           value={book.description}
                 />
-                <label>Жанр</label>
-                <div className={"genres"}>
-                    <div className={"genre"}
-                         data-genre={"0"}
-                         onClick={chooseGenre}
-                    >Исскуство</div>
-                    <div className={"genre"}
-                         onClick={chooseGenre}
-                         data-genre={"1"}>Автобиография</div>
-                    <div className={"genre"}
-                         onClick={chooseGenre}
-                         data-genre={"2"}>Биография</div>
-                    <div className={"genre"}
-                         onClick={chooseGenre}
-                         data-genre={"3"}>
-                        Бизнес литература
-                    </div>
-                    <div className={"genre"}
-                         onClick={chooseGenre}
-                         data-genre={"4"}>Кулинария</div>
-                    <div className={"genre"}
-                         onClick={chooseGenre}
-                         data-genre={"5"}>Словари</div>
-                    <div className={"genre"}
-                         onClick={chooseGenre}
-                         data-genre={"6"}>Энциклопедии</div>
-                    <div className={"genre"}
-                         onClick={chooseGenre}
-                         data-genre={"7"}>Справочники</div>
-                    <div className={"genre"}
-                         onClick={chooseGenre}
-                         data-genre={"8"}>Здоровье</div>
-                    <div className={"genre"}
-                         onClick={chooseGenre}
-                         data-genre={"9"}>История</div>
-                    <div className={"genre"}
-                         onClick={chooseGenre}
-                         data-genre={"10"}>Философия</div>
-                    <div className={"genre"}
-                         onClick={chooseGenre}
-                         data-genre={"11"}>Наука</div>
-                    <div className={"genre"}
-                         onClick={chooseGenre}
-                         data-genre={"12"}>Религия</div>
-                    <div className={"genre"}
-                         onClick={chooseGenre}
-                         data-genre={"13"}>Приключения</div>
-                    <div className={"genre"}
-                         onClick={chooseGenre}
-                         data-genre={"14"}>Детская литература</div>
-                    <div className={"genre"}
-                         onClick={chooseGenre}
-                         data-genre={"15"}>Классическая литература</div>
-                    <div className={"genre"}
-                         onClick={chooseGenre}
-                         data-genre={"16"}>Драма</div>
-                    <div className={"genre"}
-                         onClick={chooseGenre}
-                         data-genre={"17"}>Сказки</div>
-                    <div className={"genre"}
-                         onClick={chooseGenre}
-                         data-genre={"18"}>Фэнтези</div>
-                    <div className={"genre"}
-                         onClick={chooseGenre}
-                         data-genre={"19"}>Ужасы</div>
-                    <div className={"genre"}
-                         onClick={chooseGenre}
-                         data-genre={"20"}>Мистика</div>
-                    <div className={"genre"}
-                         onClick={chooseGenre}
-                         data-genre={"21"}>Поэмы</div>
-                    <div className={"genre"}
-                         onClick={chooseGenre}
-                         data-genre={"22"}>Романы</div>
-                    <div className={"genre"}
-                         onClick={chooseGenre}
-                         data-genre={"23"}>Триллеры</div>
-                </div>
-                <label>Год издания</label>
+                <label>
+                    {bookLocalization.locale[lang].genreTitle}
+                </label>
+                <GenrePanel chooseGenre={chooseGenre}/>
+                <label>
+                    {bookLocalization.locale[lang].publishedYear}
+                </label>
                 <input
                     required
                     onChange={updateBook}
@@ -314,11 +252,16 @@ function BookForm() {
                     title={validationLocalization.locale[lang].yearValidation}
                     value={book.publishedYear}
                     type={"text"}/>
-                <label>Авторы</label>
-                <div type={"button"}
-                     className={"author_btn"}
-                     onClick={turnAuthorPanel}>Выбрать авторов</div>
-                <label>Вес</label>
+                <label>
+                    {bookLocalization.locale[lang].authorTitle}
+                </label>
+                <div className={"author_btn"}
+                     onClick={turnAuthorPanel}>
+                    {bookLocalization.locale[lang].chooseAuthor}
+                </div>
+                <label>
+                    {bookLocalization.locale[lang].weight}
+                </label>
                 <input type={"text"}
                        onChange={updateBook}
                        required
@@ -328,7 +271,9 @@ function BookForm() {
                        name={"weight"}
 
                 />
-                <label>Переплет</label>
+                <label>
+                    {bookLocalization.locale[lang].materialCover}
+                </label>
                 <input type={"text"}
                        required
                        onChange={updateBook}
@@ -337,7 +282,9 @@ function BookForm() {
                        pattern={"[a-zA-ZА-ЯЁа-яё]{1,50}"}
                        title={validationLocalization.locale[lang].descriptionValidation}
                 />
-                <label>Количество страниц</label>
+                <label>
+                    {bookLocalization.locale[lang].amountPages}
+                </label>
                 <input type={"text"}
                        required
                        pattern={"[0-9]{1,4}"}
@@ -346,14 +293,18 @@ function BookForm() {
                        name={"amountPages"}
                        value={book.amountPages}
                 />
-                <label>Фото</label>
+                <label>
+                    {bookLocalization.locale[lang].picture}
+                </label>
                 <input type={"file"}
                        accept={"jpg"}
                        max={4}
                        onChange={uploadImage}
                     name={"image"}
                 />
-                <label>Цена</label>
+                <label>
+                    {bookLocalization.locale[lang].price}
+                </label>
                 <input type={"price"}
                        required
                        pattern="(0\.((0[1-9]{1})|([1-9]{1}([0-9]{1})?)))|(([1-9]+[0-9]*)(\.([0-9]{1,2}))?)"
@@ -372,25 +323,30 @@ function BookForm() {
                                onChange={updateSearch}
                         />
                         <datalist id="search_result_datalist">
-                            {authors.map((author, index) => (
+                            {authors.map((author) => (
                                 <option value={author.id + "." + author.pseudonym}/>
                             ))}
                         </datalist>
 
                         <input type={"button"}
-                               value={"Добавить"}
+                               value={bookLocalization.locale[lang].addBtn}
                                onClick={addAuthor}/>
                     </div>
                     <div className={"search_list"}>
                         {book.authors.map((author, index) => (
-                            <div className={"search_item"}>
-                                <p>{author.id} {author.pseudonym}</p>
-                                <input type="button" value="Удалить" onClick={deleteAuthor} data-index={index}/>
-                            </div>
+                            author.id !== undefined && (
+                                    <div className={"search_item"} key={index}>
+                                        <p>{author.id} {author.pseudonym}</p>
+                                        <input type="button"
+                                               value={bookLocalization.locale[lang].deleteBtn}
+                                               onClick={deleteAuthor} data-index={index}/>
+                                    </div>)
+
                         ))}
                     </div>
                 </div>
-                <input type={"submit"} value={"Сохранить"}
+                <input type={"submit"}
+                       value={bookLocalization.locale[lang].saveBtn}
                        className={"save_btn"}/>
             </form>
 

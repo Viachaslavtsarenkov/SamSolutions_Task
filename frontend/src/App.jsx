@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Main from "./component/commom/Main";
 import LogIn from "./component/auth/LogIn";
 import SignUp from'./component/auth/SignUp'
@@ -13,30 +13,39 @@ import Cart from "./component/cart/Cart";
 import User from "./component/users/User";
 import Orders from "./component/orders/Orders";
 import UserProfile from "./component/users/UserProfile";
+import UtilCart from "./service/UtilCart";
+import NotFound from "./component/errors/NotFound";
+import axios from "axios";
 
 function App()  {
 
-    function logOut() {
-        localStorage.removeItem("user");
-    }
+    let [cartCount, setCartCount] = useState(UtilCart.getCountFromCart());
+    useEffect(() => {
+    }, [cartCount])
 
+    function updateCartCount() {
+        setCartCount(UtilCart.getCountFromCart())
+    }
   return (
     <div className="App">
         <Router>
             <Switch>
                 <div className={"loc"}>
-                    <NavBar/>
+                    <NavBar count = {cartCount}/>
                     <Route exact path={'/'} component={Main}/>
                     <Route exact path={"/login"} component={LogIn}/>
                     <Route exact path={"/registration"} component={SignUp}/>
                     <Route path={"/authors"} component={Author}/>
                     <Route exact path={"/activation"} component={Activation}/>
-                    <Route path={"/books"} component={Book}/>
+                    <Route path={"/books"} render={(props) =>
+                        <Book {...props} cart={updateCartCount} />}/>
                     <Route path={"/discounts"} component={Discounts}/>
-                    <Route path={"/cart"} component={Cart}/>
+                    <Route path={"/cart"} render={(props) =>
+                        <Cart {...props} cart={updateCartCount} />} />
                     <Route path={"/users"} component={User}/>
                     <Route path={"/orders"} component={Orders}/>
                     <Route exact path={"/profile"} component={UserProfile}/>
+                    <Route path={"/404"} component={NotFound} />
                     <Footer/>
                 </div>
             </Switch>

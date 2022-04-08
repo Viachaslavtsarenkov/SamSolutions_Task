@@ -1,12 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {Link} from "react-router-dom";
 import BookLocalization from "../localization/BookLocalization";
 
 function BookAdminList(props) {
 
     const books = props.value;
-    let [lang, setLang] = useState("ru");
-
+    let [lang] = useState("ru");
 
     return (
         <React.Fragment>
@@ -32,8 +31,8 @@ function BookAdminList(props) {
                 </tr>
                 </thead>
                 <tbody>
-                {books.map((book, index) => (
-                    <tr>
+                {books.map((book) => (
+                    <tr key={book.id}>
                         <td>{book.id}</td>
                         <td>{book.name}</td>
                         <td>{book.amountPages}</td>

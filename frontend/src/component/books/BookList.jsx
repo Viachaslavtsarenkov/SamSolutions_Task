@@ -1,4 +1,4 @@
-import {Link, Redirect, useHistory, useParams} from "react-router-dom";
+import {Link,useHistory} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import BookListCustomerView from "./BookListCustomerView";
@@ -6,6 +6,7 @@ import AuthorizationService from "../../service/AuthorizationService";
 import BookAdminList from "./BookAdminList";
 import Pagination from "../commom/Pagination";
 import Util from "../../service/Util";
+import loading from "../../icon/loading.gif";
 
 function BookList() {
 
@@ -13,10 +14,11 @@ function BookList() {
     let [books, setBooks] = useState([])
     let [page, setPage] = useState(Util.getPage());
     let [sort, setSort] = useState(Util.getSort());
-    let [totalPages, setTotalPages] = useState(1);
+    let [totalPages, setTotalPages] = useState(-1);
     let [search, setSearch] = useState({
-        minPrice : '',
-        maxPrice : ''
+        minPrice : '0',
+        maxPrice : '9999',
+        inStock: '',
     });
 
     useEffect(() => {
@@ -27,39 +29,64 @@ function BookList() {
     }, [page, sort])
 
     function toPage(el) {
-        Util.setUrl(Util.setPageParam(el) + Util.getSortParam(),history)
+        Util.setUrl(Util.setPageParam(el) +
+            Util.getSortParam() + Util.getSearchParam(), history)
         setPage(el);
     }
 
     function changeOrder(e) {
-        Util.setUrl(Util.setPageParam(0) + Util.setSortParam(e.target.value), history)
+        Util.setUrl(Util.setPageParam(0)
+            + Util.setSortParam(e.target.value)
+            + Util.getSearchParam(), history)
         setSort(e.target.value);
         setPage(0);
     }
 
     function getBookList() {
-        console.log("/books?".concat(Util.getPageParam(),
-            Util.getSortParam(), getSearchCriteria()))
         axios.get("/books?".concat(Util.getPageParam(),
-            Util.getSortParam(), getSearchCriteria())).then(
+            Util.getSortParam(), Util.getSearchParam())).then(
             (response) => {
                setBooks(response.data['books']);
                setTotalPages(response.data['totalPages'])
-                console.log(response.data);
             }
         );
     }
 
     function searchByCriteria(e) {
         let option = e.target.name;
+        let value;
+        if(option === 'minPrice') {
+            value = 0;
+        } else {
+            value = 9999;
+        }
         setSearch({
             ...search,
-            [option] : e.target.value
+            [option] : e.target.value === '' ? value : e.target.value
         })
     }
 
-    function getSearchCriteria() {
-        return "&".concat("search=price>" + search.minPrice)
+    function setInStock(e) {
+        if(e.target.checked) {
+            setSearch({
+                ...search,
+                inStock: "inStock" + "~true"
+            })
+        } else {
+            setSearch({
+                ...search,
+                inStock : ""
+            })
+        }
+    }
+
+    function findByCriteria() {
+        let searchString = "&search=".concat(search.inStock)
+        let price;
+        price = ",".concat("price","<>",search.minPrice,"_",search.maxPrice);
+        Util.setUrl(Util.setPageParam(0) + Util.getSortParam() + searchString + price, history)
+        setPage(0);
+        getBookList()
     }
 
     return (
@@ -76,6 +103,7 @@ function BookList() {
                             <div className={"all_books_check_container"}>
                                 <p>Только в наличии</p>
                                 <input
+                                    onClick={setInStock}
                                     className={"in_stock"}
                                     type={"checkbox"}/>
                             </div>
@@ -84,6 +112,7 @@ function BookList() {
                                 <input
                                     maxLength={4}
                                     name={"minPrice"}
+                                    min={1}
                                     onChange={searchByCriteria}
                                     type={"number"}/>
                                 <p>До</p>
@@ -95,7 +124,7 @@ function BookList() {
                                        name={"maxPrice"}
                                        type={"number"}/>
                                 <input
-                                        onClick={getBookList}
+                                        onClick={findByCriteria}
                                        type={"button"}
                                        className={"book_search_btn"}
                                        value={"Найти"}/>
@@ -112,14 +141,22 @@ function BookList() {
                     <Link to={"/books/new"} className={"add_btn"}>Добавить</Link>
                     {totalPages !== 0 && (<BookAdminList value={books}/>)}
                 </div>)}
-                {totalPages !== 0 && (<Pagination
+
+            </div>
+            {totalPages === -1 && (
+                <div className={"loading_container"}>
+                    <img src={loading} width={50} alt={"loading"}/>
+                </div>
+            )}
+            {totalPages > 0 && (
+                <Pagination
                     page={page}
                     totalPages={totalPages}
                     toPage={toPage}
-                />)}
-            </div>
+                />
+            )}
             {totalPages === 0 && (<p>Список книг пуст</p>)}
         </div>
     )
-};
+}
 export default BookList;

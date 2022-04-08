@@ -4,12 +4,13 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import Util from "../../service/Util";
 import AuthorizationService from "../../service/AuthorizationService";
+import loading from "../../icon/loading.gif";
 
 function DiscountsList() {
 
     const history = useHistory()
     let [discounts, setDiscounts] = useState([{}])
-    let [totalPages, setTotalPages] = useState(0);
+    let [totalPages, setTotalPages] = useState(-1);
     let [page, setPage] = useState(Util.getPage());
 
     useEffect(() => {
@@ -57,8 +58,8 @@ function DiscountsList() {
                             </tr>
                         </thead>
                         <tbody>
-                            {discounts.map((discount, index) => (
-                                <tr>
+                            {discounts.map((discount) => (
+                                <tr key={discount.id}>
                                     <td>{discount.id}</td>
                                     <td>{discount.name}</td>
                                     <td>{new Date(discount.startDate).toLocaleDateString()}</td>
@@ -76,15 +77,23 @@ function DiscountsList() {
                         </tbody>
 
                     </table>
-                    <Pagination
-                        page={page}
-                        totalPages={totalPages}
-                        toPage={toPage}
-                    />
+
                 </div>
             )}
             {totalPages === 0 && (
                 <div>Список скидок пуст</div>
+            )}
+            {totalPages === -1 && (
+                <div className={"loading_container"}>
+                    <img src={loading} width={50} alt={"loading"}/>
+                </div>
+            )}
+            {totalPages > 0 && (
+                <Pagination
+                    page={page}
+                    totalPages={totalPages}
+                    toPage={toPage}
+                />
             )}
         </div>
     )

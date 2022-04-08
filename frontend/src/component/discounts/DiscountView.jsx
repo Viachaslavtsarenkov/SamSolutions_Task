@@ -20,15 +20,15 @@ function DiscountView() {
         axios.get("/discounts/" + id)
             .then((response) => {
             setDiscount(response.data);
-        }).catch((error) => {
-            setUrl("/error/404")
+        }).catch(() => {
+            setUrl("/404")
             setIsRedirect(true);
         })
     }
 
     function deleteDiscount() {
         axios.delete("/discounts/" + id)
-            .then((response) => {
+            .then(() => {
                 alert("Удалено");
                setUrl("/discounts");
                setIsRedirect(true);

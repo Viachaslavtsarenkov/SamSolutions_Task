@@ -1,5 +1,3 @@
-import {useHistory} from "react-router-dom";
-
 class Util {
     setUrl(url, history) {
         history.push({
@@ -34,6 +32,12 @@ class Util {
     getSortParam() {
         return "&order=" + this.getSort();
     }
+
+    getSearchParam() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get("search") === null ? "" : "&search=" + params.get("search") ;
+    }
+
 }
 
 export default new Util();

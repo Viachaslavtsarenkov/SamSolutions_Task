@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import {Link, useParams} from "react-router-dom";
-import AuthorizationService from "../../service/AuthorizationService";
+import {Redirect, useParams} from "react-router-dom";
 import BookItemView from "./BookItemView";
 
 
-function BookView() {
+function BookView(props) {
 
     let [book, setBook] = useState({
         id: '',
@@ -25,20 +24,25 @@ function BookView() {
         genres: [],
     })
 
+    let [isRedirect, setIsRedirect] = useState(false);
     let {id} = useParams();
 
     useEffect(() => {
         const url = "/books/"
         axios.get(url + id).then((response) => {
             setBook(response.data)
-        }).catch((error) => {
-
+        }).catch(() => {
+            setIsRedirect(true);
         })
     }, []);
 
+    if(isRedirect) {
+        return (<Redirect to={"/404"} />)
+    }
+
     return (
         <div className={"wrapper"}>
-            {book.id !== '' && (<BookItemView value={book}/>)}
+            {book.id !== '' && (<BookItemView value={book} cart={props.cart}/>)}
         </div>
     );
 };

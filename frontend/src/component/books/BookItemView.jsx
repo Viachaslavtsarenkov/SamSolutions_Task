@@ -2,12 +2,15 @@ import AuthorizationService from "../../service/AuthorizationService";
 import {Link} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
+import noPic from '../../icon/nopic.png'
+import bookLocalization from "../localization/BookLocalization";
 
 function BookItemView(props) {
 
     const book = props.value;
-
     let [inCart, setInCart] = useState(false);
+    let lang = "ru";
+
     useEffect(() => {
         let cart = localStorage.getItem("books");
         if(cart !== null) {
@@ -15,7 +18,7 @@ function BookItemView(props) {
         }
     }, [inCart, book]);
 
-    function addToCart(e) {
+    function addToCart() {
         let cartBooks = localStorage.getItem("books");
         if(cartBooks === null) {
             cartBooks = "*" + book.id + "*";
@@ -26,18 +29,17 @@ function BookItemView(props) {
         setInCart(true);
 
     }
-    //todo delete
-    function removeFromCart(e) {
+
+    function removeFromCart() {
         let cartBooks = localStorage.getItem("books");
         setInCart(false)
         localStorage.setItem("books", cartBooks
             .replace("*" + book.id + "*", "*"));
-
     }
 
-    function deleteBook(e) {
+    function deleteBook() {
         axios.delete("/books/" + book.id)
-            .then((response) => {
+            .then(() => {
                 book.inStock = true;
         })
     }
@@ -45,8 +47,11 @@ function BookItemView(props) {
     return (
         <>
             <div className={"author_view_container"}>
-                <img src={"data:image/jpg;base64," + book.image.imageContent}
-                     className={"author_picture"} width={500} height={500}/>
+                <img src={book.image.imageContent === null ? noPic :"data:image/jpg;base64," + book.image.imageContent}
+                     className={"author_picture"}
+                     width={500} height={500}
+                     alt={"book image"}
+                />
                 <div className={"author_description"}>
                     <h2>{book.name}</h2>
                     {book['discounts'].length === 0 && (
@@ -70,46 +75,69 @@ function BookItemView(props) {
                     ) && inCart === false && (
                     <input type={"button"}
                            className={"action_cart_btn"}
-                           value={"Добавить в козину"} onClick={addToCart}/>)}
+                           value={bookLocalization.locale[lang].addToCart}
+                           onClick={()=> {
+                               addToCart();
+                               props.cart();
+                    }}/>)}
 
                     {!AuthorizationService.currentUserHasRole("ROLE_ADMIN") && (
                         <></>
                     ) && inCart === true && (
                         <input type={"button"}
                                className={"action_cart_btn active_cart_btn"}
-                               value={"Удалить из корзины"}
-                               onClick={removeFromCart}/>)}
+                               value={bookLocalization.locale[lang].removeFromCart}
+                               onClick={()=> {
+                                   removeFromCart();
+                                   props.cart();
+                               }}/>)}
 
                     {AuthorizationService.currentUserHasRole("ROLE_ADMIN") && (
                             <div className={"action_btn_container"}>
                                 <Link className={"action_link"}
                                       to={{
                                           pathname : "/books/" + book.id + "/edit"
-                                      }}> Редактировать </Link>
+                                      }}>
+                                    {bookLocalization.locale[lang].editBtn}
+                                </Link>
                                 {book.inStock && (<button className={"action_link delete_btn"}
                                         onClick={deleteBook}
-                                       >Удалить</button>)
+                                       >
+                                    {bookLocalization.locale[lang].deleteBtn}
+                                </button>)
                                 }
                             </div>
                     )}
                     {!book.inStock && (
                         <div>
-                            Нет в наличии
+                            {bookLocalization.locale[lang].notInStock}
                         </div>
                     )}
                 </div>
             </div>
             <div className={"book_description"}>
-                <div><span>Название:</span> {book.weight}</div>
-                <div><span>Год публикации:</span> {book.publishedYear}</div>
-                <div><span>Материал обложки:</span> {book.materialCover}</div>
-                <div><span>Количество страниц:</span> {book.amountPages}</div>
-                <div><span>В наличии: </span>{book.inStock ? 'Да' : 'Нет'}</div>
-                <div><span>Описание: </span>{book.description}</div>
+                <div>
+                    <span>{bookLocalization.locale[lang].name} :</span>
+                    {book.weight}</div>
+                <div>
+                    <span>{bookLocalization.locale[lang].publishedYear}:</span>
+                    {book.publishedYear}</div>
+                <div>
+                    <span>{bookLocalization.locale[lang].materialCover} :</span>
+                    {book.materialCover}</div>
+                <div>
+                    <span>{bookLocalization.locale[lang].amountPages}:</span>
+                    {book.amountPages}</div>
+                <div>
+                    <span>{bookLocalization.locale[lang].inStock}: </span>
+                    {book.inStock ? bookLocalization.locale[lang].yes : bookLocalization.locale[lang].no}</div>
+                <div>
+                    <span>{bookLocalization.locale[lang].description}: </span>
+                    {book.description}</div>
                 <div className={"book_item_authors_list"}>
-                    <span>Авторы: </span>
-                    {book.authors.map((author, index)=> (
-                        <div className={"book_item_author"}>
+                    <span>{bookLocalization.locale[lang].authorTitle} : </span>
+                    {book.authors.map((author)=> (
+                        <div className={"book_item_author"} key={author.id}>
                             <Link to={{
                                 pathname: "/authors/" + author.id
                             }}>

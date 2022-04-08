@@ -12,7 +12,7 @@ function Pagination(props) {
                         &larr;
                     </button>)}
                 {[...Array(props.totalPages).keys()].map((el,index) => (
-                    <div>
+                    <div key={index}>
                         {(+index !== +props.page) && (
                             <button
                                 onClick={() => props.toPage(el)}

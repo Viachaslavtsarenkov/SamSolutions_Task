@@ -18,11 +18,19 @@ function DiscountForm() {
     })
 
     let {id} = useParams();
-    let [lang, setLang] = useState("ru");
+    let [lang] = useState("ru");
     let [books, setBooks] = useState([]);
     let [searchString, setSearchString] = useState('');
     let [isRedirect, setIsRedirect] = useState(false);
     let [url, setUrl] = useState('/discounts/');
+    let [takenBooks, setTakenBooks] = useState([]);
+    let countTakenBooks = 0;
+
+    useEffect(() => {
+        if(id !== undefined && discount.id === '') {
+            getDiscount(id);
+        }
+    }, [takenBooks]);
 
     function getDiscount(id) {
         const url = "/discounts/";
@@ -42,17 +50,11 @@ function DiscountForm() {
                    .toISOString()
                    .split('T')[0],
            })
-        }).catch((error) => {
+        }).catch(() => {
+            setUrl("/404");
+            setIsRedirect(true)
         })
     }
-
-
-
-    useEffect(() => {
-        if(discount !== undefined) {
-            getDiscount(id);
-        }
-    }, []);
 
     function updateSearch(e) {
         setSearchString(e.target.value);
@@ -66,29 +68,38 @@ function DiscountForm() {
             });
     }
 
-    function saveSale(e) {
+    function saveDiscount(e) {
         e.preventDefault();
-        if(!checkBooksOnDiscount()) {
-            let url = "/discounts"
-            console.log(discount)
-            axios.post(url, discount)
-                .then((response) => {
-                })
-        } else {
-            turnBookPanel();
-            alert("error")
-        }
-
+        let check = checkBooksOnDiscount();
+        check.then(() => {
+            if(countTakenBooks === 0) {
+                let url = "/discounts"
+                axios.post(url, discount)
+                    .then((response) => {
+                        setUrl("/discounts/" + response.data);
+                        setIsRedirect(true);
+                    })
+            } else {
+                turnBookPanel();
+            }
+        })
     }
 
     function changeSale(e) {
         e.preventDefault();
-        let url = "/discounts/"
-        axios.patch(url + id, discount)
-            .then((response) => {
-                setUrl("/discounts/" + id)
-                setIsRedirect(true);
-            })
+        let check = checkBooksOnDiscount();
+        check.then(() => {
+            if(countTakenBooks === 0) {
+                let url = "/discounts/"
+                axios.patch(url + id, discount)
+                    .then(() => {
+                       setUrl("/discounts/" + id)
+                       setIsRedirect(true);
+                    })
+            } else {
+                turnBookPanel();
+            }
+        })
     }
 
     function changeDate(e) {
@@ -99,14 +110,14 @@ function DiscountForm() {
         })
     }
 
-    function turnBookPanel(e) {
+    function turnBookPanel() {
         const overlay= document.querySelector(".overlay")
         const panel= document.querySelector(".search_panel")
         panel.classList.toggle("panel_hidden")
         overlay.classList.toggle("panel_hidden")
     }
 
-    function addBookToDiscount(e) {
+    function addBookToDiscount() {
         const list = document.getElementById('search_result_datalist');
         const searcher = document.querySelector('.input_search_connection');
         let index = list.options.namedItem(searcher.value).getAttribute('data-index');
@@ -136,36 +147,35 @@ function DiscountForm() {
         })
     }
 
-    if(!AuthorizationService.currentUserHasRole("ROLE_ADMIN")) {
-        return <Redirect to={"/"}/>
-    }
-    function checkBooksOnDiscount() {
-        let result = false;
-        discount.books.forEach((book) =>{
-            console.log("/discounts/check?".concat("id=", book.id,
+    async function checkBooksOnDiscount() {
+        let onDiscountBooks = [];
+        for(const book of discount.books){
+            await axios.get("/discounts/check?".concat("id=", book.id,
                 "&startDate=", discount.startDate,
-                "&endDate=", discount.endDate));
-            axios.get("/discounts/check?".concat("id=", book.id,
-                "&startDate=", discount.startDate,
-                "&endDate=", discount.endDate))
+                "&endDate=", discount.endDate, id === undefined ? '' : "&idDiscount=" + id))
                 .then((response) => {
                     let isOnDiscount = response.data;
                     if(isOnDiscount) {
-                        let bookOnDiscount = document.getElementById("book_" + book.id);
-                        bookOnDiscount.innerText = "Данная книга уже находится на скидке";
-                        result = true;
+                        onDiscountBooks.push(book.id);
                     }
                 });
-        })
-        return result;
+        }
+        countTakenBooks = onDiscountBooks.length;
+        setTakenBooks(onDiscountBooks);
     }
 
     if(isRedirect) {
         return <Redirect to={url}/>
     }
+
+    if(!AuthorizationService.currentUserHasRole("ROLE_ADMIN")) {
+        return <Redirect to={"/"}/>
+    }
+
     return(
         <div>
-            <form className={"book_form"} onSubmit={id === undefined ? saveSale : changeSale}>
+            <form className={"book_form"}
+                  onSubmit={id === undefined ? saveDiscount : changeSale}>
                 <label>Название скидки</label>
                 <input
                     value={discount.name}
@@ -193,12 +203,12 @@ function DiscountForm() {
                 <input
                     onChange={changeDate}
                     value={discount.discountFactor}
-                    pattern={"\\d+(\\.\\d{2})?"}
+                    pattern={"\\d+(\\.\\d{1,2})?"}
                     title={validationLocalization.locale[lang].discountNameValidation}
                     name={"discountFactor"}
                     required
                 />
-                <div className={"overlay panel_hidden"}> </div>
+                <div className={"overlay panel_hidden"} onClick={turnBookPanel}> </div>
                 <label>Книги</label>
                 <div className={"overlay panel_hidden"}
                      onClick={turnBookPanel}>
@@ -228,10 +238,12 @@ function DiscountForm() {
                                 <input type="button" value="Удалить"
                                        onClick={deleteBookFromSale} data-index={index}/>
                                 <p id={"book_" + book.id}> </p>
+                                {takenBooks.includes(book.id) && (
+                                    <p>Уже на скидке</p>
+                                )}
                             </div>
                         ))}
                     </div>
-                    <div onClick={turnBookPanel}>+</div>
                 </div>
                 <input type={"button"}
                        value={"выбрать книги"}

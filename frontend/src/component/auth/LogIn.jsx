@@ -40,7 +40,6 @@ class LogIn extends React.Component {
 
     loginUser(event) {
         event.preventDefault();
-        const {user} = this.state;
         axios.post("/login", this.state.user)
             .then((response) => {
             if (response.data["jwt"]) {
@@ -79,7 +78,6 @@ class LogIn extends React.Component {
                       type="password" className={"text_field"}
                       placeholder={registrationLocale.locale[this.state.lang].placeholderPassword} />
                <input type={"button"}  onClick={this.loginUser}
-                      variant="primary"
                       value={registrationLocale.locale[this.state.lang].login}
                       className={"action_btn"}/>
                {this.state.error !== '' && (
