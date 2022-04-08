@@ -64,7 +64,6 @@ public class OrderServiceImpl implements OrderService {
         order.setDate(date);
         order.setPaymentStatus(PaymentStatus.NO_PAID);
         order.setPaymentId(payment.getId());
-        orderRepository.save(order);
         return orderRepository.save(order);
     }
 
@@ -108,9 +107,7 @@ public class OrderServiceImpl implements OrderService {
     public Order executeOrder(String paymentId, String payerId) throws PayPalRESTException{
         paymentService.executePayment(paymentId, payerId);
         orderRepository.changePaymentStatus(PaymentStatus.PAID, paymentId);
-
-        //todo sending email
-        //mailService.sendActivationMail();
+        //todo change
         return null;
     }
 

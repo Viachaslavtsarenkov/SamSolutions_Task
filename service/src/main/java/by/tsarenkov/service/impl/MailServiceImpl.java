@@ -24,20 +24,22 @@ public class MailServiceImpl implements MailService {
     private String activationMessage;
 
     @Override
-    public void sendActivationMail(String email, String code) {
+    public boolean sendActivationMail(String email, String code) {
         preConfiguredMessage.setTo(email);
         preConfiguredMessage.setSubject("Activation");
         preConfiguredMessage.setText(String.format(activationMessage, email, code));
         mailSender.send(preConfiguredMessage);
+        return true;
     }
 
     @Override
-    public void sendMail(String email, String key) {
+    public boolean sendMail(String email, String key) {
         preConfiguredMessage.setTo(email);
         preConfiguredMessage.setSubject("Activation");
         preConfiguredMessage.setText(String.format(activationMessage, email
                 , environment.getRequiredProperty(key)));
         mailSender.send(preConfiguredMessage);
+        return true;
     }
 
 
