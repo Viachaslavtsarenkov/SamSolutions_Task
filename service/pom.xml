@@ -23,6 +23,11 @@
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>by.tsarenkov</groupId>
+            <artifactId>payment</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     <name>service</name>
     <packaging>jar</packaging>

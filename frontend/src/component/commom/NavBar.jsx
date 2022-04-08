@@ -1,51 +1,34 @@
-import React from "react";
+import React, {useEffect} from "react";
 import user from '../../icon/user.png'
-import jwtDecode from "jwt-decode";
 import AdminNavBar from "./AdminNavBar";
 import CustomerNavBar from "./CustomerNavBar";
 import AuthorizationService from "../../service/AuthorizationService";
+import axios from "axios";
 
-class NavBar extends React.Component {
+function NavBar(props) {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            currentUser: undefined,
-            ShowCustomerNavBar: false,
-            ShowAdminNavBar: false,
-            ShowGuestNavBar: false
-        }}
+    useEffect(() =>{
+    }, [])
 
-    componentDidMount() {
-        let user = localStorage.getItem('user');
-        if (user != null) {
-            user = jwtDecode(user);
-            console.log(user);
-            this.setState( {
-                ShowCustomerNavBar: user.role.includes('CUSTOMER'),
-                ShowAdminNavBar: user.role.includes('ADMIN')
-            });
-        } else {
-            this.setState({
-                ShowGuestNavBar: true
+    function logOut() {
+        axios.get("/login")
+            .then(() => {
             })
-        }
-
+        sessionStorage.clear();
+        localStorage.removeItem("user");
+        window.location.href = "/login"
     }
 
-    render() {
-        return (
-            <>
-                {this.state.ShowAdminNavBar && (
-                    <AdminNavBar/>
-                )}
-                {!AuthorizationService.currentUserHasRole("ADMIN") && (
-                    <CustomerNavBar/>
-                )}
-            </>
-
-        );
-    }
+    return (
+        <>
+            {AuthorizationService.currentUserHasRole("ROLE_ADMIN") && (
+                <AdminNavBar logout={logOut}/>
+            )}
+            {!AuthorizationService.currentUserHasRole("ROLE_ADMIN") && (
+                <CustomerNavBar logout={logOut} count={props.count}/>
+            )}
+        </>
+    );
 }
 
 export default NavBar;

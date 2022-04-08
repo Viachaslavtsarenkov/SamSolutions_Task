@@ -15,7 +15,6 @@ import by.tsarenkov.web.controller.response.UserAuthenticationResponse;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AccountStatusException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,9 +22,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,17 +50,13 @@ public class AuthorizationController {
     private static final String NAME_CLAIM = "name";
     private static final String SECRET_KEY = "secret";
 
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private UserDataValidator userValidator;
-    @Autowired
+    private final UserService userService;
+    private final UserDataValidator userValidator;
     private final AuthenticationManager authenticationManager;
-    @Autowired
-    PasswordEncoder passwordEncoder;
 
     @PostMapping(value = POST_SIGN_IN_MAPPING, consumes = {"application/json"})
-    public ResponseEntity<?> registerUser(@RequestBody UserDto userDto, BindingResult result) {
+    public ResponseEntity<?> registerUser(@RequestBody UserDto userDto, BindingResult result)
+            throws EmailAlreadyTakenException {
         Map<String, String> errors = new HashMap<>();
         userValidator.validate(userDto, result);
 
@@ -70,19 +67,15 @@ public class AuthorizationController {
             }
             return ResponseEntity.badRequest().body(errors);
         }
-        try {
-            User user = User.builder()
-                    .name(userDto.getName())
-                    .surname(userDto.getSurname())
-                    .password(userDto.getPassword())
-                    .patronymic(userDto.getPatronymic())
-                    .phoneNumber(userDto.getPhoneNumber())
-                    .email(userDto.getEmail())
-                    .build();
-            userService.registerUser(user);
-        } catch (EmailAlreadyTakenException e) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Email already taken"));
-        }
+        User user = User.builder()
+                .name(userDto.getName())
+                .surname(userDto.getSurname())
+                .password(userDto.getPassword())
+                .patronymic(userDto.getPatronymic())
+                .phoneNumber(userDto.getPhoneNumber())
+                .email(userDto.getEmail())
+                .build();
+        userService.registerUser(user);
 
         return ResponseEntity.ok(new MessageResponse("Registration is done"));
     }
@@ -100,6 +93,7 @@ public class AuthorizationController {
                 return ResponseEntity.badRequest().body(new MessageResponse(Message.BAD_CREDENTIAL));
             }
         UserDetailsImpl authenticatedUser = (UserDetailsImpl) authentication.getPrincipal();
+        System.out.println(authenticatedUser.getEmail());
         String accessToken = JWT.create()
                 .withSubject(authenticatedUser.getEmail())
                 .withExpiresAt(new Date(Long.MAX_VALUE))
@@ -120,4 +114,12 @@ public class AuthorizationController {
         userService.activateAccount(activationDto);
         return ResponseEntity.ok(new by.tsarenkov.web.controller.response.MessageResponse("The account is activated"));
     }
+
+    @GetMapping("/logout")
+    public void logout() {
+        System.out.println("was cleared");
+        SecurityContextHolder.getContext().setAuthentication(null);
+        SecurityContextHolder.clearContext();
+    }
+
 }

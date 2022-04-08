@@ -2,8 +2,9 @@ package by.tsarenkov.web.controller;
 
 import by.tsarenkov.common.model.entity.User;
 import by.tsarenkov.service.UserService;
-import by.tsarenkov.service.impl.UserServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import by.tsarenkov.service.exception.UserNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,38 +12,29 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserController {
 
-    private static final String GET_USER_BY_ID_MAPPING = "/users/{id}";
+    private static final String USER_BY_ID_MAPPING = "/users/{id}";
+    private static final String USER_MAPPING = "/users";
 
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    public void setUserService(UserServiceImpl userService) {
-        this.userService = userService;
-    }
-
-    @GetMapping(GET_USER_BY_ID_MAPPING)
-    public void getUserById(@PathVariable Long id) {
+    @GetMapping(USER_BY_ID_MAPPING)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> getUserById(@PathVariable Long id)
+            throws UserNotFoundException {
         User user = userService.getUserById(id);
+        return ResponseEntity.ok().body(user);
     }
 
-    @PatchMapping("/{id}")
-    @PreAuthorize("hasRole('CUSTOMER')")
-    public void updateUser(@PathVariable Long id, @RequestBody User user) {
-        userService.updateUser(user);
-    }
-
-    @GetMapping("/")
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
-    }
-
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('CUSTOMER')")
-    public void deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+    @GetMapping(USER_MAPPING)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> getAllUsers(@RequestParam(value = "page", required = false,
+            defaultValue = "0") Integer page,
+                                         @RequestParam(value = "size", required = false,
+                                                 defaultValue = "10") Integer size) {
+        return ResponseEntity.ok(userService.findAllUsers(page, size));
     }
 
 }

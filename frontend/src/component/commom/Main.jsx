@@ -1,32 +1,36 @@
-import React from "react";
+import React, {useState} from "react";
 import '../../styles/common/common.sass';
 import '../../styles/common/main.sass';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import main from  "../../icon/main.jpg";
 import {Link} from "react-router-dom";
+import CommonLocalization from "../localization/CommonLocalization";
 
-class Main extends React.Component {
-    render () {
+function Main() {
+
+        let [lang] = useState("ru");
+
         return (
-            <main>
-                <section className={"discover_book_world"}>
-                        <div className={"discover_description"}>
-                            <Link class="btn_light">В каталог</Link>
-                        </div>
-                </section>
-                <section name={"about"} className={"about_us"}>
-                    <h2 className={"main_headline"}>О нас</h2>
-                    <div className={"about_us_description"}>
-                        <div>
-
-                        </div>
+            <div className={"wrapper"}>
+                <section className={"main_container"}>
+                    <img className={"main_background"}
+                         alt={"book store"}
+                        src={main}
+                        width={456} height={563}/>
+                    <div className={"main_description"}>
+                        <h2 className={"main_title"}>
+                            {CommonLocalization.locale[lang].mainHeadline}
+                        </h2>
+                        <p className={"main_cite"}>
+                            {CommonLocalization.locale[lang].mainDescription}
+                        </p>
+                        <Link to={"/books"} className={"shop_now_btn"}>
+                            {CommonLocalization.locale[lang].shopBtn}
+                        </Link>
                     </div>
                 </section>
-                <section>
-                </section>
-            </main>
-
+            </div>
         )
-    }
 }
 
 export default Main;

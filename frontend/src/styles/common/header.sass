@@ -3,12 +3,35 @@ $header-font-size: 18px
 $header-font-color: #000000
 
 .header
-  box-shadow: 0px 0px 5px 0px black
+  background: white
+  box-shadow: 0 0 5px 0 black
 
 .nav_link
-  color: $header-font-color
+  color: #19392E
   text-decoration: none
   font-size: $header-font-size
+  margin: 0 15px
+
+.logo_container
+  display: flex
+  align-items: center
+
+.logo_container img
+  display: block
+
+.logo_container p
+  align-items: center
+  text-align: center
+  padding: 10px
+  margin: 0
+  color: #19392E
+  font-weight: 600
+
+.customer_nav
+  display: flex
+
+.customer_nav a
+  color: #293133
 
 .header_panel
   height: 40px
@@ -19,23 +42,28 @@ $header-font-color: #000000
   flex-direction: row
   justify-content: space-between
   align-items: center
-  padding: 0px
+  padding: 0
   font-family: $header-font-family
 
-.search_button
-  width: 80px
-  height: 30px
-  color: white
-  font-size: 16px
-  border-radius: 5px
-  border: none
-  background-color: #393F72
-
-.search_input
-  outline: none
-  width: 300px
 
 .user_panel
   display: flex
   align-items: center
   gap: 10px
+  margin-left: 20px
+
+
+.cart_count_container
+  position: relative
+
+.cart_count_container .count
+  background: #00685A
+  border-radius: 25px
+  padding: 0
+  text-align: center
+  font-size: 12px
+  color: white
+  font-weight: 600
+  width: 17px
+  position: absolute
+  right: 0

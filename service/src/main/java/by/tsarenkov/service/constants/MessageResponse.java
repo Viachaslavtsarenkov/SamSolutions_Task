@@ -6,4 +6,5 @@ public class MessageResponse {
     public static final String PASSWORD_EQUALS_ERROR = "Passwords must be equal";
     public static final String PHONE_NUMBER_ERROR = "For example +375(33/29/44)000-00-00";
     public static final String SHORT_TEXT_ERROR = "min length 8 symbols";
+    public static final String EMAIL_ALREADY_TAKEN = "emailError";
 }

@@ -1,6 +1,8 @@
 package by.tsarenkov.common.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.sun.istack.NotNull;
 import lombok.*;
 import javax.persistence.*;
@@ -15,7 +17,6 @@ import java.util.*;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
 public class Author  implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,12 +26,28 @@ public class Author  implements Serializable {
     @NotNull
     private String pseudonym;
     @Column(name = "description", length = 1200)
-    private String description;
-    @Column(name="image_name")
     @NotNull
-    private String imageName;
-    @ManyToMany(mappedBy = "authors")
+    private String description;
+    @ManyToMany(mappedBy = "authors", fetch = FetchType.EAGER)
     @ToString.Exclude
-    @JsonIgnore
-    private List<Book> books = new ArrayList<>();
+    @JsonIgnoreProperties({"authors", "discounts, image"})
+    private Set<Book> books = new HashSet<>();
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE, orphanRemoval = true)
+    @JoinColumn(name = "id_image")
+    private AuthorImage image;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Author author = (Author) o;
+        return id.equals(author.id) && pseudonym.equals(author.pseudonym)
+                && Objects.equals(description, author.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, pseudonym, description);
+    }
 }
