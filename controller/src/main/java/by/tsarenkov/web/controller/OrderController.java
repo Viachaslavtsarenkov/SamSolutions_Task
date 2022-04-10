@@ -61,7 +61,7 @@ public class OrderController {
     }
 
     @GetMapping("/orders/payment")
-    public ResponseEntity executePayment(@RequestParam(value = "paymentId") String paymentId,
+    public ResponseEntity<?> executePayment(@RequestParam(value = "paymentId") String paymentId,
                                          @RequestParam(value = "payerId") String payerId)
             throws PayPalRESTException {
             orderService.executeOrder(paymentId, payerId);

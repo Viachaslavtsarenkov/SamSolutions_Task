@@ -13,10 +13,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
-import static org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter.Directive.*;
 
 @Configuration
 @EnableWebSecurity
@@ -24,8 +22,6 @@ import static org.springframework.security.web.header.writers.ClearSiteDataHeade
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserDetailsServiceImpl userDetailsService;
     private final PasswordEncoder passwordEncoder;
 
@@ -40,18 +36,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }
 
+    @Bean
+    public JwtAuthenticationFilter authenticationTokenFilterBean() throws Exception {
+        return new JwtAuthenticationFilter();
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/**")
-                .permitAll()
+                .antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
-                .and()
-                .sessionManagement()
+                .and().sessionManagement()
                 .sessionCreationPolicy(STATELESS);
-        http.logout().logoutSuccessUrl("/");
-        http.addFilterAfter(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
     }
 
 }

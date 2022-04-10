@@ -24,6 +24,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +33,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -93,7 +98,6 @@ public class AuthorizationController {
                 return ResponseEntity.badRequest().body(new MessageResponse(Message.BAD_CREDENTIAL));
             }
         UserDetailsImpl authenticatedUser = (UserDetailsImpl) authentication.getPrincipal();
-        System.out.println(authenticatedUser.getEmail());
         String accessToken = JWT.create()
                 .withSubject(authenticatedUser.getEmail())
                 .withExpiresAt(new Date(Long.MAX_VALUE))
@@ -117,9 +121,11 @@ public class AuthorizationController {
 
     @GetMapping("/logout")
     public void logout() {
-        System.out.println("was cleared");
-        SecurityContextHolder.getContext().setAuthentication(null);
         SecurityContextHolder.clearContext();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication != null) {
+            authentication.setAuthenticated(false);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
     }
-
 }

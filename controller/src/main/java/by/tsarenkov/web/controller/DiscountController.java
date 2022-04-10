@@ -7,6 +7,7 @@ import by.tsarenkov.service.exception.DiscountNotFoundException;
 import by.tsarenkov.web.controller.response.MessageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
@@ -21,30 +22,37 @@ public class DiscountController {
 
     private final DiscountService discountService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(value = DISCOUNT_MAPPING)
     public ResponseEntity<?> saveNewDiscount(@RequestBody Discount discount) {
+        System.out.println(discount.getBooks().size());
         discountService.saveDiscount(discount);
-        return ResponseEntity.ok().body(discount.getId());
+        return ResponseEntity.ok()
+                .body(discount.getId());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping(DISCOUNT_MAPPING_BY_ID)
     public void updateDiscount(@PathVariable Long id,
                                         @RequestBody Discount discount) {
         discountService.updateDiscount(discount);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(DISCOUNT_MAPPING_BY_ID)
     public ResponseEntity<?> deleteDiscount(@PathVariable Long id) {
         discountService.deleteDiscount(id);
         return ResponseEntity.ok().body(new MessageResponse("The discount was deleted"));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(DISCOUNT_MAPPING_BY_ID)
     public ResponseEntity<?> findDiscount(@PathVariable Long id)
             throws DiscountNotFoundException {
         return ResponseEntity.ok().body(discountService.getDiscountById(id));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(DISCOUNT_MAPPING)
     public DiscountPageResponse findAllDiscounts(@RequestParam(value = "page"
             , required = false, defaultValue = "0") Integer page,
@@ -54,6 +62,7 @@ public class DiscountController {
         return discountService.findAllDiscounts(page, size);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(DISCOUNT_CHECK)
     public ResponseEntity<?> checkBookOnDiscount(@RequestParam(value = "id") Long bookId,
                                    @RequestParam(value = "startDate") Date startDate,

@@ -15,10 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -36,7 +33,7 @@ public class BookController {
 
     @GetMapping(BOOK_MAPPING)
     public ResponseEntity<?> getBooks(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-                                      @RequestParam(value = "order", required = false) String order,
+                                      @RequestParam(value = "order", defaultValue = "ASC") String order,
                                       @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
                                       @RequestParam(value = "sortby", required = false, defaultValue = "price") String sortBy,
                                       @RequestParam(value = "search", required = false) String search) {
@@ -52,12 +49,8 @@ public class BookController {
         List<Sort.Order> sorts = new ArrayList<>();
         String sortField;
 
-        if (sortBy != null) {
-            sortField = sortBy;
-        } else {
-            sortField = PRICE_SORT_FIELD;
-        }
-        if (order == null || order.equals("ASC")) {
+        sortField = Objects.requireNonNullElse(sortBy, PRICE_SORT_FIELD);
+        if (order.equals("ASC")) {
             sorts.add(new Sort.Order(Sort.Direction.ASC, sortField));
         } else {
             sorts.add(new Sort.Order(Sort.Direction.DESC, sortField));

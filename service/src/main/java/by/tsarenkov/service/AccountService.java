@@ -10,6 +10,5 @@ import org.springframework.web.bind.annotation.RequestAttribute;
 @Service
 public interface AccountService {
     User getUserProfile() throws UserNotFoundException;
-    //todo order not found
     Order getUserOrder(Long idOrder);
 }

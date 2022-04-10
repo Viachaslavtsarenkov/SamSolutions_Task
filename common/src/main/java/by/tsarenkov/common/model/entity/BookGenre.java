@@ -23,6 +23,8 @@ public class BookGenre {
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "id_genre")
     private Genre id;
+    @Column(name = "genre")
+    private Genre genre;
     @ManyToMany(mappedBy = "genres")
     @JsonIgnore
     @ToString.Exclude
