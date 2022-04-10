@@ -10,10 +10,11 @@ import {useHistory} from "react-router-dom"
 import Util from "../../service/Util";
 import localization from '../localization/AuthorLocalization';
 import loading from "../../icon/loading.gif";
+import LangUtil from "../../service/LangUtil";
 
 function AuthorsList() {
 
-    let lang = "ru";
+    let [lang] = useState(LangUtil.getLang())
     const history = useHistory()
     let [page, setPage] = useState(Util.getPage);
     let [authors, setAuthors] = useState([{}]);
@@ -86,14 +87,16 @@ function AuthorsList() {
                 </Table>
                 </div>)}
             {totalPages === 0 && (
-                <p>Список авторов пуст</p>
+                <div className={"empty_list"}>
+                    {localization.locale[lang].authorsListEmpty}
+                </div>
             )}
             {totalPages === -1 && (
                 <div className={"loading_container"}>
                     <img src={loading} width={50} alt={"loading"}/>
                 </div>
             )}
-            {totalPages >= 0 && (
+            {totalPages > 0 && (
                 <Pagination
                     page={page}
                     totalPages={totalPages}

@@ -73,7 +73,8 @@ public class BookServiceImpl implements BookService {
             BookImage bookImage = book.getImage();
             String file = pictureLoader.loadPicture(image);
             bookImage.setImageContent(file);
-            book.setImage(bookImage);
+            bookImageRepository.save(bookImage);
+            System.out.println("sadfghjkgfdsafghykjljhgfdsfghjkljhgfdsafgjk");
         }
         bookRepository.save(book);
         LOGGER.warn(String.format(LOG_UPDATED_MSG, "Book", book.getId()));
@@ -131,11 +132,4 @@ public class BookServiceImpl implements BookService {
         bookList.forEach(this::checkActualDiscount);
         return bookList;
     }
-
-    @Override
-    public Integer getCountBooks(Specification<Book> spec) {
-        //todo
-        return 0;//bookRepository.countAll(spec);
-    }
-
 }

@@ -5,6 +5,8 @@ import axios from "axios";
 import Util from "../../service/Util";
 import AuthorizationService from "../../service/AuthorizationService";
 import loading from "../../icon/loading.gif";
+import DiscountLocalization from "../localization/DiscountLocalization";
+import LangUtil from "../../service/LangUtil";
 
 function DiscountsList() {
 
@@ -12,6 +14,7 @@ function DiscountsList() {
     let [discounts, setDiscounts] = useState([{}])
     let [totalPages, setTotalPages] = useState(-1);
     let [page, setPage] = useState(Util.getPage());
+    let [lang] = useState(LangUtil.getLang())
 
     useEffect(() => {
         if(page !== 0) {
@@ -41,20 +44,32 @@ function DiscountsList() {
         <div className={"wrapper"}>
             <Link to={"/discounts/new"}
                   className={"add_btn"}>
-                Добавить
+                {DiscountLocalization.locale[lang].addBtn}
             </Link>
-            {totalPages !== 0 && (
+            {totalPages > 0 && (
                 <div>
                     <table className={"book_list_table"}>
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Название скидки</th>
-                                <th>День начала скидки</th>
-                                <th>День окончания</th>
-                                <th>Коэффициент</th>
-                                <th>Количество книг</th>
-                                <th>Действие</th>
+                                <th>
+                                    {DiscountLocalization.locale[lang].id}
+                                </th>
+                                <th>
+                                    {DiscountLocalization.locale[lang].name}
+                                </th>
+                                <th>
+                                    {DiscountLocalization.locale[lang].startDate}
+                                </th>
+                                <th>
+                                    {DiscountLocalization.locale[lang].endDate}
+                                </th>
+                                <th>
+                                    {DiscountLocalization.locale[lang].discountFactor}
+                                </th>
+                                <th>
+                                    {DiscountLocalization.locale[lang].count}
+                                </th>
+                                <th> </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -65,12 +80,13 @@ function DiscountsList() {
                                     <td>{new Date(discount.startDate).toLocaleDateString()}</td>
                                     <td>{new Date(discount.endDate).toLocaleDateString()}</td>
                                     <td>{discount.discountFactor}</td>
-                                    <td>f</td>
+                                    <td>{discount.books.length}</td>
                                     <td>
                                         <Link to={{
-                                            //todo change
                                             pathname : "/discounts/" + discount.id
-                                        }}> Посмотреть</Link>
+                                        }}>
+                                            {DiscountLocalization.locale[lang].seeBtn}
+                                        </Link>
                                     </td>
                                 </tr>
                             ))}
@@ -81,7 +97,7 @@ function DiscountsList() {
                 </div>
             )}
             {totalPages === 0 && (
-                <div>Список скидок пуст</div>
+                <div className={"empty_list"}>Список скидок пуст</div>
             )}
             {totalPages === -1 && (
                 <div className={"loading_container"}>

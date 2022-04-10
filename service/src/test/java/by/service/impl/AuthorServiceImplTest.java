@@ -86,7 +86,7 @@ public class AuthorServiceImplTest {
         author.setImage(authorImage);
         author.setId(id);
         String newImage = "new Image";
-        given(authorRepository.existsByPseudonymAndIdIsNot(author.getPseudonym(), id)).willReturn(false);
+        given(authorRepository.existsByPseudonymIgnoreCaseAndIdIsNot(author.getPseudonym(), id)).willReturn(false);
         given(pictureLoader.loadPicture(image)).willReturn(newImage);
         given(imageRepository.save(authorImage)).willReturn(authorImage);
         given(authorRepository.save(author)).willReturn(author);
@@ -97,7 +97,7 @@ public class AuthorServiceImplTest {
     @Test
     void shouldThrowAuthorAlreadyExistsExceptionDuringUpdating() {
         author.setId(id);
-        given(authorRepository.existsByPseudonymAndIdIsNot(author.getPseudonym(), id))
+        given(authorRepository.existsByPseudonymIgnoreCaseAndIdIsNot(author.getPseudonym(), id))
                 .willReturn(true);
         assertThatThrownBy(() -> authorService.updateAuthor(author, null))
                 .isInstanceOf(AuthorAlreadyExistsException.class);

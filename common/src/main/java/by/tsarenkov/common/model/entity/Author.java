@@ -30,7 +30,7 @@ public class Author  implements Serializable {
     private String description;
     @ManyToMany(mappedBy = "authors", fetch = FetchType.EAGER)
     @ToString.Exclude
-    @JsonIgnoreProperties({"authors", "discounts, image"})
+    @JsonIgnoreProperties(value = {"authors", "discounts, image"}, allowSetters = true)
     private Set<Book> books = new HashSet<>();
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE, orphanRemoval = true)
     @JoinColumn(name = "id_image")

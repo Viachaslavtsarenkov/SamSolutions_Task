@@ -1,14 +1,16 @@
 import React, {useState} from "react";
 import {Link} from "react-router-dom";
 import BookLocalization from "../localization/BookLocalization";
+import LangUtil from "../../service/LangUtil";
 
 function BookAdminList(props) {
 
     const books = props.value;
-    let [lang] = useState("ru");
+    let [lang] = useState(LangUtil.getLang())
 
     return (
         <React.Fragment>
+            {books.length !== 0 && (
             <table className={"book_list_table"}>
                 <thead>
                 <tr>
@@ -48,7 +50,7 @@ function BookAdminList(props) {
                     </tr>
                 ))}
                 </tbody>
-            </table>
+            </table>)}
         </React.Fragment>
 
     )

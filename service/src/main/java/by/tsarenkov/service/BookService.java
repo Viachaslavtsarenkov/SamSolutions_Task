@@ -18,5 +18,4 @@ public interface BookService {
     BookPageResponse findAllBook(Specification<Book> spec, int page, Sort sort);
     List<Book> findBooksByNameOrId(String searchString);
     List<Book> getCart(Set<Long> ids);
-    Integer getCountBooks(Specification<Book> spec);
 }

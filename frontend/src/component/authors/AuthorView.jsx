@@ -6,10 +6,11 @@ import axios from "axios";
 import localization from "../localization/AuthorLocalization";
 import AuthorizationService from "../../service/AuthorizationService";
 import noPic from "../../icon/nopic.png";
+import LangUtil from "../../service/LangUtil";
 function AuthorView() {
 
     let {id} = useParams();
-    let lang = "ru";
+    let [lang] = useState(LangUtil.getLang())
     const[url, setUrl] = useState("/authors");
     let[isRedirect, setIsRedirect] = useState(false);
 
@@ -88,17 +89,25 @@ function AuthorView() {
                         </div>)}
                 </div>
             </div>
-            <div className={"author_book_container"}>
-                {author.books.map((book) => (
-                    <div className={"author_item_books"} key={book.id}>
-                        <Link to={{
-                            pathname: "/books/" + book.id
-                        }}>
-                            {book.name}
-                        </Link>
+            {author.books.length !== 0 && (
+                <div>
+                    <h2>Книги</h2>
+                    <div className={"author_book_container"}>
+                        {author.books.map((book) => (
+                            <div className={"author_item_books"} key={book.id}>
+                                <Link to={{
+                                    pathname: "/books/" + book.id
+                                }}>
+                                    {book.name}
+                                </Link>
+                            </div>
+                        ))}
                     </div>
-                ))}
-            </div>
+                </div>
+            )}
+
+
+
         </div>
     );
 }

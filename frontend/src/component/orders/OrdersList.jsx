@@ -6,11 +6,12 @@ import Util from "../../service/Util";
 import loading from "../../icon/loading.gif";
 import AuthorizationService from "../../service/AuthorizationService";
 import OrderLocalization from "../localization/OrderLocalization";
+import LangUtil from "../../service/LangUtil";
 
 function OrdersList() {
 
     let [orders, setOrders] =  useState([]);
-    let [lang] = "ru";
+    let [lang] = useState(LangUtil.getLang());
     const history = useHistory()
     let [page, setPage] = useState(Util.getPage);
     let [totalPages, setTotalPages] = useState(-1);
@@ -45,45 +46,50 @@ function OrdersList() {
 
   return (
       <div>
+          {orders.length > 0 && (
           <table className={"book_list_table"}>
               <tr>
-                  <th>ID</th>
-                  <th>Дата</th>
-                  <th>Статус</th>
-                  <th>Количество товаров</th>
-                  <th>Сумма</th>
+                  <th>{OrderLocalization.locale[lang].id}</th>
+                  <th>{OrderLocalization.locale[lang].date}</th>
+                  <th>{OrderLocalization.locale[lang].paymentStatus}</th>
+                  <th>{OrderLocalization.locale[lang].amount}</th>
+                  <th> </th>
               </tr>
               {orders.map((order) => (
                   <tr key={order.id}>
                       <td>{order.id}</td>
-                      <td>{order.date}</td>
+                      <td>{new Date(order.date).toLocaleDateString()}</td>
                       <td>
-                          {OrderLocalization.locale[lang].NEW}
+                          {OrderLocalization.locale[lang][order.status]}
                       </td>
                       <td>{order.amount}</td>
                       <td>
                           <Link to={{
                               pathname : "/orders/" + order.id
-                          }}> Посмотреть</Link>
+                          }}>{OrderLocalization.locale[lang].see}</Link>
                       </td>
                   </tr>
               ))}
-          </table>
+          </table>)}
           {totalPages === -1 && (
               <div className={"loading_container"}>
                   <img src={loading} width={50} alt={"loading"}/>
               </div>
           )}
-          {totalPages >= 0 && (
+          {totalPages > 0 && (
               <Pagination
                   page={page}
                   totalPages={totalPages}
                   toPage={toPage}
               />
           )}
+          {totalPages === 0 && (
+              <div className={"empty_list"}>
+                  {OrderLocalization.locale[lang].noOrders}
+              </div>
+          )}
 
       </div>
   )
 }
-
 export default OrdersList;

@@ -7,13 +7,10 @@ import axios from "axios";
 
 function NavBar(props) {
 
-    useEffect(() =>{
+    useEffect(() => {
     }, [])
 
     function logOut() {
-        axios.get("/login")
-            .then(() => {
-            })
         sessionStorage.clear();
         localStorage.removeItem("user");
         window.location.href = "/login"

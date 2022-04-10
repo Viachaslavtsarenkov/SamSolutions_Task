@@ -10,8 +10,8 @@ import java.util.List;
 
 @Repository
 public interface AuthorRepository extends CrudRepository<Author, Long> {
-    List<Author> findAuthorByPseudonymStartingWith(String pseudonym);
+    List<Author> findAuthorByPseudonymIgnoreCaseContaining(String pseudonym);
     boolean existsByPseudonym(String pseudonym);
     Page<Author> findAll(Pageable pageable);
-    boolean existsByPseudonymAndIdIsNot(String pseudonym, Long id);
+    boolean existsByPseudonymIgnoreCaseAndIdIsNot(String pseudonym, Long id);
 }

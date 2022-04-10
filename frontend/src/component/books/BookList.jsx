@@ -7,11 +7,15 @@ import BookAdminList from "./BookAdminList";
 import Pagination from "../commom/Pagination";
 import Util from "../../service/Util";
 import loading from "../../icon/loading.gif";
+import BookLocalization from "../localization/BookLocalization";
+import LangUtil from "../../service/LangUtil";
+import bookLocalization from "../localization/BookLocalization";
 
 function BookList() {
 
-    const history = useHistory()
-    let [books, setBooks] = useState([])
+    const history = useHistory();
+    let [lang] = useState(LangUtil.getLang())
+    let [books, setBooks] = useState([]);
     let [page, setPage] = useState(Util.getPage());
     let [sort, setSort] = useState(Util.getSort());
     let [totalPages, setTotalPages] = useState(-1);
@@ -95,27 +99,27 @@ function BookList() {
                 {!AuthorizationService.currentUserHasRole("ROLE_ADMIN") && (
                     <div className={"customer_book_panel"}>
                         <div className={"sorting_panel"}>
-                            <p>Цена</p>
+                            <p>{BookLocalization.locale[lang].price}</p>
                             <select className={"sort_by"} onChange={changeOrder}>
-                                <option value={"ASC"}>По возрастанию</option>
-                                <option value={"DESC"}>По убыванию</option>
+                                <option value={"ASC"}>{BookLocalization.locale[lang].ascending}</option>
+                                <option value={"DESC"}>{BookLocalization.locale[lang].descending}</option>
                             </select>
                             <div className={"all_books_check_container"}>
-                                <p>Только в наличии</p>
+                                <p>{BookLocalization.locale[lang].onlyInStock}</p>
                                 <input
                                     onClick={setInStock}
                                     className={"in_stock"}
                                     type={"checkbox"}/>
                             </div>
                             <div className={"price_criteria_container"}>
-                                <p>От</p>
+                                <p>{BookLocalization.locale[lang].from}</p>
                                 <input
                                     maxLength={4}
                                     name={"minPrice"}
                                     min={1}
                                     onChange={searchByCriteria}
                                     type={"number"}/>
-                                <p>До</p>
+                                <p>{BookLocalization.locale[lang].to}</p>
                                 <input
                                        onChange={searchByCriteria}
                                        maxLength={4}
@@ -127,7 +131,13 @@ function BookList() {
                                         onClick={findByCriteria}
                                        type={"button"}
                                        className={"book_search_btn"}
-                                       value={"Найти"}/>
+                                       value= {bookLocalization.locale[lang].find}
+                                />
+                                <p className={"reset_filter"}
+                                    onClick={
+                                    () => {window.location.href = "/books"}}>
+                                    Сбосить фильтр
+                                </p>
                             </div>
                         </div>
                         <div className={"book_list"}>
@@ -138,7 +148,9 @@ function BookList() {
             }
             {AuthorizationService.currentUserHasRole("ROLE_ADMIN") && (
                 <div className={"book_author_container"}>
-                    <Link to={"/books/new"} className={"add_btn"}>Добавить</Link>
+                    <Link to={"/books/new"} className={"add_btn"}>
+                        {bookLocalization.locale[lang].add}
+                    </Link>
                     {totalPages !== 0 && (<BookAdminList value={books}/>)}
                 </div>)}
 
@@ -155,7 +167,10 @@ function BookList() {
                     toPage={toPage}
                 />
             )}
-            {totalPages === 0 && (<p>Список книг пуст</p>)}
+            {totalPages === 0 && (
+                <div className={"empty_list"}>
+                    {bookLocalization.locale[lang].listEmpty}
+                </div>)}
         </div>
     )
 }

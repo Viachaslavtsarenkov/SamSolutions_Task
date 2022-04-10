@@ -26,7 +26,6 @@ import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 
-@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
@@ -54,6 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             } catch (Exception exception) {
+                System.out.println("catch");
                 response.setStatus(FORBIDDEN.value());
                 Map<String, String> errors = new HashMap<>();
                 errors.put("errorMessage", exception.getMessage());

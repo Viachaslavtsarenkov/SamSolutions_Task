@@ -7,10 +7,11 @@ import "../../styles/common/header.sass";
 import AuthorizationService from "../../service/AuthorizationService";
 import logOutIcon from "../../icon/logout.png";
 import CommonLocalization from "../localization/CommonLocalization";
+import LangUtil from "../../service/LangUtil";
 
 function CustomerNavBar(props) {
 
-    let [lang] = useState("ru");
+    let [lang] = useState(LangUtil.getLang())
 
     return (
         <>

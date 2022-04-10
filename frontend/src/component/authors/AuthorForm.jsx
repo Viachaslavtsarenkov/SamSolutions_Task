@@ -4,6 +4,7 @@ import AuthorizationService from "../../service/AuthorizationService";
 import {Redirect} from "react-router-dom";
 import axios from "axios";
 import localization from "../localization/AuthorLocalization";
+import LangUtil from "../../service/LangUtil";
 
 class AuthorForm extends React.Component {
 
@@ -29,7 +30,7 @@ class AuthorForm extends React.Component {
             errorPseudonym : null,
             isSaved : false,
             isFound : true,
-            lang : "ru"
+            lang : LangUtil.getLang()
         }
         this.handleChange = this.handleChange.bind(this);
         this.createAuthor = this.createAuthor.bind(this);
@@ -56,11 +57,10 @@ class AuthorForm extends React.Component {
     }
 
     uploadImg(event) {
-        alert(event.target.files[0].size )
         if(event.target.files[0].size < 2000000) {
             this.setState({file:event.target.files[0]})
         } else {
-            alert("Размер файла должен быть меньше 2мб")
+            alert(localization.locale[this.state.lang].authorPicSize)
             event.target.value = "";
         }
     }
@@ -122,9 +122,8 @@ class AuthorForm extends React.Component {
                             {localization.locale[this.state.lang].pseudonymTaken}
                         </div>
                     )}
-                        <input
+                        <textarea
                             value={this.state.author.description}
-                            type="textarea"
                             required
                             name="description"
                             minLength={10}
@@ -143,6 +142,7 @@ class AuthorForm extends React.Component {
                         accept={".jpg"}
                     />
                     <input type={"submit"}
+                           className={"action_btn"}
                            value={localization.locale[this.state.lang].save}
                     />
                 </form>

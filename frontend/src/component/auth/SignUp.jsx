@@ -6,6 +6,7 @@ import { Redirect } from 'react-router-dom';
 import AuthorizationService from "../../service/AuthorizationService";
 import localization from '../localization/RegistrationLocalization'
 import validationLocale from '../localization/ValidationLocalization'
+import LangUtil from "../../service/LangUtil";
 
 class SignUP extends React.Component {
 
@@ -27,7 +28,7 @@ class SignUP extends React.Component {
             isEqual: true,
             errors : {},
             redirect: null,
-            lang : 'ru'
+            lang : LangUtil.getLang()
         }
         this.handleChange = this.handleChange.bind(this);
         this.registerUser = this.registerUser.bind(this);
@@ -47,12 +48,13 @@ class SignUP extends React.Component {
 
 
     registerUser(event) {
+        event.preventDefault();
         this.setState({errors : []})
         event.preventDefault();
         axios.post("/signUp", this.state.user).then(() => {
             this.setState({ redirect: '/login' });
-        }).catch(() => {
-           this.setState({errors: {"emailError" : ""}})
+        }).catch((error) => {
+           this.setState({errors: error.response.data})
         })
     }
 
@@ -162,6 +164,7 @@ class SignUP extends React.Component {
                             onChange={this.handleChange}
                             type="password"
                             name="password"
+                            autoComplete={"new-password"}
                             pattern={"[A-Za-zА-Яа-яЁё0-9]{8,}"}
                             className={"text_field"}
                             title={validationLocale.locale[this.state.lang].fieldPassword}

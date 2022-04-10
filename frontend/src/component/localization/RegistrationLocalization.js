@@ -1,14 +1,37 @@
 const locale = ({
     en: {
-        account : "Do you have any accounts?",
+        id : "Id",
+        userInformation : "User information",
+        account : "Do you have any account?",
         register : "Sign up",
-        login : "Log in",
-        loginTitle : 'Log in',
+        login : "Sign in",
+        loginTitle : 'Login',
         passwordTitle : 'Password',
         placeholderLogin: 'Enter email',
-        placeholderPassword: 'Enter password'
+        placeholderPassword: 'Enter password',
+        repeatedPassword : 'Retype password',
+        repeatedPasswordPlaceHolder : 'Enter password',
+        loginError : "Login or password entered incorrectly",
+        statusError : "Check your email and activate your account",
+        name : 'Name',
+        namePlaceHolder : 'Enter name',
+        surname : 'Surname',
+        user : "User",
+        surnamePlaceHolder : 'Enter surname',
+        patronymic: 'Patronymic',
+        patronymicPlaceHolder: 'Enter patronymic',
+        phone : 'Phone number',
+        phonePlaceHolder : 'Enter phone number',
+        email : 'Email',
+        status : "Status",
+        emailTaken : "The email has already taken",
+        see : "See",
+        ACTIVE : "Active",
+        NO_ACTIVATED : "No activated"
     },
     ru: {
+        id : "Код",
+        userInformation : "Информация о пользователе",
         account : "У вас есть аккаунт?",
         register : "Зарегистрироваться",
         login : "Войти",
@@ -23,14 +46,18 @@ const locale = ({
         name : 'Имя',
         namePlaceHolder : 'Введите имя',
         surname : 'Фамилия',
+        user : "Пользователь",
         surnamePlaceHolder : 'Введите фамилию',
         patronymic: 'Отчество',
         patronymicPlaceHolder: 'Введите отчество',
         phone : 'Номер телефона',
         phonePlaceHolder : 'Введите номер телефона',
         email : 'Email',
-        emailTaken : "Адрес электронной почты уже занят"
-
+        status : "Статус",
+        emailTaken : "Адрес электронной почты уже занят",
+        see : "Посмотреть",
+        ACTIVE : "Активный",
+        NO_ACTIVATED : "Не активирован"
     }
 });
 export default {locale};

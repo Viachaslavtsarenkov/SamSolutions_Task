@@ -60,7 +60,6 @@ public class AuthorServiceImpl implements AuthorService {
         }
         authorImageRepository.save(authorImage);
         author.setImage(authorImage);
-
         authorRepository.save(author);
         LOGGER.warn(String.format(LOG_CREATED_MSG, "Author", author.getId()));
         return author;
@@ -78,15 +77,15 @@ public class AuthorServiceImpl implements AuthorService {
     public void updateAuthor(Author author, MultipartFile image)
             throws AuthorAlreadyExistsException {
 
-        if(authorRepository.existsByPseudonymAndIdIsNot(author.getPseudonym(), author.getId())) {
+        if(authorRepository.existsByPseudonymIgnoreCaseAndIdIsNot(author.getPseudonym(), author.getId())) {
             throw new AuthorAlreadyExistsException(MessageResponse.AUTHOR_ALREADY_EXIST);
         }
 
         if(image != null) {
             String file = pictureLoader.loadPicture(image);
             AuthorImage authorImage = author.getImage();
-            authorImage = authorImageRepository.save(authorImage);
             authorImage.setImageContent(file);
+            authorImageRepository.save(authorImage);
         }
 
         authorRepository.save(author);
@@ -111,6 +110,6 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     @Transactional
     public List<Author> findAuthor(String pseudonym) {
-        return authorRepository.findAuthorByPseudonymStartingWith(pseudonym);
+        return authorRepository.findAuthorByPseudonymIgnoreCaseContaining(pseudonym);
     }
 }
