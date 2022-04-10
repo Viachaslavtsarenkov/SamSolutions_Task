@@ -25,9 +25,6 @@ public class BookRepositoryTest {
     @Autowired
     private BookRepository bookRepository;
 
-    @Mock
-    private AuthorRepository authorRepository;
-
     private final Book testBook = Book.builder()
             .name("The queen's Gambit")
             .description("")
@@ -41,7 +38,9 @@ public class BookRepositoryTest {
     @Test
     public void ShouldSaveBook() {
         Set<Author> authorsList = new HashSet<>();
-        BookImage image = new BookImage();
+        BookImage image = BookImage.builder()
+                .id(1L).imageContent("image")
+                .build();
         image.setImageContent("image");
         testBook.setImage(image);
         testBook.setAuthors(authorsList);

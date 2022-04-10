@@ -9,7 +9,6 @@ import java.util.Set;
 
 public interface OrderService {
     Order saveOrder(Order order) throws PayPalRESTException;
-    void deleteOrder(Long id);
     Order findOrderById(Long id) throws OrderNotFoundException;
     void updateOrder(Order order);
     OrderPageResponse getOrderPage(int page);

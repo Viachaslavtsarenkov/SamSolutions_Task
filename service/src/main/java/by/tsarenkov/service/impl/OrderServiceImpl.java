@@ -69,12 +69,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void deleteOrder(Long id) {
-        orderRepository.deleteById(id);
-    }
-
-    @Override
-    @Transactional
     public Order findOrderById(Long id) throws OrderNotFoundException {
         return Optional.of(orderRepository.findById(id))
                 .get().orElseThrow(OrderNotFoundException::new);

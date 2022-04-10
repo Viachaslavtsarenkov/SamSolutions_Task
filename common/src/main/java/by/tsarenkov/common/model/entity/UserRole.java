@@ -3,6 +3,8 @@ package by.tsarenkov.common.model.entity;
 import by.tsarenkov.common.model.enumeration.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -22,7 +24,10 @@ public class UserRole implements Serializable {
 
     @Id
     @Column(name = "id_role")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(name = "role")
+    @NotNull
     private Role role;
     @OneToMany
     @JsonIgnore

@@ -1,6 +1,7 @@
 package by.tsarenkov.db.repository;
 
 import by.tsarenkov.common.model.entity.Order;
+import by.tsarenkov.common.model.entity.User;
 import by.tsarenkov.common.model.enumeration.PaymentStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

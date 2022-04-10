@@ -27,10 +27,12 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id_order")
     private Long id;
+    @NotNull
     @Column(name = "amount")
     private Double amount;
     @Column(name = "count")
     private long count;
+    @NotNull
     @Column(name = "date")
     private Date date;
     @Column(name = "status")
@@ -42,7 +44,9 @@ public class Order {
     @NotNull
     private String paymentUrl;
     @Column(name="paymentStatus")
+    @NotNull
     private PaymentStatus paymentStatus;
+    @NotNull
     @Column(name = "paymentId")
     private String paymentId;
     @ManyToOne(fetch = FetchType.EAGER)
