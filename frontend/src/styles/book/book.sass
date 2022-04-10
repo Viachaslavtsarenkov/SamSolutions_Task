@@ -8,7 +8,7 @@ $font-family-content: Roboto
   margin: 25px auto
   padding: 25px
   background: #FFFFFF
-  box-shadow: 0 0 15px 0px gray
+  box-shadow: 0 0 15px 0 gray
 
 label
   font-weight: 600
@@ -84,7 +84,7 @@ input[type=text]
   margin: 40px auto
 
 .book_user_item
-  box-shadow: 5px 5px 15px 0px gray
+  box-shadow: 5px 5px 15px 0 gray
   width: 280px
   height: 420px
   display: flex
@@ -92,7 +92,6 @@ input[type=text]
   align-items: center
   transition: 1s
 
-.book_user_item
 
 .book_user_item:hover
   transform: scale(1.03)
@@ -127,7 +126,7 @@ input[type=text]
 
 
 .book_list_table
-  max-width: 800px
+  min-width: 500px
   border: 1px solid #dddddd
   border-collapse: collapse
   margin: 40px auto
@@ -175,6 +174,10 @@ input[type=text]
   background: #BDC5C0
   box-shadow: 0 0 3px 2px #A65D50
 
+
+
+.table_width
+  max-width: 400px
 
 .sorting_panel p
   vertical-align: center
@@ -251,11 +254,10 @@ input[type=text]
 
 .book_description div:nth-child(2n)
   background: #F5F6F2
-  box-shadow: 0 0 3px 0px gray
+  box-shadow: 0 0 3px 0 gray
 
 .price
   background: red
-  width: 50%
   text-align: center
   padding: 15px 70px
   margin-top: 100px
@@ -265,6 +267,7 @@ input[type=text]
 
 .book_item_authors_list
   display: flex
+  flex-wrap: wrap
   flex-direction: row
   gap: 25px
 
@@ -274,7 +277,7 @@ input[type=text]
   text-align: center
   align-self: center
   border-radius: 5px
-  box-shadow: 0 0 15px 0px gray
+  box-shadow: 0 0 15px 0 gray
 
 .view_sale_price_container
   width: 120px
@@ -315,3 +318,11 @@ a
 
 .old_price
   text-decoration: line-through
+
+.reset_filter
+  font-size: 12px
+  color : red
+  padding-top : 13px
+
+.reset_filter:hover
+  cursor: pointer

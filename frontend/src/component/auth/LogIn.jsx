@@ -6,6 +6,7 @@ import AuthorizationService from '../../service/AuthorizationService';
 import registrationLocale from '../localization/RegistrationLocalization'
 import '../../styles/auth/login.sass';
 import '../../styles/common/common.sass';
+import LangUtil from "../../service/LangUtil";
 
 class LogIn extends React.Component {
 
@@ -18,7 +19,7 @@ class LogIn extends React.Component {
             },
             redirect: false,
             error : '',
-            lang : 'ru'
+            lang : LangUtil.getLang()
         }
 
         this.handleChange = this.handleChange.bind(this);

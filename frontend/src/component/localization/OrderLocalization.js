@@ -1,6 +1,34 @@
 const locale = ({
     en: {
-        NEW : "New"
+        NEW : "New",
+        IN_PROCESSING : "In processing",
+        SENT : "Sent",
+        RECEIVED : "Received",
+        PAID : "Paid",
+        NO_PAID : "Not paid",
+        addressPlaceHolder : "Enter address",
+        books : "Books",
+        amount : "Total",
+        changeOrderBtn: "Change order",
+        placeOrderBtn: "Place the order",
+        placeOrderTitle : "Ordering",
+        orderInformation : "Order information",
+        orderCode : "Order code",
+        orderDate : "Date",
+        orderStatus : "Order status",
+        paymentStatus : "Payment order",
+        customer : "Customer",
+        bookList : "Book list",
+        save : "Save",
+        successPayment : "Payment was successful. Information" +
+            "You can get information about the order in your personal account",
+        orderError: "Payment failed. To pay for an order in your account",
+        goToProfile : "Go to profile",
+        id : "Id",
+        date : "Date",
+        payBtn : "Pay",
+        see: "See",
+        noOrders: "There is no any orders"
     },
     ru: {
         NEW : "Новый",
@@ -8,7 +36,31 @@ const locale = ({
         SENT : "Отправлен",
         RECEIVED : "Получен",
         PAID : "Оплачен",
-        NO_PAID : "Не оплачен"
+        NO_PAID : "Не оплачен",
+        addressPlaceHolder : "Введите адрес",
+        books : "Список книг",
+        amount : "Итого",
+        changeOrderBtn: "Изменить заказ",
+        placeOrderBtn: "Оформить заказ",
+        placeOrderTitle : "Оформление заказа",
+        orderInformation : "Информация о заказе",
+        orderCode : "Код заказа",
+        orderDate : "Дата заказа",
+        orderStatus : "Статус заказа",
+        paymentStatus : "Статус оплаты",
+        customer : "Покупатель",
+        bookList : "Список кник",
+        save : "Сохранить",
+        successPayment : "Оплата прошла успешно. Информацию" +
+            " о заказе можно получить в личном кабинете",
+        orderError: "Оплата не прошла. Для оплаты заказа в личном кабинете",
+        goToProfile : "Перейти в личный кабинет",
+        id : "Код",
+        date : "Дата заказа",
+        payBtn : "Оплатить",
+        see: "Посмотреть",
+        noOrders: "Нет заказов"
+
     }
 });
 export default {locale};

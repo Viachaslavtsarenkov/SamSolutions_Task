@@ -5,13 +5,16 @@ import Pagination from "../commom/Pagination";
 import Util from "../../service/Util";
 import AuthorizationService from "../../service/AuthorizationService";
 import loading from "../../icon/loading.gif";
-
+import UserLocalization from "../localization/RegistrationLocalization";
+import User from "./User";
+import LangUtil from "../../service/LangUtil";
 function UserList() {
 
     const history = useHistory();
     let [users, setUsers] = useState([{}]);
     let [totalPages, setTotalPages] = useState(-1);
     let [page, setPage] = useState(Util.getPage());
+    let [lang] = useState(LangUtil.getLang())
 
     useEffect(() => {
         if(page !== 0) {
@@ -23,7 +26,6 @@ function UserList() {
     function getUsers() {
         axios.get("/users?" + Util.getPageParam())
             .then((response) => {
-                console.log(response.data['users'])
             setUsers(response.data['users']);
             setTotalPages(response.data['totalPages']);
         })
@@ -40,30 +42,41 @@ function UserList() {
 
     return (
         <div>
+            {totalPages > 0 && (
             <table className={"book_list_table"}>
                 <tr>
-                    <th>ID</th>
-                    <th>ФИО</th>
-                    <th>Email</th>
-                    <th>Номер телефона</th>
-                    <th>Статус</th>
-                    <th>Действие</th>
+                    <th>
+                        {UserLocalization.locale[lang].id}
+                    </th>
+                    <th>
+                        {UserLocalization.locale[lang].user}
+                    </th>
+                    <th>
+                        {UserLocalization.locale[lang].email}
+                    </th>
+                    <th>
+                        {UserLocalization.locale[lang].status}
+                    </th>
+                    <th>
+                        {UserLocalization.locale[lang].status}
+                    </th>
                 </tr>
                 {users.map((user) => (
                     <tr key={user.id}>
                         <td>{user.id}</td>
                         <td>{user.name} {user.surname} {user.patronymic}</td>
                         <td>{user.email}</td>
-                        <td>{user.phoneNumber}</td>
-                        <td>{user.status}</td>
+                        <td>{UserLocalization.locale[lang][user.status]}</td>
                         <td>
                             <Link to={{
                                 pathname : "/users/" + user.id
-                            }}> Посмотреть</Link>
+                            }}>
+                                {UserLocalization.locale[lang].see}
+                            </Link>
                         </td>
                     </tr>
                 ))}
-            </table>
+            </table>)}
             {totalPages === -1 && (
                 <div className={"loading_container"}>
                     <img src={loading} width={50} alt={"loading"}/>

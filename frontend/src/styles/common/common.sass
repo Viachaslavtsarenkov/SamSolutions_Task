@@ -50,7 +50,6 @@ input[type=subgmit]
   display: flex
   flex-direction: column
   justify-content: space-between
-  //todo
 
 
 .active_page
@@ -63,7 +62,8 @@ input[type=subgmit]
 
 .action_delete_btn
   padding: 10px
-  border-radius: 10px
+  border-radius: 2px
+  margin-right: 5px
   border: none
   background: red
   font-size: 15px
@@ -72,7 +72,7 @@ input[type=subgmit]
 
 .action_edit_btn
   padding: 10px
-  border-radius: 10px
+  border-radius: 2px
   border: none
   background: green
   font-size: 15px
@@ -83,6 +83,7 @@ input[type=subgmit]
   border: 2px solid
   background: transparent
   color: #19392E
+  border-radius: 2px
   padding: 7px 25px
   font-size: 18px
   margin: 0 auto
@@ -91,15 +92,57 @@ input[type=subgmit]
   font-weight: 400
 
 
-.action_btn :hover
+.action_btn:hover
   color: white
   background: #19392E
 
 .error_validation
-  text-align: center
   margin: 5px 0
   color: red
   font-size: 12px
+  grid-column-start: 1
+  grid-column-end: 3
+
 
 .loading_container
   text-align: center
+
+
+.empty_list
+  font-weight: 700
+  font-size: 24px
+  text-align: center
+
+input[type=text]:focus
+  color: #212529
+  background-color: #fff
+  border-color: #bdbdbd
+  outline: 0
+  box-shadow: 0 0 0 0.2rem rgba(158, 158, 158, 0.25)
+
+input[type=text]:valid
+  border-color: #dc3545
+  padding-right: 2.25rem
+  background-repeat: no-repeat
+  background-position: right 0.5625rem center
+  background-size: 1.125rem 1.125rem
+
+input[type=text]:valid
+  border-color: #198754
+
+input[type=text]:invalid:focus
+  border-color: #dc3545
+  box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25)
+
+input[type=text]:valid:focus
+  border-color: #198754
+
+.lang_container
+  margin: 10px 0 0 120px
+
+.lang_container button
+  background: transparent
+  border: none
+  color: white
+  font-size: 10pt
+  padding-right: 10px

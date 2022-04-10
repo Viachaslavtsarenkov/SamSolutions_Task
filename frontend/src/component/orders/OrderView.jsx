@@ -11,15 +11,21 @@ function OrderView() {
     let [status] = useState('');
     let [isSaved, setIsSaved] = useState(false);
     let [isRedirect, setIsRedirect] = useState(false);
-    let  [url, setUrl] = useState("");
-    let lang = "ru";
+    let [url, setUrl] = useState("");
+    let searchUrl = "";
+    let lang = useState("ru");
 
     useEffect(() => {
-        findOrder(id)
+        if(AuthorizationService.currentUserHasRole("ROLE_CUSTOMER")) {
+            searchUrl = "/profile/order/" + id;
+        } else {
+            searchUrl = "/orders/" + id;
+        }
+        findOrder()
     }, [isSaved])
 
-    function findOrder(id) {
-        axios.get("/orders/" + id)
+    function findOrder() {
+        axios.get(searchUrl)
             .then((response) => {
             setOrder(response.data);
             setIsSaved(false);
@@ -57,30 +63,32 @@ function OrderView() {
         <div>
             {order !== undefined && (
             <div className={"order_container_view"}>
-                <h2>Информация о заказе</h2>
+                <h2>
+                    {OrderLocalization.locale[lang].orderInformation}
+                </h2>
                 <p className={"code"}>
                     <span>
-                        код заказа:
+                        {OrderLocalization.locale[lang].orderCode}
                     </span>
                     {order['id']}
                 </p>
                 <p>
                     <span>
-                        Дата заказа:
+                        {OrderLocalization.locale[lang].orderDate} :
                     </span>
                     {new Date(order['date']).toLocaleDateString()}
                 </p>
                 <p>
-                    <span>Статус заказа  : </span>
+                    <span>{OrderLocalization.locale[lang].orderStatus} : </span>
                     {OrderLocalization.locale[lang][order['status']]}
 
                 </p>
                 <p>
-                    <span>Статус оплаты:</span>
+                    <span>{OrderLocalization.locale[lang].paymentStatus}:</span>
                     {OrderLocalization.locale[lang][order['paymentStatus']]}
                 </p>
                 <p>
-                    <span>Покупатель:</span>
+                    <span>{OrderLocalization.locale[lang].customer}:</span>
                     {order['user'] !== undefined && (
                     <Link to={{
                         pathname : '/users/' + order['user']['id']
@@ -89,7 +97,9 @@ function OrderView() {
                     </Link>)
                     }
                     <div className={"order_book_list"}>
-                        <h4>Список товаров</h4>
+                        <h4>
+                            {OrderLocalization.locale[lang].bookList}
+                        </h4>
                         {order['orderBooks'].map((book) => (
                             <div>
                                 <Link to={{
@@ -102,7 +112,7 @@ function OrderView() {
                     </div>
                     <p>
                         <span>
-                            Итого:
+                            {OrderLocalization.locale[lang].amount}
                         </span>
                         {order['amount']}
                     </p>
@@ -110,11 +120,19 @@ function OrderView() {
                 {AuthorizationService.currentUserHasRole("ROLE_ADMIN") && (
                     <div>
                         <select id={"order_status"} onChange={changeStatus}>
-                            <option value={"IN_PROCESSING"}>В обработке</option>
-                            <option value={"SENT"}>Отправлен</option>
-                            <option value={"RECEIVED"}>Получен</option>
+                            <option value={"IN_PROCESSING"}>
+                                {OrderLocalization.locale[lang].IN_PROCESSING}
+                            </option>
+                            <option value={"SENT"}>
+                                {OrderLocalization.locale[lang].SENT}
+                            </option>
+                            <option value={"RECEIVED"}>
+                                {OrderLocalization.locale[lang].RECEIVED}
+                            </option>
                         </select>
-                        <button onClick={saveStatus}>Сохранить</button>
+                        <button onClick={saveStatus}>
+                            {OrderLocalization.locale[lang].save}
+                        </button>
                     </div>
                 )}
             </div>

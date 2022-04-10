@@ -1,12 +1,12 @@
 const locale = ({
     en: {
         id : "Id",
-        pseudonym:  "pseudonym",
-        pseudonymTaken : "Pseudonym has already taken",
+        pseudonym:  "Pseudonym",
+        pseudonymTaken : "The pseudonym has already taken",
         pseudonymPlaceHolder: "Enter pseudonym",
         description: "Description",
         descriptionPlaceHolder: "Enter description",
-        loadPhoto : "Load photo",
+        loadPhoto : "Load picture",
         add : "Add",
         save : "Save",
         edit : "Edit",
@@ -14,7 +14,11 @@ const locale = ({
         see : "See",
         modificationMessage : "Saved",
         removeMessage: "Deleted",
-        about : "Author's description"
+        about : "About the author",
+        books : "Books",
+        deleteAuthorMessage : "Deletion is not possible because the author has books",
+        authorPicSize : "Image size must be less than 2MB",
+        authorsListEmpty : "Author list is empty",
     },
     ru: {
        id : "код автора",
@@ -33,7 +37,9 @@ const locale = ({
        removeMessage: "Удалено",
        about : "Об авторе",
        books : "Книги",
-       deleteAuthorMessage : "Удаление невозможно, так как у автора есть книги"
+       deleteAuthorMessage : "Удаление невозможно, так как у автора есть книги",
+       authorPicSize : "Размер картинки должен быть меньше 2мб",
+       authorsListEmpty : "Список авторов пуст",
     }
 });
 export default {locale};

@@ -5,10 +5,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import main from  "../../icon/main.jpg";
 import {Link} from "react-router-dom";
 import CommonLocalization from "../localization/CommonLocalization";
+import LangUtil from "../../service/LangUtil";
 
 function Main() {
 
-        let [lang] = useState("ru");
+        let [lang] = useState(LangUtil.getLang())
 
         return (
             <div className={"wrapper"}>

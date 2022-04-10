@@ -5,13 +5,17 @@ import {Redirect} from "react-router-dom";
 import AuthorizationService from "../../service/AuthorizationService";
 import UtilCart from "../../service/UtilCart";
 import noPic from "../../icon/nopic.png";
+import BookLocalization from "../localization/BookLocalization";
+import LangUtil from "../../service/LangUtil";
 
 function Cart(props) {
+
     let [cart, setCart] = useState([]);
     let [cartLocal, setCartLocal] = useState(UtilCart.getFromCart);
     let [order, setOrder] = useState([]);
     let [isRedirect, setIsRedirect] = useState(false);
     let [url, setUrl] = useState("/");
+    let [lang] = useState(LangUtil.getLang())
 
     useEffect(() => {
         getCart();
@@ -76,7 +80,7 @@ function Cart(props) {
                             )}
                             {!book.inStock && (
                                 <div className={"code"} align={"center"}>
-                                    Нет в наличии
+                                    {BookLocalization.locale[lang].notInStock}
                                 </div>
                             )}
                             <button className={"action_btn"}
@@ -86,21 +90,21 @@ function Cart(props) {
                                         props.cart();
                                     }}
                                     value={book.id}>
-                                Удалить из корзины
+                                {BookLocalization.locale[lang].removeFromCart}
                             </button>
                         </div>
                     </div>
                 ))}
                 {order.length !== 0 && (
                     <button className={"action_btn"} onClick={createOrder}>
-                        Оформить заказ
+                        {BookLocalization.locale[lang].placeOrderBtn}
                     </button>)}
             </div>
             )}
 
             {UtilCart.getCountFromCart() === 0 && (
-                <div className={"empty_cart"}>
-                    Нет товаров в корзине
+                <div className={"empty_list"}>
+                    {BookLocalization.locale[lang].emptyCart}
                 </div>
             )}
         </div>

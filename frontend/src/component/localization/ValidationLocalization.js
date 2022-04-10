@@ -1,12 +1,18 @@
 const locale = ({
     en: {
-        account : "Do you have any accounts?",
-        register : "Sign up",
-        login : "Log in",
-        loginTitle : 'Log in',
-        passwordTitle : 'Password',
-        placeholderLogin: 'Enter email',
-        placeholderPassword: 'Enter password'
+        fieldSimpleText : 'Min. field length 2 characters. The field must contain only letters',
+        fieldPhoneNumber : 'Enter your phone in the format +375333751253',
+        fieldPassword : 'Password must be at least 8 characters',
+        bookNameValidation : "The title of the book must contain only letters and numbers." +
+            " Minimum field length 1 character",
+        descriptionValidation : 'Description must be at least 10 characters',
+        yearValidation : 'Enter the year! For example: 1999',
+        weightValidation: 'Enter weight in grams. For example: 580. Maximum weight 9999gr.',
+        pagesValidation : 'Enter the number of pages. The maximum number of pages is 9999. For example: 120',
+        materialValidation : 'The field must contain only letters. Minimum field length 3 characters',
+        priceValidation : 'Enter the price of the book as a decimal. For example: 19.84',
+        discountNameValidation :  "Discount name must contain only letters. Minimum field length 2 characters",
+        discountFactor : 'Enter the discount percentage in the format 0.11. For example: 10% = 0.1',
     },
     ru: {
         fieldSimpleText : 'Мин. длинна поля 2 символа. Поле должно содержать только буквы',

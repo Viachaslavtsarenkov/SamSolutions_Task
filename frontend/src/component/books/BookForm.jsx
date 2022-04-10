@@ -8,11 +8,11 @@ import AuthorizationService from "../../service/AuthorizationService";
 import validationLocalization from  '../localization/ValidationLocalization';
 import bookLocalization from "../localization/BookLocalization";
 import GenrePanel from "./GenrePanel";
+import LangUtil from "../../service/LangUtil";
 
 function BookForm() {
 
-    let [lang] = useState("ru");
-
+    let [lang] = useState(LangUtil.getLang())
     let [book, setBook] = useState({
         id : '',
         name : '',
@@ -33,7 +33,7 @@ function BookForm() {
 
     let {id} = useParams();
     let [url,setURL] = useState("/books")
-    let [file] = useState(null);
+    let [file, setFile] = useState(null);
     let [searchString, setSearchString] = useState('');
     let [authors, setAuthors] = useState([{
         id : '',
@@ -41,7 +41,6 @@ function BookForm() {
         description : ''
     }])
     let [isRedirect, setIsRedirect] = useState(false);
-    let [newAuthor, setNewAuthor] = useState({});
 
     function getBook(id) {
         const url = "/books/";
@@ -59,15 +58,17 @@ function BookForm() {
             getBook(id);
             turnGenres();
         }
-        }, [newAuthor]);
+        }, []);
+
+    useEffect(() => {
+        turnGenres();
+    }, [book]);
 
     function uploadImage(event) {
-        alert(event.target.files[0].size )
         if(event.target.files[0].size < 2000000) {
-            this.setState({file:event.target.files[0]})
+            setFile(event.target.files[0])
         } else {
-            alert("Размер файла должен быть меньше 2мб")
-            event.target.value = "";
+           event.target.value = "";
         }
     }
 
@@ -75,7 +76,7 @@ function BookForm() {
         const container_genres = document.querySelector(".genres");
         container_genres.childNodes.forEach((node) => {
             let currentGenre = book.genres.find((f) => {
-               return f.id === +node.dataset.genre;
+               return +f.id === +node.dataset.genre;
             })
             if(currentGenre !== undefined) {
                 node.classList.add("active_genre");
@@ -89,6 +90,7 @@ function BookForm() {
                 setAuthors(response.data)
             });
     }
+
 
     function chooseGenre(e) {
         e.preventDefault();
@@ -161,26 +163,24 @@ function BookForm() {
         }
     }
 
-    function addAuthor(e) {
-       e.preventDefault();
-       const searcher = document.querySelector('.input_search_connection');
-       let idAuthor = searcher.value.split(".")[0];
-       if(!checkAuthor(idAuthor)) {
-           getAuthor(idAuthor);
-           let currentAuthor = [...book.authors, newAuthor];
-           setBook({
-               ...book,
-               authors : currentAuthor
-           })
-       } else {
-           alert(bookLocalization.locale[lang].authorAlreadyAdded)
-       }
+    function addAuthor() {
+        const list = document.getElementById('search_result_datalist');
+        const searcher = document.querySelector('.input_search_connection');
+        let index = list.options.namedItem(searcher.value).getAttribute('data-index');
+        if(!checkAuthor(authors[index])) {
+            setBook({
+                ...book,
+                authors : [...book.authors, authors[index]]
+            })
+        } else {
+            alert(bookLocalization.locale[lang].authorTaken)
+        }
     }
 
-    function checkAuthor(idAuthor) {
-        let result = false
-        book.authors.forEach((author)=> {
-            if(+author.id === +idAuthor) {
+    function checkAuthor(author) {
+        let result = false;
+        book.authors.filter((bookAuthor)=> {
+            if(bookAuthor.id === author.id) {
                 result = true;
             }
         })
@@ -194,13 +194,6 @@ function BookForm() {
             'authors': book.authors.filter(function(f, index) {
                 return index !== indexAuthor
             })
-        })
-    }
-
-    function getAuthor(idAuthor) {
-        axios.get("/authors/" + idAuthor)
-            .then((response) => {
-                setNewAuthor(response.data);
         })
     }
 
@@ -298,7 +291,6 @@ function BookForm() {
                 </label>
                 <input type={"file"}
                        accept={"jpg"}
-                       max={4}
                        onChange={uploadImage}
                     name={"image"}
                 />
@@ -323,14 +315,16 @@ function BookForm() {
                                onChange={updateSearch}
                         />
                         <datalist id="search_result_datalist">
-                            {authors.map((author) => (
-                                <option value={author.id + "." + author.pseudonym}/>
+                            {authors.map((author, index) => (
+                                <option data-index={index}
+                                        name={author.id + " " + author.pseudonym}
+                                        value={author.id + " " + author.pseudonym}/>
                             ))}
                         </datalist>
-
                         <input type={"button"}
                                value={bookLocalization.locale[lang].addBtn}
-                               onClick={addAuthor}/>
+                               onClick={addAuthor}
+                        />
                     </div>
                     <div className={"search_list"}>
                         {book.authors.map((author, index) => (
@@ -338,6 +332,7 @@ function BookForm() {
                                     <div className={"search_item"} key={index}>
                                         <p>{author.id} {author.pseudonym}</p>
                                         <input type="button"
+                                               className={"action_btn"}
                                                value={bookLocalization.locale[lang].deleteBtn}
                                                onClick={deleteAuthor} data-index={index}/>
                                     </div>)
@@ -347,9 +342,8 @@ function BookForm() {
                 </div>
                 <input type={"submit"}
                        value={bookLocalization.locale[lang].saveBtn}
-                       className={"save_btn"}/>
+                       className={"action_btn"}/>
             </form>
-
         </div>
     )
 }

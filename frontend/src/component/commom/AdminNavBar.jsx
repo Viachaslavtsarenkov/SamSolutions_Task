@@ -3,11 +3,11 @@ import {Link} from "react-router-dom";
 import logOutIcon from "../../icon/logout.png"
 import React, {useState} from "react";
 import CommonLocalization from "../localization/CommonLocalization";
+import LangUtil from "../../service/LangUtil";
 
 function AdminNavBar(props) {
 
-
-    let [lang] = useState("ru");
+    let [lang] = useState(LangUtil.getLang());
 
     return (
         <React.Fragment>

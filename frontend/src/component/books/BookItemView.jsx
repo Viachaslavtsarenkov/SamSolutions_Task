@@ -4,12 +4,13 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import noPic from '../../icon/nopic.png'
 import bookLocalization from "../localization/BookLocalization";
+import LangUtil from "../../service/LangUtil";
 
 function BookItemView(props) {
 
-    const book = props.value;
+    const [book] = useState(props.value);
     let [inCart, setInCart] = useState(false);
-    let lang = "ru";
+    let [lang] = useState(LangUtil.getLang())
 
     useEffect(() => {
         let cart = localStorage.getItem("books");
@@ -35,13 +36,6 @@ function BookItemView(props) {
         setInCart(false)
         localStorage.setItem("books", cartBooks
             .replace("*" + book.id + "*", "*"));
-    }
-
-    function deleteBook() {
-        axios.delete("/books/" + book.id)
-            .then(() => {
-                book.inStock = true;
-        })
     }
 
     return (
@@ -101,10 +95,15 @@ function BookItemView(props) {
                                     {bookLocalization.locale[lang].editBtn}
                                 </Link>
                                 {book.inStock && (<button className={"action_link delete_btn"}
-                                        onClick={deleteBook}
+                                        onClick={props.change}
                                        >
                                     {bookLocalization.locale[lang].deleteBtn}
-                                </button>)
+                                </button>)}
+                                {!book.inStock && (<button className={"action_link delete_btn"}
+                                    onClick={props.change}
+                                    >
+                                {"Восстановить книгу"}
+                                    </button>)
                                 }
                             </div>
                     )}
@@ -134,6 +133,16 @@ function BookItemView(props) {
                 <div>
                     <span>{bookLocalization.locale[lang].description}: </span>
                     {book.description}</div>
+                <div className={"book_item_authors_list"}>
+                    <span>{bookLocalization.locale[lang].genreTitle} : </span>
+                    {book.genres.map((genre)=> (
+                        <div className={"book_item_author"} key={genre.id}>
+                            <div>
+                                {bookLocalization.locale[lang].genres[genre.id]}
+                            </div>
+                        </div>
+                    ))}
+                </div>
                 <div className={"book_item_authors_list"}>
                     <span>{bookLocalization.locale[lang].authorTitle} : </span>
                     {book.authors.map((author)=> (

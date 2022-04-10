@@ -3,12 +3,16 @@ import axios from "axios";
 import React, {useEffect, useState} from "react";
 import '../../styles/user/user.sass';
 import AuthorizationService from "../../service/AuthorizationService";
+import userLocalization from "../localization/RegistrationLocalization";
+import OrderLocalization from "../localization/OrderLocalization";
+import LangUtil from "../../service/LangUtil";
 
 function UserProfile() {
 
     let {id} = useParams();
     let [user, setUser] = useState();
     let [isRedirect, setIsRedirect] = useState(false);
+    let [lang] = useState(LangUtil.getLang());
 
     useEffect(() => {
         getProfile();
@@ -39,24 +43,44 @@ function UserProfile() {
         <div>
             {user !== undefined && (
             <div className={"user_container"}>
-                <h2>Информация о пользователе</h2>
+                <h2>
+                    {userLocalization.locale[lang].userInformation}
+                </h2>
                 <div className={"user_info"}>
-                    <p><span>Имя:</span> {user['name']}</p>
-                    <p><span>Фамилия:</span> {user['surname']}</p>
-                    <p><span>Отчество:</span> {user['patronymic']}</p>
-                    <p><span>Email:</span> {user['email']}</p>
-                    <p><span>Номер телефона:</span> {user['phoneNumber']}</p>
+                    <p>
+                        <span>
+                        {userLocalization.locale[lang].surname}: </span>
+                         {user['surname']}
+                    </p>
+                    <p>
+                        <span>
+                        {userLocalization.locale[lang].name}:
+                        </span> {user['name']}
+                    </p>
+                    <p><span>
+                        {userLocalization.locale[lang].patronymic}: </span> {user['patronymic']}</p>
+                    <p>
+                        <span>
+                        {userLocalization.locale[lang].email}: </span>
+                        {user['email']}
+                    </p>
+                    <p>
+                        <span>
+                        {userLocalization.locale[lang].phone}: </span>
+                        {user['phoneNumber']}</p>
                 </div>
                 {user['orders'].length !== 0 && (
                 <div className={"user_orders"}>
                     <h2>Заказы</h2>
-                    <table className={"book_list_table"}>
+                    <table className={"book_list_table table_width"} >
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Дата</th>
-                                <th>Статус заказа</th>
-                                <th>Сумма</th>
+                                <th>
+                                    {OrderLocalization.locale[lang].id}
+                                </th>
+                                <th>{OrderLocalization.locale[lang].date}</th>
+                                <th>{OrderLocalization.locale[lang].paymentStatus}</th>
+                                <th>{OrderLocalization.locale[lang].amount}</th>
                                 <th> </th>
                             </tr>
                         </thead>
@@ -66,20 +90,31 @@ function UserProfile() {
                                     <td>{order.id}</td>
                                     <td>{new Date(order.date).toLocaleDateString()}</td>
                                     <td>
-                                        {order['paymentStatus'] === "NO_PAID" && (
+                                        {order['paymentStatus'] === "NO_PAID"
+                                        && AuthorizationService.currentUserHasRole("ROLE_CUSTOMER") && (
                                             <a href={order['paymentUrl']}>
-                                                Оплатить
+                                                {OrderLocalization.locale[lang].payBtn}
+                                            </a>
+                                        )}
+                                        {order['paymentStatus'] === "NO_PAID"
+                                        && !AuthorizationService.currentUserHasRole("ROLE_CUSTOMER") && (
+                                            <a href={order['paymentUrl']}>
+                                                {OrderLocalization.locale[lang].NO_PAID}
                                             </a>
                                         )}
                                         {order['paymentStatus'] !== "NO_PAID" && (
-                                            <p>Оплачено</p>
+                                            <p>
+                                                {OrderLocalization.locale[lang].PAID}
+                                            </p>
                                         )}
                                     </td>
                                     <td>{order.amount}</td>
                                     <td>
                                         <Link to={{
                                             pathname : "/orders/" + order.id
-                                        }}> Посмотреть</Link>
+                                        }}>
+                                            {OrderLocalization.locale[lang].see}
+                                        </Link>
                                     </td>
                                 </tr>
                             ))}

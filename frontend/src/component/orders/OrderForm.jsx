@@ -3,6 +3,7 @@ import axios from "axios";
 import '../../styles/order/order.sass'
 import {Link, Redirect} from "react-router-dom";
 import AuthorizationService from "../../service/AuthorizationService";
+import OrderLocalization from "../localization/OrderLocalization";
 
 function OrderForm(props) {
 
@@ -10,6 +11,7 @@ function OrderForm(props) {
     let[isSaved] = useState(false);
     let[url] = useState('');
     let[books] = useState(props.location.search);
+    let[lang] = useState("ru");
 
     useEffect(() => {
        getOrderBooks();
@@ -19,8 +21,6 @@ function OrderForm(props) {
         axios.get('/orders/books' + books)
             .then((response) => {
                 setOrder(response.data)
-                console.log(response.data)
-        }).catch(() => {
         })
     }
 
@@ -50,15 +50,20 @@ function OrderForm(props) {
     return (
         <div className={"wrapper"}>
             <div className={"order_container"}>
-                <h3>Оформление заказа</h3>
+                <h3>
+                    {OrderLocalization.locale[lang].placeOrderTitle}
+                </h3>
                 <form onSubmit={saveOrder}>
                     <textarea name={"address"}
-                              required
+                              placeholder={"Введите адрес"}
+                              maxLength={200}
                               className={"address"}
-                              minLength={10}
                               onChange={setAddress}
-                              value={order['address']}/>
-                    <p>Товары</p>
+                              required
+                    />
+                    <p>
+                        {OrderLocalization.locale[lang].books}
+                    </p>
                     <div className={"order_books_list"}>
                         {order['orderBooks'] !== undefined
                         && order['orderBooks'].map((book) => (
@@ -75,14 +80,23 @@ function OrderForm(props) {
                             </div>
                         ))}
                     </div>
-                    <div><span>Итого</span>&nbsp;&nbsp;{order['amount']}</div>
+                    <div>
+                        <h3>
+                            <span>
+                                {OrderLocalization.locale[lang].amount}
+                            </span>
+                            &nbsp;&nbsp;
+                            {order['amount']}
+                        </h3>
+                    </div>
                     <Link to={"/cart"} className={"change_order_btn"}>
-                        Изменить заказ
+                        {OrderLocalization.locale[lang].changeOrderBtn}
                     </Link><br/>
                     <input
                         className={"action_btn"}
                         type={"submit"}
-                        onClick={saveOrder} value={"Оформить заказ"}/>
+                        onClick={saveOrder}
+                        value={OrderLocalization.locale[lang].placeOrderBtn}/>
                 </form>
 
             </div>

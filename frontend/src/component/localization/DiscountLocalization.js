@@ -1,20 +1,47 @@
 const locale = ({
     en: {
-        collection : "Каталог книг",
-        discounts : "Скидки",
-        authors : 'Авторы',
-        orders : 'Заказы',
-        users :'Пользователи',
-        home : 'Главная страница',
-        mainHeadline : 'Pile of books is never too much',
-        mainDescription : `The main thing is not how much you spend by buying a book.
-            The main thing is how much you will lose by not reading it.`
+        id: "Id",
+        name : "Name",
+        count : "Count",
+        startDate : "Start date",
+        endDate : 'End date',
+        discountFactor : 'Discount factor',
+        chooseBookMessage : "Choose book",
+        alreadyTaken : "Already taken",
+        warnDateMessage: "The end date of the discount must be greater than the start date",
+        books : "Books",
+        addBtn : "Add",
+        deleteBtn : "Delete",
+        saveBtn : "Save",
+        seeBtn: "See",
+        editBtn: "Edit",
+        alreadyOnDiscountBook : "The book has already on the discount",
+        codeBook: "Book code",
+        discountCode : "Discount code",
+        deleteMsg : "Deleted",
+        chooseBookBtn : "Choose book"
     },
     ru: {
+        id: "Код",
         name : "Название",
+        count : "Количество книг",
         startDate : "Дата начала скидки",
         endDate : 'Дата окончания скидки',
         discountFactor : 'Коэффициент скидки',
+        chooseBookMessage : "Выберите книгу",
+        alreadyTaken : "Данная книга уже добавлена",
+        warnDateMessage: "Дата окончания скидки должна быть больше ее начала",
+        books : "Книги",
+        addBtn : "Добавить",
+        deleteBtn : "Удалить",
+        saveBtn : "Сохранить",
+        seeBtn: "Посмотреть",
+        editBtn: "Редактировать",
+        alreadyOnDiscountBook : "Уже на скидке",
+        codeBook: "Код книги",
+        discountCode : "Код скидки",
+        deleteMsg : "Удалено",
+        chooseBookBtn : "Выберите книги"
     }
 });
 export default {locale};

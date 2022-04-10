@@ -5,6 +5,8 @@ import '../../styles/book/book.sass'
 import '../../styles/common/search.sass'
 import {Redirect, useParams} from "react-router-dom";
 import validationLocalization from "../localization/ValidationLocalization";
+import DiscountLocalization from "../localization/DiscountLocalization";
+import LangUtil from "../../service/LangUtil";
 
 function DiscountForm() {
 
@@ -18,19 +20,38 @@ function DiscountForm() {
     })
 
     let {id} = useParams();
-    let [lang] = useState("ru");
+    let [lang] = useState(LangUtil.getLang())
     let [books, setBooks] = useState([]);
     let [searchString, setSearchString] = useState('');
     let [isRedirect, setIsRedirect] = useState(false);
     let [url, setUrl] = useState('/discounts/');
     let [takenBooks, setTakenBooks] = useState([]);
     let countTakenBooks = 0;
+    let [error,setError] = useState({
+        errorDate : false
+    });
 
     useEffect(() => {
         if(id !== undefined && discount.id === '') {
             getDiscount(id);
         }
     }, [takenBooks]);
+
+
+    function isValid() {
+        let isValid = true;
+        let date1 = new Date(discount.startDate);
+        let date2 = new Date(discount.endDate);
+        if(!(date2 > date1)) {
+            isValid = false;
+            setError({...error, errorDate: true});
+        }
+        if(discount.books.length === 0) {
+            isValid = false;
+            alert(DiscountLocalization.locale[lang].chooseBookMessage);
+        }
+        return isValid;
+    }
 
     function getDiscount(id) {
         const url = "/discounts/";
@@ -70,36 +91,41 @@ function DiscountForm() {
 
     function saveDiscount(e) {
         e.preventDefault();
-        let check = checkBooksOnDiscount();
-        check.then(() => {
-            if(countTakenBooks === 0) {
-                let url = "/discounts"
-                axios.post(url, discount)
-                    .then((response) => {
-                        setUrl("/discounts/" + response.data);
-                        setIsRedirect(true);
-                    })
-            } else {
-                turnBookPanel();
-            }
-        })
+        if(isValid()) {
+            let check = checkBooksOnDiscount();
+            check.then(() => {
+                if(countTakenBooks === 0) {
+                    console.log(discount)
+                    axios.post("/discounts", discount)
+                        .then((response) => {
+                            setUrl("/discounts/" + response.data);
+                            setIsRedirect(true);
+                        })
+                } else {
+                    turnBookPanel();
+                }
+            })
+        }
     }
 
     function changeSale(e) {
         e.preventDefault();
-        let check = checkBooksOnDiscount();
-        check.then(() => {
-            if(countTakenBooks === 0) {
-                let url = "/discounts/"
-                axios.patch(url + id, discount)
-                    .then(() => {
-                       setUrl("/discounts/" + id)
-                       setIsRedirect(true);
-                    })
-            } else {
-                turnBookPanel();
-            }
-        })
+        if (isValid()) {
+            e.preventDefault();
+            let check = checkBooksOnDiscount();
+            check.then(() => {
+                if(countTakenBooks === 0) {
+                    let url = "/discounts/"
+                    axios.patch(url + id, discount)
+                        .then(() => {
+                            setUrl("/discounts/" + id)
+                            setIsRedirect(true);
+                        })
+                } else {
+                    turnBookPanel();
+                }
+            })
+        }
     }
 
     function changeDate(e) {
@@ -133,7 +159,7 @@ function DiscountForm() {
                 books : [...discount.books, books[index]]
             })
         } else {
-            alert("Данная книга уже добавлена")
+            alert(DiscountLocalization.locale[lang].alreadyTaken);
         }
     }
 
@@ -176,7 +202,9 @@ function DiscountForm() {
         <div>
             <form className={"book_form"}
                   onSubmit={id === undefined ? saveDiscount : changeSale}>
-                <label>Название скидки</label>
+                <label>
+                    {DiscountLocalization.locale[lang].name}
+                </label>
                 <input
                     value={discount.name}
                     onChange={changeDate}
@@ -185,21 +213,32 @@ function DiscountForm() {
                     title={validationLocalization.locale[lang].discountNameValidation}
                 required
                 />
-                <label>Дата начала скидки</label>
+                <label>
+                    {DiscountLocalization.locale[lang].startDate}
+                </label>
                 <input
                     onChange={changeDate}
                     name={"startDate"}
                     required
                     value={discount.startDate}
                     type={"date"}/>
-                <label>Дата конца скидки</label>
+                <label>
+                    {DiscountLocalization.locale[lang].endDate}
+                </label>
                 <input
                     onChange={changeDate}
                     name={"endDate"}
                     required
                     value={discount.endDate}
                     type={"date"}/>
-                <label>Коэффициент скидки</label>
+                {error.errorDate && (
+                    <div className={"error_validation"}>
+                        {DiscountLocalization.locale[lang].warnDateMessage}
+                    </div>
+                )}
+                <label>
+                    {DiscountLocalization.locale[lang].discountFactor}
+                </label>
                 <input
                     onChange={changeDate}
                     value={discount.discountFactor}
@@ -209,7 +248,9 @@ function DiscountForm() {
                     required
                 />
                 <div className={"overlay panel_hidden"} onClick={turnBookPanel}> </div>
-                <label>Книги</label>
+                <label>
+                    {DiscountLocalization.locale[lang].books}
+                </label>
                 <div className={"overlay panel_hidden"}
                      onClick={turnBookPanel}>
                 </div>
@@ -222,35 +263,41 @@ function DiscountForm() {
                         <datalist id="search_result_datalist">
                             {books.map((book, index) => (
                                 <option data-index={index}
+                                        key={index}
                                         name={book.id + " " + book.name}
                                         value={book.id + " " + book.name}/>
                             ))}
                         </datalist>
                         <input type={"button"}
-                               value={"Добавить"}
+                               value={DiscountLocalization.locale[lang].addBtn}
                                onClick={addBookToDiscount}
                               />
                     </div>
                     <div className={"search_list"}>
                         {discount.books.map((book, index) => (
-                            <div className={"search_item"}>
+                            <div className={"search_item"} key={book.id}>
                                 <p>{book.id} {book.name}</p>
-                                <input type="button" value="Удалить"
+                                <input type="button"
+                                       value={DiscountLocalization.locale[lang].deleteBtn}
+                                       className={"action_btn"}
                                        onClick={deleteBookFromSale} data-index={index}/>
                                 <p id={"book_" + book.id}> </p>
                                 {takenBooks.includes(book.id) && (
-                                    <p>Уже на скидке</p>
+                                    <p>
+                                        value={DiscountLocalization.locale[lang].alreadyOnDiscountBook}
+                                    </p>
                                 )}
                             </div>
                         ))}
                     </div>
                 </div>
                 <input type={"button"}
-                       value={"выбрать книги"}
+                       className={"action_btn"}
+                       value={DiscountLocalization.locale[lang].chooseBookBtn}
                        onClick={turnBookPanel}/>
                     <input
                         type={"submit"} className={"action_btn"}
-                        value={id === undefined ? 'save' : 'save changes'}/>
+                        value={DiscountLocalization.locale[lang].saveBtn}/>
             </form>
         </div>
     )
